@@ -10,3 +10,4 @@ apps/api/*.db
 apps/api/**/*.db
 apps/api/**/storage/
 apps/mobile/.expo/
+.env
