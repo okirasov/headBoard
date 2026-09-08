@@ -1,0 +1,55 @@
+.editorconfig
+  s_2372cb08d633fa::t_b8c8d691d87ba0 1-8
+.gitignore
+  s_2372cb08d633fa::t_e6ee0f567823d8 1-10
+package-lock.json
+  s_2372cb08d633fa::t_4c8409f0ed54da 1-1506
+package.json
+  s_2372cb08d633fa::t_8f3c8ca3cb10b0 1-11
+packages/core/package.json
+  s_2372cb08d633fa::t_70e1894e685adb 1-17
+packages/core/src/calendar.test.ts
+  s_2372cb08d633fa::t_40e713cfde505a 1-55
+packages/core/src/calendar.ts
+  s_2372cb08d633fa::t_8bb0e97a482dd2 1-91
+packages/core/src/capture.ts
+  s_2372cb08d633fa::t_f8d0b81439c4dc 1-61
+packages/core/src/dates.ts
+  s_2372cb08d633fa::t_eef147dd47fb9c 1-57
+packages/core/src/digest.test.ts
+  s_2372cb08d633fa::t_13a5ea98678a00 1-56
+packages/core/src/digest.ts
+  s_2372cb08d633fa::t_f8bf6fd2df269c 1-47
+packages/core/src/i18n.test.ts
+  s_2372cb08d633fa::t_b34f81cf1d7adc 1-23
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_72dd0ca6abb271 1-137
+packages/core/src/index.ts
+  s_2372cb08d633fa::t_32594567c67b13 1-7
+packages/core/src/model.ts
+  s_2372cb08d633fa::t_a9df3d7311b2c2 1-91
+packages/core/src/tasks.test.ts
+  s_2372cb08d633fa::t_08097da2124b4c 1-72
+packages/core/src/tasks.ts
+  s_2372cb08d633fa::t_852a898e7703c2 1-70
+packages/core/tsconfig.json
+  s_2372cb08d633fa::t_a5f122c30ac2e0 1-13
+packages/core/vitest.config.ts
+  s_2372cb08d633fa::t_4a1a61b84a85d6 1-2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "155904a7a987b02f865d8ec08f00df97b10fc019",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
