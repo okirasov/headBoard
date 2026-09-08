@@ -1,0 +1,37 @@
+apps/web/src/App.tsx
+  s_2372cb08d633fa::t_611ea13962fe54 6-9,18-21
+apps/web/src/components/capture/CaptureModal.tsx
+  s_2372cb08d633fa::t_3ae8949b22ab47 1-72
+apps/web/src/components/files/FilePreviewModal.tsx
+  s_2372cb08d633fa::t_db48279062d52f 1-37
+apps/web/src/components/layout/Shell.tsx
+  s_2372cb08d633fa::t_770e7975656d07 5-7,17-19
+apps/web/src/components/snooze/SnoozePicker.tsx
+  s_2372cb08d633fa::t_26413509b0b3d0 1-63
+apps/web/src/components/task/TaskDrawer.tsx
+  s_2372cb08d633fa::t_6d7ba8196a03ce 1-173
+apps/web/src/views/calendar/CalendarView.tsx
+  s_2372cb08d633fa::t_e70751fc40404d 1-75
+apps/web/src/views/digest/DigestView.tsx
+  s_2372cb08d633fa::t_ecf8075618c4e2 1-54
+apps/web/src/views/digest/RowList.tsx
+  s_2372cb08d633fa::t_f0114e6863aef8 1-29
+apps/web/src/views/review/ReviewView.tsx
+  s_2372cb08d633fa::t_ea7c0d9a5516aa 1-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "f4a5e6975d9633f30eb34bc7b0ccdf2af5711125",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "unknown"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
