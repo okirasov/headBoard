@@ -1,0 +1,21 @@
+docs/superpowers/plans/2026-09-08-api.md
+  s_2372cb08d633fa::t_36733eb9611f5c 1-61
+docs/superpowers/plans/2026-09-08-mobile.md
+  s_2372cb08d633fa::t_ba5140a949bcc4 1-42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "0e90531a047373f21eb4007be4f1126d459f7e05",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "unknown"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
