@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Onest:wght@400;500;600&family=Manrope:wght@400;500;600;700&family=Rubik:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EFEDE7;font-family:'Golos Text',sans-serif;color:#1a1a1a}
+a{color:#1a1a1a}a:hover{color:#000}
+.dv-turn{padding:40px 44px 32px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}
+.dv-tid{font:600 10px 'IBM Plex Mono',monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:600 13px/1.2 'Golos Text',sans-serif}
+.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px}
+.dv-oid{font:600 10.5px 'IBM Plex Mono',monospace;padding:3px 7px;background:rgba(0,0,0,.08);border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 'Golos Text',sans-serif;color:rgba(0,0,0,.55)}
+.dv-card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:10px;overflow:hidden}
+</style>
+</helmet>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">board — шрифты интерфейса на примере колонки (light / dark из Teach). Метки везде IBM Plex Mono.</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Golos Text — ровно как Teach (текущий вариант, но h1 26px/600, карточки 500)</div>
+<div class="dv-card" style="width:680px;display:flex;font-family:'Golos Text',sans-serif;">
+  <div style="flex:1;background:#F1EEE5;padding:20px;color:#1C1917;">
+    <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-size:26px;font-weight:600;letter-spacing:-.3px;line-height:1.2;">Доска</span><span style="font-size:13px;color:#6B655B;">открытых: 12</span></div>
+    <div style="display:flex;gap:6px;margin-top:14px;"><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#1C1917;color:#F7F4EC;">Инбокс <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">4</span></span><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#fff;color:#6B655B;border:1px solid #E8E2D6;">В фокусе <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">3</span></span><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#fff;color:#6B655B;border:1px solid #E8E2D6;">Ожидание</span></div>
+    <div style="margin-top:12px;background:#fff;border:1px solid #E8E2D6;border-radius:14px;padding:13px 13px 13px 17px;position:relative;overflow:hidden;"><span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C8552F;"></span><div style="font-size:14px;font-weight:500;line-height:1.4;">Сравнить векторные БД для памяти</div><div style="display:flex;gap:6px;margin-top:8px;align-items:center;"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;padding:5px 8px;border-radius:7px;background:#F2EEE2;color:#8A6D1E;">memory-app</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8A8175;">чт 28 · 3 дн.</span></div></div>
+    <div style="margin-top:10px;font-size:13px;line-height:1.55;color:#6B655B;">Вставьте что угодно — чат, заметки, поток мыслей. Это станет задачами.</div>
+  </div>
+  <div style="flex:1;background:#0F1B15;padding:20px;color:#EDF3EA;">
+    <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-size:26px;font-weight:600;letter-spacing:-.3px;line-height:1.2;">Board</span><span style="font-size:13px;color:#8FA697;">12 open</span></div>
+    <div style="display:flex;gap:6px;margin-top:14px;"><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#EDF3EA;color:#0F1B15;">Inbox <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">4</span></span><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#17271D;color:#C9D6CC;border:1px solid #24382C;">In focus <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">3</span></span><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#17271D;color:#C9D6CC;border:1px solid #24382C;">Waiting</span></div>
+    <div style="margin-top:12px;background:#17271D;border:1px solid #24382C;border-radius:14px;padding:13px 13px 13px 17px;position:relative;overflow:hidden;"><span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#E0663A;"></span><div style="font-size:14px;font-weight:500;line-height:1.4;">Compare vector DBs for the memory feature</div><div style="display:flex;gap:6px;margin-top:8px;align-items:center;"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;padding:5px 8px;border-radius:7px;background:#2E3A1E;color:#D9B25C;">memory-app</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8FA697;">Thu 28 · 3d idle</span></div></div>
+    <div style="margin-top:10px;font-size:13px;line-height:1.55;color:#8FA697;">Paste anything — a chat, notes, a braindump. It becomes tasks.</div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>IBM Plex Sans — пара к Plex Mono из Teach, чуть суше и техничнее</div>
+<div class="dv-card" style="width:680px;display:flex;font-family:'IBM Plex Sans',sans-serif;">
+  <div style="flex:1;background:#F1EEE5;padding:20px;color:#1C1917;">
+    <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-size:26px;font-weight:600;letter-spacing:-.3px;line-height:1.2;">Доска</span><span style="font-size:13px;color:#6B655B;">открытых: 12</span></div>
+    <div style="display:flex;gap:6px;margin-top:14px;"><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#1C1917;color:#F7F4EC;">Инбокс <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">4</span></span><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#fff;color:#6B655B;border:1px solid #E8E2D6;">В фокусе <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">3</span></span><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#fff;color:#6B655B;border:1px solid #E8E2D6;">Ожидание</span></div>
+    <div style="margin-top:12px;background:#fff;border:1px solid #E8E2D6;border-radius:14px;padding:13px 13px 13px 17px;position:relative;overflow:hidden;"><span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C8552F;"></span><div style="font-size:14px;font-weight:500;line-height:1.4;">Сравнить векторные БД для памяти</div><div style="display:flex;gap:6px;margin-top:8px;align-items:center;"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;padding:5px 8px;border-radius:7px;background:#F2EEE2;color:#8A6D1E;">memory-app</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8A8175;">чт 28 · 3 дн.</span></div></div>
+    <div style="margin-top:10px;font-size:13px;line-height:1.55;color:#6B655B;">Вставьте что угодно — чат, заметки, поток мыслей. Это станет задачами.</div>
+  </div>
+  <div style="flex:1;background:#0F1B15;padding:20px;color:#EDF3EA;">
+    <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-size:26px;font-weight:600;letter-spacing:-.3px;line-height:1.2;">Board</span><span style="font-size:13px;color:#8FA697;">12 open</span></div>
+    <div style="display:flex;gap:6px;margin-top:14px;"><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#EDF3EA;color:#0F1B15;">Inbox <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">4</span></span><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#17271D;color:#C9D6CC;border:1px solid #24382C;">In focus <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">3</span></span><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#17271D;color:#C9D6CC;border:1px solid #24382C;">Waiting</span></div>
+    <div style="margin-top:12px;background:#17271D;border:1px solid #24382C;border-radius:14px;padding:13px 13px 13px 17px;position:relative;overflow:hidden;"><span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#E0663A;"></span><div style="font-size:14px;font-weight:500;line-height:1.4;">Compare vector DBs for the memory feature</div><div style="display:flex;gap:6px;margin-top:8px;align-items:center;"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;padding:5px 8px;border-radius:7px;background:#2E3A1E;color:#D9B25C;">memory-app</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8FA697;">Thu 28 · 3d idle</span></div></div>
+    <div style="margin-top:10px;font-size:13px;line-height:1.55;color:#8FA697;">Paste anything — a chat, notes, a braindump. It becomes tasks.</div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Manrope — мягче и современнее, широкие формы</div>
+<div class="dv-card" style="width:680px;display:flex;font-family:'Manrope',sans-serif;">
+  <div style="flex:1;background:#F1EEE5;padding:20px;color:#1C1917;">
+    <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-size:26px;font-weight:700;letter-spacing:-.4px;line-height:1.2;">Доска</span><span style="font-size:13px;color:#6B655B;">открытых: 12</span></div>
+    <div style="display:flex;gap:6px;margin-top:14px;"><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#1C1917;color:#F7F4EC;">Инбокс <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">4</span></span><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#fff;color:#6B655B;border:1px solid #E8E2D6;">В фокусе <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">3</span></span><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#fff;color:#6B655B;border:1px solid #E8E2D6;">Ожидание</span></div>
+    <div style="margin-top:12px;background:#fff;border:1px solid #E8E2D6;border-radius:14px;padding:13px 13px 13px 17px;position:relative;overflow:hidden;"><span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C8552F;"></span><div style="font-size:14px;font-weight:600;line-height:1.4;">Сравнить векторные БД для памяти</div><div style="display:flex;gap:6px;margin-top:8px;align-items:center;"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;padding:5px 8px;border-radius:7px;background:#F2EEE2;color:#8A6D1E;">memory-app</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8A8175;">чт 28 · 3 дн.</span></div></div>
+    <div style="margin-top:10px;font-size:13px;line-height:1.55;color:#6B655B;">Вставьте что угодно — чат, заметки, поток мыслей. Это станет задачами.</div>
+  </div>
+  <div style="flex:1;background:#0F1B15;padding:20px;color:#EDF3EA;">
+    <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-size:26px;font-weight:700;letter-spacing:-.4px;line-height:1.2;">Board</span><span style="font-size:13px;color:#8FA697;">12 open</span></div>
+    <div style="display:flex;gap:6px;margin-top:14px;"><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#EDF3EA;color:#0F1B15;">Inbox <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">4</span></span><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#17271D;color:#C9D6CC;border:1px solid #24382C;">In focus <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">3</span></span><span style="font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#17271D;color:#C9D6CC;border:1px solid #24382C;">Waiting</span></div>
+    <div style="margin-top:12px;background:#17271D;border:1px solid #24382C;border-radius:14px;padding:13px 13px 13px 17px;position:relative;overflow:hidden;"><span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#E0663A;"></span><div style="font-size:14px;font-weight:600;line-height:1.4;">Compare vector DBs for the memory feature</div><div style="display:flex;gap:6px;margin-top:8px;align-items:center;"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;padding:5px 8px;border-radius:7px;background:#2E3A1E;color:#D9B25C;">memory-app</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8FA697;">Thu 28 · 3d idle</span></div></div>
+    <div style="margin-top:10px;font-size:13px;line-height:1.55;color:#8FA697;">Paste anything — a chat, notes, a braindump. It becomes tasks.</div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1d">
+<div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Rubik — из концепции Teach 1d «Сигнал», тёплый и округлый</div>
+<div class="dv-card" style="width:680px;display:flex;font-family:'Rubik',sans-serif;">
+  <div style="flex:1;background:#F1EEE5;padding:20px;color:#1C1917;">
+    <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-size:26px;font-weight:600;letter-spacing:-.3px;line-height:1.2;">Доска</span><span style="font-size:13px;color:#6B655B;">открытых: 12</span></div>
+    <div style="display:flex;gap:6px;margin-top:14px;"><span style="font-size:12px;font-weight:500;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#1C1917;color:#F7F4EC;">Инбокс <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">4</span></span><span style="font-size:12px;font-weight:500;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#fff;color:#6B655B;border:1px solid #E8E2D6;">В фокусе <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">3</span></span><span style="font-size:12px;font-weight:500;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#fff;color:#6B655B;border:1px solid #E8E2D6;">Ожидание</span></div>
+    <div style="margin-top:12px;background:#fff;border:1px solid #E8E2D6;border-radius:14px;padding:13px 13px 13px 17px;position:relative;overflow:hidden;"><span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C8552F;"></span><div style="font-size:14px;font-weight:500;line-height:1.4;">Сравнить векторные БД для памяти</div><div style="display:flex;gap:6px;margin-top:8px;align-items:center;"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;padding:5px 8px;border-radius:7px;background:#F2EEE2;color:#8A6D1E;">memory-app</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8A8175;">чт 28 · 3 дн.</span></div></div>
+    <div style="margin-top:10px;font-size:13px;line-height:1.55;color:#6B655B;">Вставьте что угодно — чат, заметки, поток мыслей. Это станет задачами.</div>
+  </div>
+  <div style="flex:1;background:#0F1B15;padding:20px;color:#EDF3EA;">
+    <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-size:26px;font-weight:600;letter-spacing:-.3px;line-height:1.2;">Board</span><span style="font-size:13px;color:#8FA697;">12 open</span></div>
+    <div style="display:flex;gap:6px;margin-top:14px;"><span style="font-size:12px;font-weight:500;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#EDF3EA;color:#0F1B15;">Inbox <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">4</span></span><span style="font-size:12px;font-weight:500;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#17271D;color:#C9D6CC;border:1px solid #24382C;">In focus <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">3</span></span><span style="font-size:12px;font-weight:500;padding:7px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;background:#17271D;color:#C9D6CC;border:1px solid #24382C;">Waiting</span></div>
+    <div style="margin-top:12px;background:#17271D;border:1px solid #24382C;border-radius:14px;padding:13px 13px 13px 17px;position:relative;overflow:hidden;"><span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#E0663A;"></span><div style="font-size:14px;font-weight:500;line-height:1.4;">Compare vector DBs for the memory feature</div><div style="display:flex;gap:6px;margin-top:8px;align-items:center;"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;padding:5px 8px;border-radius:7px;background:#2E3A1E;color:#D9B25C;">memory-app</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8FA697;">Thu 28 · 3d idle</span></div></div>
+    <div style="margin-top:10px;font-size:13px;line-height:1.55;color:#8FA697;">Paste anything — a chat, notes, a braindump. It becomes tasks.</div>
+  </div>
+</div>
+</div>
+
+</div>
+</section>
+
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{--bg:#F4F1EA;--panel:#FAF8F3;--card:#FFFFFF;--inset:#F1EEE7;--sel:#EAE6DD;--heat1:#F6F2EA;--heat2:#F1E9DA;--heat2b:#F3E6CF;--heat2bd:#E3D2AE;--staleBg:#FFFFFF;--staleBd:#E6DFD2;--ink:#1F1B18;--inkHov:#3A342E;--onInk:#FBF9F4;--mut:#625C54;--mut2:#8B857B;--faint:#ABA59A;--ghost:#CDC7BC;--line:#E7E2D9;--lineStrong:#D4CEC2;--acc:#C8552F;--accHov:#A84325;--hi:#C8552F;--onAcc:#FFF3EC;--goldInk:#8F6A1A;--med:#E0B85A;--scrim:rgba(32,29,23,0.55);--scrimSoft:rgba(32,29,23,0.32);--tabBg:rgba(255,253,248,0.97);--ok:#4F7A5C;--okBg:#E8F0E8;--okBd:#CFDFD0;--goldFaint:#A9895A;--goldBd:#E0D6C2;--rowLine:#EEE9E0;--rowLineGold:#EFE6D2;--chipBg:#EAE6DD;--chipInk:#1F1B18;}
+body.dark{--bg:#161412;--panel:#1C1A18;--card:#232019;--inset:#2B2824;--sel:#34302B;--heat1:#211E1A;--heat2:#2B261E;--heat2b:#3A3224;--heat2bd:#57492E;--staleBg:#232019;--staleBd:#3A3630;--ink:#F3EFE9;--inkHov:#FFFFFF;--onInk:#161412;--mut:#CDC6BC;--mut2:#9E978C;--faint:#736D64;--ghost:#4B4740;--line:#2E2B27;--lineStrong:#413D37;--acc:#E8724A;--accHov:#F0855F;--hi:#E8724A;--onAcc:#FFF6F0;--goldInk:#DDB868;--med:#D9B25C;--scrim:rgba(0,0,0,0.62);--scrimSoft:rgba(0,0,0,0.5);--tabBg:rgba(35,32,29,0.97);--ok:#8FC08F;--okBg:#222A22;--okBd:#354535;--goldFaint:#A88C55;--goldBd:#4A4230;--rowLine:#2B2824;--rowLineGold:#3A3224;--chipBg:#34302B;--chipInk:#F3EFE9;}
+body{margin:0;background:#E9E3D3;background-image:radial-gradient(#D9D0B9 1px,transparent 1px);background-size:26px 26px;}
+*{box-sizing:border-box;}
+a{color:var(--acc);} a:hover{color:var(--accHov);}
+::-webkit-scrollbar{width:8px;height:8px;} ::-webkit-scrollbar-thumb{background:var(--lineStrong);border-radius:7px;} ::-webkit-scrollbar-track{background:transparent;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes slideIn{from{opacity:0;transform:translateX(24px);}to{opacity:1;transform:translateX(0);}}
+@keyframes sheetUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+textarea:focus,input:focus{outline:none;}
+</style>
+</helmet>
+<div style="min-width:fit-content;padding:64px 72px 96px;display:flex;flex-direction:column;gap:30px;font-family:'Golos Text',sans-serif;color:#1C1917;">
+  <div>
+    <div style="display:flex;align-items:center;gap:8px;"><svg width="34" height="34" viewBox="0 0 48 48"><circle cx="15" cy="38" r="7.5" style="fill:#1C1917;"></circle><circle cx="24" cy="29" r="2.6" style="fill:#1C1917;"></circle><rect x="25" y="3" width="19" height="19" rx="7" style="fill:none;stroke:#1C1917;" stroke-width="5"></rect><circle cx="40.5" cy="18.5" r="4.4" style="fill:#E9E3D3;"></circle><circle cx="40.5" cy="18.5" r="3.1" style="fill:#C8552F;"></circle></svg><span style="font-family:'Golos Text',sans-serif;font-weight:400;font-size:28px;line-height:1;letter-spacing:-.3px;color:#1C1917;">b<span style="color:#C8552F;">o</span>ard</span></div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8A8175;margin-top:4px;">Personal thinking board · Web + iOS · shared data — interact with both</div>
+  </div>
+  <div style="display:flex;gap:72px;align-items:flex-start;">
+
+    <!-- ================= WEB ================= -->
+    <div data-screen-label="Web app">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8A8175;margin-bottom:10px;">Web · 1440×900</div>
+      <div style="width:1440px;height:900px;position:relative;overflow:hidden;border-radius:20px;background:var(--bg);color:var(--ink);display:flex;box-shadow:0 40px 80px rgba(32,29,23,0.16),0 0 0 1px rgba(32,29,23,0.08);">
+
+        <!-- sidebar -->
+        <div style="width:234px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:20px 12px 16px;">
+          <div style="padding:0 10px;">
+            <div style="display:flex;align-items:center;gap:7px;"><svg width="25" height="25" viewBox="0 0 48 48"><circle cx="15" cy="38" r="7.5" style="fill:var(--ink);"></circle><circle cx="24" cy="29" r="2.6" style="fill:var(--ink);"></circle><rect x="25" y="3" width="19" height="19" rx="7" style="fill:none;stroke:var(--ink);" stroke-width="5"></rect><circle cx="40.5" cy="18.5" r="4.4" style="fill:var(--panel);"></circle><circle cx="40.5" cy="18.5" r="3.1" style="fill:var(--acc);"></circle></svg><span style="font-family:'Golos Text',sans-serif;font-weight:400;font-size:21px;line-height:1;letter-spacing:-.3px;color:var(--ink);">b<span style="color:var(--acc);">o</span>ard</span></div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut2);margin-top:5px;">{{ T.tagline }}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:2px;margin-top:22px;">
+            <div onClick="{{ onBoard }}" style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:13.5px;font-weight:500;background:{{ nBoardBg }};color:{{ nBoardC }};">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="2" width="3.4" height="12" rx="1" stroke="currentColor" stroke-width="1.5"></rect><rect x="6.3" y="2" width="3.4" height="8.5" rx="1" stroke="currentColor" stroke-width="1.5"></rect><rect x="11.1" y="2" width="3.4" height="5.5" rx="1" stroke="currentColor" stroke-width="1.5"></rect></svg>
+              <span style="flex:1;">{{ T.board }}</span>
+            </div>
+            <div onClick="{{ onRes }}" style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:13.5px;font-weight:500;background:{{ nResBg }};color:{{ nResC }};">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.5"></circle><path d="M8 4.8V8l2.4 1.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+              <span style="flex:1;">{{ T.resurface }}</span>
+              <sc-if value="{{ resBadgeShow }}" hint-placeholder-val="{{ true }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;background:var(--heat2b);color:var(--goldInk);border-radius:7px;padding:1px 7px;">{{ resBadge }}</span></sc-if>
+            </div>
+            <div onClick="{{ onDig }}" style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:13.5px;font-weight:500;background:{{ nDigBg }};color:{{ nDigC }};">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="1.5" width="11" height="13" rx="1.5" stroke="currentColor" stroke-width="1.5"></rect><path d="M5.2 5h5.6M5.2 8h5.6M5.2 11h3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+              <span style="flex:1;">{{ T.digest }}</span>
+            </div>
+            <div onClick="{{ onCal }}" style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:13.5px;font-weight:500;background:{{ nCalBg }};color:{{ nCalC }};">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="1.8" y="2.8" width="12.4" height="11.4" rx="1.5" stroke="currentColor" stroke-width="1.5"></rect><path d="M1.8 6.4h12.4M5.3 1.2v3M10.7 1.2v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+              <span style="flex:1;">{{ T.calendar }}</span>
+            </div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut2);margin:24px 10px 8px;">{{ T.projects }}</div>
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <div onClick="{{ onAllProj }}" style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:10px;cursor:pointer;font-size:13px;background:{{ allBg }};">
+              <span style="width:7px;height:7px;border-radius:50%;background:var(--ink);"></span>
+              <span style="flex:1;">{{ T.allProjects }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--mut2);">{{ totalCount }}</span>
+            </div>
+            <sc-for list="{{ projRows }}" as="p" hint-placeholder-count="5">
+              <div onClick="{{ p.on }}" style="display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:10px;cursor:pointer;font-size:13px;background:{{ p.bg }};">
+                <span style="width:7px;height:7px;border-radius:50%;background:{{ p.color }};"></span>
+                <span style="flex:1;">{{ p.name }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--mut2);">{{ p.count }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="flex:1;"></div>
+          <div style="position:relative;border-top:1px solid var(--line);padding-top:10px;">
+            <sc-if value="{{ profOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 44px rgba(32,29,23,0.18);padding:13px;display:flex;flex-direction:column;gap:11px;z-index:45;animation:fadeUp .18s ease;">
+                <div style="display:flex;flex-direction:column;gap:2px;">
+                  <span style="font-size:13px;font-weight:600;">{{ uName }}</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut2);">{{ uEmail }}</span>
+                </div>
+                <div style="height:1px;background:var(--line);"></div>
+                <div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut2);margin-bottom:6px;">{{ T.language }}</div>
+                  <div style="display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;">
+                    <div onClick="{{ onEn }}" style="flex:1;text-align:center;padding:7px 0;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;cursor:pointer;background:{{ enBg }};color:{{ enC }};">EN</div>
+                    <div onClick="{{ onRu }}" style="flex:1;text-align:center;padding:7px 0;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;cursor:pointer;background:{{ ruBg }};color:{{ ruC }};">RU</div>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut2);margin-bottom:6px;">{{ T.theme }}</div>
+                  <div style="display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;">
+                    <div onClick="{{ onThL }}" style="flex:1;text-align:center;padding:7px 0;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;cursor:pointer;background:{{ thLBg }};color:{{ thLC }};">{{ T.light }}</div>
+                    <div onClick="{{ onThD }}" style="flex:1;text-align:center;padding:7px 0;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;cursor:pointer;background:{{ thDBg }};color:{{ thDC }};">{{ T.dark }}</div>
+                  </div>
+                </div>
+                <div style="height:1px;background:var(--line);"></div>
+                <div onClick="{{ onSignOut }}" style="font-size:12.5px;font-weight:600;color:var(--hi);cursor:pointer;padding:1px;">{{ T.signOut }}</div>
+              </div>
+            </sc-if>
+            <div onClick="{{ onProf }}" style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:11px;cursor:pointer;background:{{ profBg }};" style-hover="background:var(--sel);">
+              <span style="width:30px;height:30px;border-radius:50%;background:var(--chipBg);color:var(--chipInk);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;flex-shrink:0;">{{ uInit }}</span>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ uName }}</div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mut2);">{{ uProv }}</div>
+              </div>
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="none" style="color:var(--mut2);flex-shrink:0;"><path d="M4 10L8 6l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+          </div>
+          <div style="padding:10px 10px 0;display:flex;align-items:center;gap:8px;">
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--ok);animation:pulse 2.4s ease-in-out infinite;flex-shrink:0;"></span>
+            <div style="flex:1;">
+              <div style="font-size:12px;font-weight:600;">{{ T.offline }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut2);">{{ T.synced }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- main -->
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;">
+          <div style="height:62px;flex-shrink:0;display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid var(--line);">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut2);">{{ todayLabel }}</div>
+            <div style="flex:1;"></div>
+            <div style="position:relative;">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="position:absolute;left:10px;top:9px;color:var(--mut2);"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"></circle><path d="M11 11l3.4 3.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
+              <input value="{{ q }}" onChange="{{ onQ }}" placeholder="{{ T.searchPh }}" style="width:250px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px 8px 32px;font-family:'Golos Text',sans-serif;font-size:13px;color:var(--ink);">
+            </div>
+            <div onClick="{{ onOpenCap }}" style="display:flex;align-items:center;gap:7px;background:var(--acc);color:var(--onAcc);border-radius:10px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;" style-hover="background:var(--accHov);">
+              <svg width="13" height="13" viewBox="0 0 16 16"><path d="M8 1l1.8 4.9L14.7 8l-4.9 2.1L8 15l-1.8-4.9L1.3 8l4.9-2.1z" fill="currentColor"></path></svg>
+              {{ T.capture }}
+            </div>
+          </div>
+
+          <!-- BOARD -->
+          <sc-if value="{{ isBoard }}" hint-placeholder-val="{{ true }}">
+            <div style="flex:1;min-height:0;display:flex;flex-direction:column;padding:18px 24px 0;">
+              <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:14px;">
+                <div style="font-family:'Golos Text',sans-serif;font-weight:500;letter-spacing:-.3px;font-size:26px;line-height:1.2;">{{ T.board }}</div>
+                <div style="font-size:12px;color:var(--mut2);">{{ boardSub }}</div>
+                <div style="flex:1;"></div>
+                <div style="display:flex;gap:5px;">
+                  <sc-for list="{{ prChips }}" as="ch" hint-placeholder-count="4">
+                    <div onClick="{{ ch.on }}" style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:500;padding:4px 9px;border-radius:7px;cursor:pointer;background:{{ ch.bg }};color:{{ ch.c }};border:1px solid {{ ch.bd }};">{{ ch.L }}</div>
+                  </sc-for>
+                </div>
+              </div>
+              <sc-if value="{{ projBarShow }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 14px;margin-bottom:12px;flex-wrap:wrap;">
+                  <span style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;"><span style="width:8px;height:8px;border-radius:50%;background:{{ projBarColor }};"></span>{{ projBarName }}</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:var(--mut2);">{{ T.projFilesL }}</span>
+                  <sc-for list="{{ projBarFiles }}" as="f" hint-placeholder-count="2">
+                    <div onClick="{{ f.open }}" style="display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:4px 8px;cursor:pointer;" style-hover="border-color:var(--acc);">
+                      <sc-if value="{{ f.hasSrc }}" hint-placeholder-val="{{ false }}"><div style="width:26px;height:26px;border-radius:6px;background-image:url({{ f.src }});background-size:cover;background-position:center;background-color:var(--inset);"></div></sc-if>
+                      <sc-if value="{{ f.iconImg }}" hint-placeholder-val="{{ false }}"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="color:var(--mut2);"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1.4"></rect><circle cx="5.5" cy="6" r="1.3" fill="currentColor"></circle><path d="M2 12l3.5-3.5 2.5 2.5 3-3.5 3 3.5" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg></sc-if>
+                      <sc-if value="{{ f.iconFile }}" hint-placeholder-val="{{ true }}"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" style="color:var(--mut2);"><path d="M9 1.5H4.5A1.5 1.5 0 0 0 3 3v10a1.5 1.5 0 0 0 1.5 1.5h7A1.5 1.5 0 0 0 13 13V5.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path><path d="M9 1.5V5.5H13" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg></sc-if>
+                      <span style="font-size:11.5px;font-weight:500;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ f.name }}</span>
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mut2);">{{ f.sizeL }}</span>
+                      <span onClick="{{ f.remove }}" style="display:flex;cursor:pointer;color:var(--mut2);" style-hover="color:var(--hi);"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span>
+                    </div>
+                  </sc-for>
+                  <label style="display:flex;align-items:center;gap:4px;border:1px dashed var(--lineStrong);border-radius:9px;padding:6px 10px;font-size:11.5px;font-weight:600;color:var(--mut);cursor:pointer;" style-hover="border-color:var(--acc);color:var(--acc);">+ {{ T.attach }}<input type="file" multiple="" style="display:none;" onChange="{{ onProjFiles }}"></label>
+                </div>
+              </sc-if>
+              <div style="flex:1;min-height:0;display:flex;gap:14px;">
+                <sc-for list="{{ colRows }}" as="col" hint-placeholder-count="4">
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;">
+                    <div style="display:flex;align-items:center;gap:8px;padding:0 2px 10px;">
+                      <span style="width:8px;height:8px;border-radius:50%;background:{{ col.dot }};"></span>
+                      <span style="font-size:11.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mut);">{{ col.label }}</span>
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--mut2);">{{ col.count }}</span>
+                    </div>
+                    <div onDragOver="{{ col.over }}" onDrop="{{ col.drop }}" style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:6px 4px 18px;background:{{ col.bodyBg }};border:1.5px dashed {{ col.bodyBd }};border-radius:12px;transition:background .15s;">
+                      <sc-for list="{{ col.cards }}" as="t" hint-placeholder-count="3">
+                        <div onClick="{{ t.open }}" draggable="true" onDragStart="{{ t.dragStart }}" onDragEnd="{{ t.dragEnd }}" style="position:relative;overflow:hidden;background:{{ t.cardBg }};border:1px solid {{ t.cardBd }};border-radius:12px;padding:12px 12px 12px 16px;display:flex;flex-direction:column;gap:8px;cursor:grab;opacity:{{ t.op }};transition:box-shadow .15s,border-color .15s;" style-hover="box-shadow:0 6px 16px rgba(32,29,23,0.09);border-color:var(--lineStrong);">
+                          <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:{{ t.prBar }};"></span>
+                          <sc-if value="{{ t.topShow }}" hint-placeholder-val="{{ true }}">
+                          <div style="display:flex;align-items:center;gap:6px;">
+                            <sc-if value="{{ t.idleShow }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 6px;border-radius:7px;background:{{ t.idleBg }};color:{{ t.idleC }};">{{ t.idleL }}</span></sc-if>
+                            <span style="flex:1;"></span>
+                            <sc-if value="{{ t.actShow }}" hint-placeholder-val="{{ true }}">
+                              <span onClick="{{ t.done }}" style="width:22px;height:22px;border-radius:6px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--mut2);opacity:.55;background:var(--card);" style-hover="opacity:1;color:var(--ok);border-color:var(--ok);"><svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M2.5 8.5L6 12l7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                              <span onClick="{{ t.bump }}" style="width:22px;height:22px;border-radius:6px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--mut2);opacity:.55;background:var(--card);" style-hover="opacity:1;color:var(--acc);border-color:var(--acc);"><svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                            </sc-if>
+                          </div>
+                          </sc-if>
+                          <div style="font-size:14px;font-weight:500;line-height:1.4;text-wrap:pretty;">{{ t.title }}</div>
+                          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                            <sc-if value="{{ t.hasProj }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--mut);"><span style="width:7px;height:7px;border-radius:50%;background:{{ t.projColor }};"></span>{{ t.projName }}</span></sc-if>
+                            <sc-if value="{{ t.tagShow }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--mut2);">{{ t.tagStr }}</span></sc-if>
+                            <span style="flex:1;"></span>
+                            <sc-if value="{{ t.cmShow }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:3px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--mut2);"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M14 10.5a1.5 1.5 0 0 1-1.5 1.5H6l-3.5 3V3.5A1.5 1.5 0 0 1 4 2h8.5A1.5 1.5 0 0 1 14 3.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg>{{ t.cmN }}</span></sc-if>
+                            <sc-if value="{{ t.fileShow }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:3px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--mut2);"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M13 7.5l-5 5a3.2 3.2 0 0 1-4.5-4.5l5.5-5.5a2.1 2.1 0 0 1 3 3L6.7 10.8a1 1 0 0 1-1.5-1.5L10 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>{{ t.fileN }}</span></sc-if>
+                            <sc-if value="{{ t.dueShow }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:{{ t.dueC }};">{{ t.dueL }}</span></sc-if>
+                            <sc-if value="{{ t.recurShow }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:3px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--mut2);"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M13.5 7A5.5 5.5 0 0 0 3.3 4.6M2.5 9a5.5 5.5 0 0 0 10.2 2.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path><path d="M13.5 2.5V7H9M2.5 13.5V9h4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>{{ t.recurL }}</span></sc-if>
+                            <sc-if value="{{ t.chatShow }}" hint-placeholder-val="{{ false }}"><a href="{{ t.chat }}" target="_blank" rel="noreferrer" onClick="{{ stop }}" style="display:flex;align-items:center;gap:3px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--mut2);text-decoration:none;" style-hover="color:var(--acc);"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M6.5 9.5l3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path><path d="M7.2 4.8l1.2-1.2a2.6 2.6 0 0 1 3.7 3.7l-1.2 1.2M8.8 11.2l-1.2 1.2a2.6 2.6 0 0 1-3.7-3.7l1.2-1.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>{{ T.chat }}</a></sc-if>
+                          </div>
+                        </div>
+                      </sc-for>
+                      <sc-if value="{{ col.empty }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Golos Text',sans-serif;font-style:italic;font-size:13.5px;color:var(--mut2);padding:10px 4px;">{{ T.nothingHere }}</div></sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- RESURFACE -->
+          <sc-if value="{{ isRes }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;min-height:0;overflow-y:auto;padding:18px 24px 24px;">
+              <div style="font-family:'Golos Text',sans-serif;font-weight:500;letter-spacing:-.3px;font-size:26px;line-height:1.2;">{{ T.resurface }}</div>
+              <div style="font-size:12.5px;color:var(--mut2);margin:4px 0 18px;">{{ resIntro }}</div>
+              <div style="display:flex;flex-direction:column;gap:10px;max-width:820px;">
+                <sc-for list="{{ resRows }}" as="r" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--goldBd);border-radius:14px;padding:14px 16px;">
+                    <div style="width:64px;flex-shrink:0;text-align:center;">
+                      <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:var(--goldInk);line-height:1;">{{ r.idleNL }}</div>
+                      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--goldFaint);margin-top:3px;">{{ T.daysIdle }}</div>
+                    </div>
+                    <div onClick="{{ r.open }}" style="flex:1;min-width:0;cursor:pointer;">
+                      <div style="font-size:14.5px;font-weight:600;letter-spacing:-0.1px;">{{ r.title }}</div>
+                      <div style="font-size:11.5px;color:var(--mut2);margin-top:3px;">{{ r.sub }}</div>
+                    </div>
+                    <div style="display:flex;gap:7px;flex-shrink:0;">
+                      <div onClick="{{ r.keep }}" style="font-size:12px;font-weight:600;padding:7px 12px;border-radius:9px;background:var(--acc);color:var(--onAcc);cursor:pointer;" style-hover="background:var(--accHov);">{{ T.keep }}</div>
+                      <div onClick="{{ r.zOpen }}" style="font-size:12px;font-weight:600;padding:7px 12px;border-radius:9px;border:1px solid var(--goldBd);color:var(--mut);cursor:pointer;background:var(--card);" style-hover="border-color:var(--acc);color:var(--acc);">{{ T.snoozeDots }}</div>
+                      <div onClick="{{ r.drop }}" style="font-size:12px;font-weight:600;padding:7px 12px;border-radius:9px;border:1px solid var(--goldBd);color:var(--mut2);cursor:pointer;background:var(--card);" style-hover="border-color:var(--hi);color:var(--hi);">{{ T.archive }}</div>
+                    </div>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ resEmpty }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Golos Text',sans-serif;font-style:italic;font-size:16px;color:var(--mut2);padding:20px 0;">{{ T.noDust }}</div></sc-if>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- DIGEST -->
+          <sc-if value="{{ isDig }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;min-height:0;overflow-y:auto;padding:18px 24px 24px;">
+              <div style="display:flex;align-items:baseline;gap:14px;">
+                <div style="font-family:'Golos Text',sans-serif;font-weight:500;letter-spacing:-.3px;font-size:26px;line-height:1.2;">{{ T.digTitle }}</div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--mut2);">{{ todayLabel }}</div>
+              </div>
+              <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-top:16px;max-width:1080px;">
+                <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:14px;">
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--mut2);">{{ digStats }}</div>
+                  <div style="font-family:'Golos Text',sans-serif;font-size:19px;line-height:1.55;text-wrap:pretty;">{{ digPara }}</div>
+                  <div style="display:flex;align-items:center;gap:10px;margin-top:auto;">
+                    <div onClick="{{ onRegen }}" style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:7px 13px;border-radius:9px;border:1px solid var(--line);color:var(--acc);cursor:pointer;background:var(--card);" style-hover="border-color:var(--acc);">
+                      <svg width="11" height="11" viewBox="0 0 16 16"><path d="M8 1l1.8 4.9L14.7 8l-4.9 2.1L8 15l-1.8-4.9L1.3 8l4.9-2.1z" fill="currentColor"></path></svg>{{ digBtnL }}
+                    </div>
+                    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut2);">{{ T.digNote }}</div>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                  <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;">
+                    <div style="font-size:11.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mut);margin-bottom:10px;">{{ T.dueToday }}</div>
+                    <div style="display:flex;flex-direction:column;">
+                      <sc-for list="{{ dueRows }}" as="dr" hint-placeholder-count="2">
+                        <div onClick="{{ dr.open }}" style="display:flex;align-items:center;gap:9px;padding:8px 2px;cursor:pointer;border-bottom:1px solid var(--rowLine);">
+                          <span style="width:7px;height:7px;border-radius:50%;background:{{ dr.dotC }};flex-shrink:0;"></span>
+                          <span style="flex:1;font-size:13.5px;font-weight:500;">{{ dr.title }}</span>
+                          <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:{{ dr.chipC }};">{{ dr.chipL }}</span>
+                        </div>
+                      </sc-for>
+                      <sc-if value="{{ dueEmpty }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Golos Text',sans-serif;font-style:italic;font-size:13px;color:var(--mut2);padding:4px 2px;">{{ T.nothingDue }}</div></sc-if>
+                    </div>
+                  </div>
+                  <div style="background:var(--card);border:1px solid var(--goldBd);border-radius:16px;padding:16px 18px;">
+                    <div style="font-size:11.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--goldInk);margin-bottom:10px;">{{ T.dustyPicks }}</div>
+                    <div style="display:flex;flex-direction:column;">
+                      <sc-for list="{{ pickRows }}" as="pk" hint-placeholder-count="3">
+                        <div onClick="{{ pk.open }}" style="display:flex;align-items:center;gap:9px;padding:8px 2px;cursor:pointer;border-bottom:1px solid var(--rowLineGold);">
+                          <span style="width:7px;height:7px;border-radius:50%;background:{{ pk.dotC }};flex-shrink:0;"></span>
+                          <span style="flex:1;font-size:13.5px;font-weight:500;">{{ pk.title }}</span>
+                          <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--goldInk);">{{ pk.chipL }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;">
+                    <div style="font-size:11.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mut);margin-bottom:10px;">{{ T.recurring }}</div>
+                    <div style="display:flex;flex-direction:column;">
+                      <sc-for list="{{ recurRows }}" as="rr" hint-placeholder-count="2">
+                        <div onClick="{{ rr.open }}" style="display:flex;align-items:center;gap:9px;padding:8px 2px;cursor:pointer;border-bottom:1px solid var(--rowLine);">
+                          <span style="width:7px;height:7px;border-radius:50%;background:{{ rr.dotC }};flex-shrink:0;"></span>
+                          <span style="flex:1;font-size:13.5px;font-weight:500;">{{ rr.title }}</span>
+                          <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--mut2);">{{ rr.chipL }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- CALENDAR -->
+          <sc-if value="{{ isCal }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1;min-height:0;overflow-y:auto;padding:18px 24px 24px;">
+              <div style="display:flex;align-items:baseline;gap:14px;">
+                <div style="font-family:'Golos Text',sans-serif;font-weight:500;letter-spacing:-.3px;font-size:26px;line-height:1.2;">{{ T.calendar }}</div>
+                <div style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ok);background:var(--okBg);border:1px solid var(--okBd);border-radius:7px;padding:3px 10px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--ok);"></span>{{ T.gcal }}</div>
+              </div>
+              <div style="display:flex;gap:20px;margin-top:16px;align-items:flex-start;">
+                <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;flex-shrink:0;">
+                  <div style="font-family:'Golos Text',sans-serif;font-style:italic;font-size:18px;margin-bottom:12px;">{{ monthLabel }}</div>
+                  <div style="display:grid;grid-template-columns:repeat(7,46px);gap:4px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:1px;color:var(--mut2);text-align:center;text-transform:uppercase;margin-bottom:6px;">
+                    <span>{{ T.dw1 }}</span><span>{{ T.dw2 }}</span><span>{{ T.dw3 }}</span><span>{{ T.dw4 }}</span><span>{{ T.dw5 }}</span><span>{{ T.dw6 }}</span><span>{{ T.dw7 }}</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:4px;">
+                    <sc-for list="{{ calWeeks }}" as="w" hint-placeholder-count="5">
+                      <div style="display:grid;grid-template-columns:repeat(7,46px);gap:4px;">
+                        <sc-for list="{{ w.days }}" as="dy" hint-placeholder-count="7">
+                          <div onClick="{{ dy.on }}" style="height:46px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;background:{{ dy.bg }};border:1px solid {{ dy.bd }};">
+                            <span style="font-size:12.5px;font-weight:500;color:{{ dy.c }};">{{ dy.n }}</span>
+                            <span style="display:flex;align-items:center;justify-content:center;height:14px;">
+                              <sc-if value="{{ dy.hasN }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;line-height:1;padding:2.5px 5px;border-radius:7px;background:{{ dy.nBg }};color:{{ dy.nC }};">{{ dy.nT }}</span></sc-if>
+                            </span>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="flex:1;min-width:0;max-width:520px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;">
+                  <div style="font-size:11.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mut);margin-bottom:10px;">{{ schedTitle }}</div>
+                  <div style="display:flex;flex-direction:column;">
+                    <sc-for list="{{ schedRows }}" as="s" hint-placeholder-count="5">
+                      <div onClick="{{ s.on }}" style="display:flex;align-items:center;gap:10px;padding:9px 2px;cursor:pointer;border-bottom:1px solid var(--rowLine);">
+                        <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:{{ s.dueC }};width:80px;flex-shrink:0;">{{ s.dateL }}</span>
+                        <span style="width:7px;height:7px;border-radius:50%;background:{{ s.dotC }};flex-shrink:0;"></span>
+                        <span style="flex:1;font-size:13.5px;font-weight:500;">{{ s.title }}</span>
+                        <sc-if value="{{ s.recShow }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut2);">↻ {{ s.recL }}</span></sc-if>
+                      </div>
+                    </sc-for>
+                    <sc-if value="{{ schedEmpty }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Golos Text',sans-serif;font-style:italic;font-size:13px;color:var(--mut2);padding:6px 2px;">{{ T.nothingSched }}</div></sc-if>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <!-- drawer -->
+        <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:40;">
+            <div onClick="{{ dv.close }}" style="position:absolute;inset:0;background:rgba(32,29,23,0.28);"></div>
+            <div style="position:absolute;top:0;right:0;bottom:0;width:392px;background:var(--panel);border-left:1px solid var(--line);box-shadow:-24px 0 48px rgba(32,29,23,0.14);padding:22px 22px 18px;display:flex;flex-direction:column;gap:14px;overflow:hidden;animation:slideIn .22s ease;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <sc-if value="{{ dv.idleShow }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:2px 7px;border-radius:6px;background:{{ dv.idleBg }};color:{{ dv.idleC }};">{{ dv.idleL }}</span></sc-if>
+                <span style="flex:1;"></span>
+                <span onClick="{{ dv.close }}" style="width:26px;height:26px;border-radius:8px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--mut);background:var(--card);" style-hover="color:var(--ink);border-color:var(--lineStrong);"><svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span>
+              </div>
+              <div style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:14px;margin-right:-8px;padding-right:8px;">
+              <div style="font-family:'Golos Text',sans-serif;font-weight:500;letter-spacing:-0.2px;font-size:22px;line-height:1.25;text-wrap:pretty;">{{ dv.title }}</div>
+              <sc-if value="{{ dv.hasProj }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mut);"><span style="width:8px;height:8px;border-radius:50%;background:{{ dv.projColor }};"></span>{{ dv.projName }}<sc-if value="{{ dv.tagShow }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--mut2);margin-left:6px;">{{ dv.tagStr }}</span></sc-if></div></sc-if>
+              <sc-if value="{{ dv.noteShow }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;line-height:1.55;color:var(--mut);background:var(--inset);border-radius:10px;padding:11px 13px;">{{ dv.note }}</div></sc-if>
+              <div style="display:flex;gap:14px;align-items:flex-end;">
+                <div style="flex:1;min-width:0;">
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut2);margin-bottom:7px;">{{ T.status }}</div>
+                  <div style="position:relative;">
+                    <select value="{{ dv.statusVal }}" onChange="{{ dv.onStatusSel }}" style="appearance:none;-webkit-appearance:none;width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 32px 10px 12px;font-family:'Golos Text',sans-serif;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;outline:none;">
+                      <sc-for list="{{ dv.statusList }}" as="o" hint-placeholder-count="4">
+                        <option value="{{ o.v }}">{{ o.L }}</option>
+                      </sc-for>
+                    </select>
+                    <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--mut2);display:flex;"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M4 6.5L8 10.5l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut2);margin-bottom:7px;">{{ T.priority }}</div>
+                  <div style="display:flex;align-items:center;gap:8px;height:39px;">
+                    <sc-for list="{{ dv.prDots }}" as="o" hint-placeholder-count="3">
+                      <span onClick="{{ o.on }}" title="{{ o.title }}" style="width:20px;height:20px;border-radius:50%;background:{{ o.bg }};border:2px solid {{ o.bd }};box-shadow:{{ o.sh }};cursor:pointer;flex-shrink:0;"></span>
+                    </sc-for>
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:var(--mut);min-width:54px;">{{ dv.prCur }}</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut2);margin-bottom:7px;">{{ T.attachments }} · {{ dv.fileN }}</div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                  <sc-for list="{{ dv.files }}" as="f" hint-placeholder-count="2">
+                    <div onClick="{{ f.open }}" style="display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:5px 8px;cursor:pointer;" style-hover="border-color:var(--acc);">
+                      <sc-if value="{{ f.hasSrc }}" hint-placeholder-val="{{ false }}"><div style="width:30px;height:30px;border-radius:6px;background-image:url({{ f.src }});background-size:cover;background-position:center;background-color:var(--inset);"></div></sc-if>
+                      <sc-if value="{{ f.iconImg }}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="color:var(--mut2);"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1.4"></rect><circle cx="5.5" cy="6" r="1.3" fill="currentColor"></circle><path d="M2 12l3.5-3.5 2.5 2.5 3-3.5 3 3.5" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg></sc-if>
+                      <sc-if value="{{ f.iconFile }}" hint-placeholder-val="{{ true }}"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="color:var(--mut2);"><path d="M9 1.5H4.5A1.5 1.5 0 0 0 3 3v10a1.5 1.5 0 0 0 1.5 1.5h7A1.5 1.5 0 0 0 13 13V5.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path><path d="M9 1.5V5.5H13" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg></sc-if>
+                      <span style="font-size:11.5px;font-weight:500;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ f.name }}</span>
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mut2);">{{ f.sizeL }}</span>
+                      <span onClick="{{ f.remove }}" style="display:flex;cursor:pointer;color:var(--mut2);" style-hover="color:var(--hi);"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span>
+                    </div>
+                  </sc-for>
+                  <label style="display:flex;align-items:center;gap:4px;border:1px dashed var(--lineStrong);border-radius:9px;padding:7px 10px;font-size:11.5px;font-weight:600;color:var(--mut);cursor:pointer;" style-hover="border-color:var(--acc);color:var(--acc);">+ {{ T.attach }}<input type="file" multiple="" style="display:none;" onChange="{{ dv.addFiles }}"></label>
+                </div>
+              </div>
+              <div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut2);margin-bottom:7px;">{{ T.comments }} · {{ dv.cmN }}</div>
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                  <div style="display:flex;flex-direction:column;gap:6px;max-height:186px;overflow-y:auto;margin-right:-6px;padding-right:6px;">
+                    <sc-for list="{{ dv.comments }}" as="c" hint-placeholder-count="2">
+                      <div style="background:var(--inset);border-radius:10px;padding:8px 11px;">
+                        <div style="font-size:12.5px;line-height:1.5;">{{ c.text }}</div>
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--mut2);margin-top:3px;">{{ c.time }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="display:flex;gap:6px;">
+                    <input value="{{ dv.cmText }}" onChange="{{ dv.onCmText }}" onKeyDown="{{ dv.cmKey }}" placeholder="{{ T.cmPh }}" style="flex:1;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 11px;font-family:'Golos Text',sans-serif;font-size:12.5px;color:var(--ink);">
+                    <div onClick="{{ dv.addCm }}" style="width:34px;height:34px;border-radius:10px;background:var(--acc);color:var(--onAcc);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;" style-hover="background:var(--accHov);"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M14.5 1.5L7 9M14.5 1.5L10 14.5 7 9 1.5 6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"></path></svg></div>
+                  </div>
+                </div>
+              </div>
+              <div style="border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px;">
+                <sc-for list="{{ dv.metaRows }}" as="m" hint-placeholder-count="3">
+                  <div style="display:flex;font-size:12px;"><span style="width:130px;color:var(--mut2);flex-shrink:0;">{{ m.l }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:{{ m.c }};">{{ m.v }}</span></div>
+                </sc-for>
+                <sc-if value="{{ dv.chatShow }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;font-size:12px;align-items:center;"><span style="width:130px;color:var(--mut2);flex-shrink:0;">{{ T.claudeChat }}</span><a href="{{ dv.chat }}" target="_blank" rel="noreferrer" style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6.5 9.5l3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path><path d="M7.2 4.8l1.2-1.2a2.6 2.6 0 0 1 3.7 3.7l-1.2 1.2M8.8 11.2l-1.2 1.2a2.6 2.6 0 0 1-3.7-3.7l1.2-1.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>{{ T.openChat }}</a></div>
+                </sc-if>
+              </div>
+              </div>
+              <div style="padding-top:4px;display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;gap:8px;">
+                  <div onClick="{{ dv.onDone }}" style="flex:1;text-align:center;font-size:13px;font-weight:600;padding:10px;border-radius:10px;background:var(--ok);color:var(--onInk);cursor:pointer;" style-hover="background:#516F4A;">{{ dv.doneL }}</div>
+                  <div onClick="{{ dv.onBump }}" style="flex:1;text-align:center;font-size:13px;font-weight:600;padding:10px;border-radius:10px;background:var(--acc);color:var(--onAcc);cursor:pointer;" style-hover="background:var(--accHov);">{{ T.bumpTop }}</div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <div onClick="{{ dv.zOpen }}" style="flex:1;text-align:center;font-size:12.5px;font-weight:600;padding:9px;border-radius:10px;border:1px solid var(--line);color:var(--mut);cursor:pointer;background:var(--card);" style-hover="border-color:var(--acc);color:var(--acc);">{{ T.snoozeDots }}</div>
+                  <div onClick="{{ dv.onArchive }}" style="flex:1;text-align:center;font-size:12.5px;font-weight:600;padding:9px;border-radius:10px;border:1px solid var(--line);color:var(--mut2);cursor:pointer;background:var(--card);" style-hover="border-color:var(--hi);color:var(--hi);">{{ T.archive }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- capture modal -->
+        <sc-if value="{{ capOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;">
+            <div onClick="{{ onCloseCap }}" style="position:absolute;inset:0;background:var(--scrimSoft);"></div>
+            <div style="position:relative;width:600px;background:var(--panel);border-radius:18px;box-shadow:0 32px 80px rgba(32,29,23,0.3);padding:24px;display:flex;flex-direction:column;gap:14px;animation:fadeUp .22s ease;">
+              <div>
+                <div style="font-family:'Golos Text',sans-serif;font-weight:500;letter-spacing:-0.2px;font-size:22px;">{{ T.capture }}</div>
+                <div style="font-size:12.5px;color:var(--mut2);margin-top:3px;">{{ T.capSub }}</div>
+              </div>
+              <textarea value="{{ capText }}" onChange="{{ onCapText }}" placeholder="{{ T.capPh }}" style="height:132px;resize:none;background:var(--inset);border:1px solid var(--line);border-radius:12px;padding:13px 14px;font-family:'Golos Text',sans-serif;font-size:13.5px;line-height:1.55;color:var(--ink);"></textarea>
+              <sc-if value="{{ capHasItems }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;">
+                  <sc-for list="{{ capRows }}" as="ci" hint-placeholder-count="3">
+                    <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 11px 9px 14px;">
+                      <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:{{ ci.prBar }};"></span>
+                      <span style="flex:1;font-size:13px;font-weight:500;">{{ ci.title }}</span>
+                      <sc-if value="{{ ci.hasProj }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--mut);"><span style="width:6px;height:6px;border-radius:50%;background:{{ ci.projColor }};"></span>{{ ci.projName }}</span></sc-if>
+                      <span onClick="{{ ci.remove }}" style="width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--mut2);" style-hover="color:var(--hi);"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <div onClick="{{ onExtract }}" style="display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;padding:9px 15px;border-radius:10px;background:var(--acc);color:var(--onAcc);cursor:pointer;" style-hover="background:var(--accHov);"><svg width="12" height="12" viewBox="0 0 16 16"><path d="M8 1l1.8 4.9L14.7 8l-4.9 2.1L8 15l-1.8-4.9L1.3 8l4.9-2.1z" fill="currentColor"></path></svg>{{ capBtnL }}</div>
+                <div onClick="{{ onAddSingle }}" style="font-size:13px;font-weight:600;padding:9px 15px;border-radius:10px;border:1px solid var(--line);color:var(--mut);cursor:pointer;background:var(--card);" style-hover="border-color:var(--acc);color:var(--acc);">{{ T.addOne }}</div>
+                <div style="flex:1;"></div>
+                <sc-if value="{{ capHasItems }}" hint-placeholder-val="{{ false }}">
+                  <div onClick="{{ onAddAll }}" style="font-size:13px;font-weight:600;padding:9px 15px;border-radius:10px;background:var(--ink);color:var(--onInk);cursor:pointer;" style-hover="background:var(--inkHov);">{{ capAddL }}</div>
+                </sc-if>
+                <div onClick="{{ onCloseCap }}" style="font-size:13px;font-weight:600;padding:9px 13px;border-radius:10px;color:var(--mut2);cursor:pointer;" style-hover="color:var(--ink);">{{ T.discard }}</div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- file preview -->
+        <sc-if value="{{ pvOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:40px;">
+            <div onClick="{{ pv.close }}" style="position:absolute;inset:0;background:var(--scrim);"></div>
+            <div style="position:relative;max-width:760px;background:var(--panel);border-radius:16px;box-shadow:0 32px 80px rgba(32,29,23,0.42);padding:14px;display:flex;flex-direction:column;gap:11px;animation:fadeUp .2s ease;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:13.5px;font-weight:600;max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ pv.name }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--mut2);">{{ pv.sizeL }}</span>
+                <span style="flex:1;"></span>
+                <sc-if value="{{ pv.hasSrc }}" hint-placeholder-val="{{ false }}"><a href="{{ pv.src }}" download="{{ pv.name }}" style="font-size:12px;font-weight:600;padding:6px 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);text-decoration:none;color:var(--mut);" style-hover="border-color:var(--acc);color:var(--acc);">{{ T.dl }}</a></sc-if>
+                <span onClick="{{ pv.close }}" style="width:26px;height:26px;border-radius:8px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--mut);background:var(--card);" style-hover="color:var(--ink);border-color:var(--lineStrong);"><svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span>
+              </div>
+              <sc-if value="{{ pv.hasSrc }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;justify-content:center;">{{ pv.imgEl }}</div>
+              </sc-if>
+              <sc-if value="{{ pv.noPrev }}" hint-placeholder-val="{{ true }}">
+                <div style="width:460px;height:280px;border-radius:12px;border:1px dashed var(--lineStrong);background:var(--inset);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;">
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:1.4px;padding:5px 10px;border-radius:7px;background:var(--sel);color:var(--goldInk);">{{ pv.extL }}</span>
+                  <span style="font-family:'Golos Text',sans-serif;font-style:italic;font-size:17px;">{{ T.pvNA }}</span>
+                  <span style="font-size:12px;line-height:1.55;color:var(--mut2);text-align:center;max-width:290px;text-wrap:pretty;">{{ T.pvNAsub }}</span>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- snooze date picker -->
+        <sc-if value="{{ zOpenW }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:55;display:flex;align-items:center;justify-content:center;">
+            <div onClick="{{ zClose }}" style="position:absolute;inset:0;background:var(--scrimSoft);"></div>
+            <div style="position:relative;width:322px;background:var(--panel);border-radius:16px;box-shadow:0 24px 64px rgba(32,29,23,0.3);padding:18px;display:flex;flex-direction:column;gap:12px;animation:fadeUp .2s ease;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="font-family:'Golos Text',sans-serif;font-weight:500;letter-spacing:-0.2px;font-size:18px;flex:1;">{{ T.zTitle }}</div>
+                <span onClick="{{ zClose }}" style="width:24px;height:24px;border-radius:7px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--mut);background:var(--card);" style-hover="color:var(--ink);border-color:var(--lineStrong);"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span>
+              </div>
+              <div style="display:flex;align-items:center;">
+                <span onClick="{{ zPrev }}" style="width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--mut);" style-hover="background:var(--sel);"><svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M10 2.5L4.5 8l5.5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                <span style="flex:1;text-align:center;font-size:13px;font-weight:600;">{{ zMonthLabel }}</span>
+                <span onClick="{{ zNext }}" style="width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--mut);" style-hover="background:var(--sel);"><svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 2.5L11.5 8 6 13.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.8px;color:var(--mut2);text-align:center;text-transform:uppercase;">
+                <span>{{ T.dw1 }}</span><span>{{ T.dw2 }}</span><span>{{ T.dw3 }}</span><span>{{ T.dw4 }}</span><span>{{ T.dw5 }}</span><span>{{ T.dw6 }}</span><span>{{ T.dw7 }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:2px;">
+                <sc-for list="{{ zWeeks }}" as="zw" hint-placeholder-count="5">
+                  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;">
+                    <sc-for list="{{ zw.days }}" as="dz" hint-placeholder-count="7">
+                      <div onClick="{{ dz.on }}" style="height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:500;cursor:{{ dz.cur }};color:{{ dz.c }};background:{{ dz.bg }};" style-hover="background:{{ dz.hbg }};">{{ dz.n }}</div>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- sign in -->
+        <sc-if value="{{ notAuthed }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:70;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:40px;">
+            <div style="width:432px;background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:0 32px 80px rgba(32,29,23,0.16);padding:34px;display:flex;flex-direction:column;gap:22px;">
+              <div>
+                <div style="display:flex;align-items:center;gap:8px;"><svg width="32" height="32" viewBox="0 0 48 48"><circle cx="15" cy="38" r="7.5" style="fill:var(--ink);"></circle><circle cx="24" cy="29" r="2.6" style="fill:var(--ink);"></circle><rect x="25" y="3" width="19" height="19" rx="7" style="fill:none;stroke:var(--ink);" stroke-width="5"></rect><circle cx="40.5" cy="18.5" r="4.4" style="fill:var(--panel);"></circle><circle cx="40.5" cy="18.5" r="3.1" style="fill:var(--acc);"></circle></svg><span style="font-family:'Golos Text',sans-serif;font-weight:400;font-size:26px;line-height:1;letter-spacing:-.3px;color:var(--ink);">b<span style="color:var(--acc);">o</span>ard</span></div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut2);margin-top:6px;">{{ T.tagline }}</div>
+              </div>
+              <div style="font-family:'Golos Text',sans-serif;font-size:19px;line-height:1.5;color:var(--mut);text-wrap:pretty;">{{ T.authSub }}</div>
+              <div style="display:flex;flex-direction:column;gap:9px;">
+                <div onClick="{{ onGoogle }}" style="display:flex;align-items:center;justify-content:center;height:46px;border-radius:12px;border:1px solid var(--lineStrong);background:var(--card);font-size:14px;font-weight:600;cursor:pointer;" style-hover="border-color:var(--acc);color:var(--acc);">{{ T.google }}</div>
+                <div onClick="{{ onApple }}" style="display:flex;align-items:center;justify-content:center;height:46px;border-radius:12px;background:var(--ink);color:var(--onInk);font-size:14px;font-weight:600;cursor:pointer;" style-hover="background:var(--inkHov);">{{ T.apple }}</div>
+              </div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.7;letter-spacing:.4px;color:var(--mut2);">{{ T.authNote }}</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- snackbar -->
+        <sc-if value="{{ snackShow }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:60;background:var(--ink);color:var(--onInk);font-size:12.5px;font-weight:500;padding:9px 18px;border-radius:7px;box-shadow:0 12px 32px rgba(32,29,23,0.3);animation:fadeUp .2s ease;">{{ snack }}</div>
+        </sc-if>
+      </div>
+    </div>
+
+    <!-- ================= MOBILE ================= -->
+    <div data-screen-label="iOS app">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8A8175;margin-bottom:10px;">iOS · 402</div>
+      <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ isDark }}" hint-size="402px,874px">
+        <div style="height:100%;position:relative;z-index:0;overflow:hidden;background:var(--bg);font-family:'Golos Text',sans-serif;color:var(--ink);display:flex;flex-direction:column;">
+          <div style="padding:64px 18px 0;flex-shrink:0;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="display:flex;align-items:center;gap:6px;"><svg width="20" height="20" viewBox="0 0 48 48"><circle cx="15" cy="38" r="7.5" style="fill:var(--ink);"></circle><circle cx="24" cy="29" r="2.6" style="fill:var(--ink);"></circle><rect x="25" y="3" width="19" height="19" rx="7" style="fill:none;stroke:var(--ink);" stroke-width="5"></rect><circle cx="40.5" cy="18.5" r="4.4" style="fill:var(--bg);"></circle><circle cx="40.5" cy="18.5" r="3.1" style="fill:var(--acc);"></circle></svg><span style="font-family:'Golos Text',sans-serif;font-weight:400;font-size:20px;line-height:1;letter-spacing:-.3px;color:var(--ink);">b<span style="color:var(--acc);">o</span>ard</span></div>
+              <div style="flex:1;"></div>
+              <div style="display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--ok);"><span style="width:6px;height:6px;border-radius:50%;background:var(--ok);animation:pulse 2.4s ease-in-out infinite;"></span>{{ T.offlineM }}</div>
+              <div onClick="{{ onMProf }}" style="width:30px;height:30px;border-radius:50%;background:var(--chipBg);color:var(--chipInk);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;flex-shrink:0;">{{ uInit }}</div>
+            </div>
+            <div style="font-family:'Golos Text',sans-serif;font-weight:500;letter-spacing:-.3px;font-size:26px;line-height:1.2;margin-top:10px;">{{ mTitle }}</div>
+            <div style="font-size:11.5px;color:var(--mut2);margin-top:2px;">{{ mSub }}</div>
+          </div>
+          <div style="flex:1;min-height:0;overflow-y:auto;padding:12px 14px 110px;">
+            <sc-if value="{{ mIsBoard }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+                <sc-for list="{{ mCols }}" as="mc" hint-placeholder-count="4">
+                  <div onClick="{{ mc.on }}" style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:7px 11px;border-radius:7px;cursor:pointer;background:{{ mc.bg }};color:{{ mc.c }};border:1px solid {{ mc.bd }};">{{ mc.L }}<span style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;">{{ mc.count }}</span></div>
+                </sc-for>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:9px;">
+                <sc-for list="{{ mCards }}" as="t" hint-placeholder-count="4">
+                  <div onClick="{{ t.tapM }}" style="position:relative;overflow:hidden;background:{{ t.cardBg }};border:1px solid {{ t.cardBd }};border-radius:14px;padding:13px 13px 13px 17px;display:flex;flex-direction:column;gap:7px;">
+                    <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:{{ t.prBar }};"></span>
+                    <sc-if value="{{ t.topShow }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:flex;align-items:center;gap:6px;">
+                      <sc-if value="{{ t.idleShow }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 6px;border-radius:7px;background:{{ t.idleBg }};color:{{ t.idleC }};">{{ t.idleL }}</span></sc-if>
+                      <span style="flex:1;"></span>
+                      <sc-if value="{{ t.dueShow }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:{{ t.dueC }};">{{ t.dueL }}</span></sc-if>
+                    </div>
+                    </sc-if>
+                    <div style="font-size:14.5px;font-weight:500;line-height:1.4;">{{ t.title }}</div>
+                    <div style="display:flex;align-items:center;gap:9px;">
+                      <sc-if value="{{ t.hasProj }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--mut);"><span style="width:6px;height:6px;border-radius:50%;background:{{ t.projColor }};"></span>{{ t.projName }}</span></sc-if>
+                      <sc-if value="{{ t.tagShow }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut2);">{{ t.tagStr }}</span></sc-if>
+                      <span style="flex:1;"></span>
+                      <sc-if value="{{ t.cmShow }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:3px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut2);"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M14 10.5a1.5 1.5 0 0 1-1.5 1.5H6l-3.5 3V3.5A1.5 1.5 0 0 1 4 2h8.5A1.5 1.5 0 0 1 14 3.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg>{{ t.cmN }}</span></sc-if>
+                      <sc-if value="{{ t.fileShow }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:3px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut2);"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M13 7.5l-5 5a3.2 3.2 0 0 1-4.5-4.5l5.5-5.5a2.1 2.1 0 0 1 3 3L6.7 10.8a1 1 0 0 1-1.5-1.5L10 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>{{ t.fileN }}</span></sc-if>
+                      <sc-if value="{{ t.recurShow }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut2);">↻ {{ t.recurL }}</span></sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ mEmpty }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Golos Text',sans-serif;font-style:italic;font-size:14px;color:var(--mut2);padding:8px 4px;">{{ T.nothingHere }}</div></sc-if>
+              </div>
+            </sc-if>
+            <sc-if value="{{ mIsRes }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:9px;">
+                <sc-for list="{{ resRows }}" as="r" hint-placeholder-count="4">
+                  <div style="background:var(--card);border:1px solid var(--goldBd);border-radius:14px;padding:13px;">
+                    <div onClick="{{ r.tapM }}" style="display:flex;align-items:center;gap:11px;cursor:pointer;">
+                      <div style="width:46px;flex-shrink:0;text-align:center;">
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:var(--goldInk);line-height:1;">{{ r.idleNL }}</div>
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.8px;text-transform:uppercase;color:var(--goldFaint);margin-top:2px;">{{ T.daysShort }}</div>
+                      </div>
+                      <div style="flex:1;min-width:0;">
+                        <div style="font-size:13.5px;font-weight:600;line-height:1.3;">{{ r.title }}</div>
+                        <div style="font-size:10.5px;color:var(--mut2);margin-top:2px;">{{ r.sub }}</div>
+                      </div>
+                    </div>
+                    <div style="display:flex;gap:6px;margin-top:10px;">
+                      <div onClick="{{ r.keep }}" style="flex:1;text-align:center;font-size:11.5px;font-weight:600;padding:8px 4px;border-radius:9px;background:var(--acc);color:var(--onAcc);cursor:pointer;">{{ T.keep }}</div>
+                      <div onClick="{{ r.zOpenM }}" style="flex:1;text-align:center;font-size:11.5px;font-weight:600;padding:9px 4px;border-radius:9px;border:1px solid var(--goldBd);color:var(--mut);background:var(--card);cursor:pointer;">{{ T.snoozeDots }}</div>
+                      <div onClick="{{ r.drop }}" style="flex:1;text-align:center;font-size:11.5px;font-weight:600;padding:8px 4px;border-radius:9px;border:1px solid var(--goldBd);color:var(--mut2);background:var(--card);cursor:pointer;">{{ T.archive }}</div>
+                    </div>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ resEmpty }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Golos Text',sans-serif;font-style:italic;font-size:14px;color:var(--mut2);padding:8px 4px;">{{ T.noDust }}</div></sc-if>
+              </div>
+            </sc-if>
+            <sc-if value="{{ mIsDig }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;">
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--mut2);margin-bottom:9px;">{{ digStats }}</div>
+                  <div style="font-family:'Golos Text',sans-serif;font-size:16px;line-height:1.55;text-wrap:pretty;">{{ digPara }}</div>
+                  <div onClick="{{ onRegen }}" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:8px 13px;border-radius:9px;border:1px solid var(--line);color:var(--acc);cursor:pointer;background:var(--card);margin-top:12px;">
+                    <svg width="11" height="11" viewBox="0 0 16 16"><path d="M8 1l1.8 4.9L14.7 8l-4.9 2.1L8 15l-1.8-4.9L1.3 8l4.9-2.1z" fill="currentColor"></path></svg>{{ digBtnL }}
+                  </div>
+                </div>
+                <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;">
+                  <div style="font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--mut);margin-bottom:8px;">{{ T.dueToday }}</div>
+                  <sc-for list="{{ dueRows }}" as="dr" hint-placeholder-count="2">
+                    <div onClick="{{ dr.tapM }}" style="display:flex;align-items:center;gap:8px;padding:9px 2px;cursor:pointer;border-bottom:1px solid var(--rowLine);">
+                      <span style="width:6px;height:6px;border-radius:50%;background:{{ dr.dotC }};flex-shrink:0;"></span>
+                      <span style="flex:1;font-size:13px;font-weight:500;">{{ dr.title }}</span>
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:{{ dr.chipC }};">{{ dr.chipL }}</span>
+                    </div>
+                  </sc-for>
+                  <sc-if value="{{ dueEmpty }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Golos Text',sans-serif;font-style:italic;font-size:12.5px;color:var(--mut2);padding:4px 0;">{{ T.nothingDue }}</div></sc-if>
+                </div>
+                <div style="background:var(--card);border:1px solid var(--goldBd);border-radius:16px;padding:14px 16px;">
+                  <div style="font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--goldInk);margin-bottom:8px;">{{ T.dustyPicks }}</div>
+                  <sc-for list="{{ pickRows }}" as="pk" hint-placeholder-count="3">
+                    <div onClick="{{ pk.tapM }}" style="display:flex;align-items:center;gap:8px;padding:9px 2px;cursor:pointer;border-bottom:1px solid var(--rowLineGold);">
+                      <span style="width:6px;height:6px;border-radius:50%;background:{{ pk.dotC }};flex-shrink:0;"></span>
+                      <span style="flex:1;font-size:13px;font-weight:500;">{{ pk.title }}</span>
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--goldInk);">{{ pk.chipL }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ mIsCal }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;">
+                  <div style="font-family:'Golos Text',sans-serif;font-style:italic;font-size:15px;margin-bottom:9px;">{{ monthLabel }}</div>
+                  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.8px;color:var(--mut2);text-align:center;text-transform:uppercase;margin-bottom:4px;">
+                    <span>{{ T.dw1 }}</span><span>{{ T.dw2 }}</span><span>{{ T.dw3 }}</span><span>{{ T.dw4 }}</span><span>{{ T.dw5 }}</span><span>{{ T.dw6 }}</span><span>{{ T.dw7 }}</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:3px;">
+                    <sc-for list="{{ calWeeks }}" as="w" hint-placeholder-count="5">
+                      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;">
+                        <sc-for list="{{ w.days }}" as="dy" hint-placeholder-count="7">
+                          <div onClick="{{ dy.on }}" style="height:44px;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;background:{{ dy.bg }};border:1px solid {{ dy.bd }};">
+                            <span style="font-size:11.5px;font-weight:500;color:{{ dy.c }};">{{ dy.n }}</span>
+                            <span style="display:flex;align-items:center;justify-content:center;height:13px;">
+                              <sc-if value="{{ dy.hasN }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;line-height:1;padding:2px 4.5px;border-radius:7px;background:{{ dy.nBg }};color:{{ dy.nC }};">{{ dy.nT }}</span></sc-if>
+                            </span>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;">
+                  <div style="font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--mut);margin-bottom:8px;">{{ schedTitle }}</div>
+                  <sc-for list="{{ schedRows }}" as="s" hint-placeholder-count="5">
+                    <div onClick="{{ s.tapM }}" style="display:flex;align-items:center;gap:8px;padding:9px 2px;cursor:pointer;border-bottom:1px solid var(--rowLine);">
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:{{ s.dueC }};width:66px;flex-shrink:0;">{{ s.dateL }}</span>
+                      <span style="width:6px;height:6px;border-radius:50%;background:{{ s.dotC }};flex-shrink:0;"></span>
+                      <span style="flex:1;font-size:13px;font-weight:500;">{{ s.title }}</span>
+                    </div>
+                  </sc-for>
+                  <sc-if value="{{ schedEmpty }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Golos Text',sans-serif;font-style:italic;font-size:12.5px;color:var(--mut2);padding:4px 0;">{{ T.nothingSched }}</div></sc-if>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+
+          <!-- tab bar -->
+          <div style="position:absolute;left:0;right:0;bottom:0;z-index:30;background:var(--tabBg);backdrop-filter:blur(14px);border-top:1px solid var(--lineStrong);box-shadow:0 -8px 24px rgba(0,0,0,0.08);display:flex;align-items:flex-start;padding:10px 10px 26px;">
+            <div onClick="{{ onMBoard }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ mBoardC }};padding-top:4px;">
+              <svg width="19" height="19" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="2" width="3.4" height="12" rx="1" stroke="currentColor" stroke-width="1.5"></rect><rect x="6.3" y="2" width="3.4" height="8.5" rx="1" stroke="currentColor" stroke-width="1.5"></rect><rect x="11.1" y="2" width="3.4" height="5.5" rx="1" stroke="currentColor" stroke-width="1.5"></rect></svg>
+              <span style="font-size:10px;font-weight:600;">{{ T.board }}</span>
+            </div>
+            <div onClick="{{ onMRes }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ mResC }};padding-top:4px;position:relative;">
+              <svg width="19" height="19" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.5"></circle><path d="M8 4.8V8l2.4 1.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;">{{ T.resurface }}</span>
+              <sc-if value="{{ resBadgeShow }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:0;right:16px;min-width:15px;height:15px;border-radius:7px;background:var(--acc);color:var(--onAcc);font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;padding:0 4px;">{{ resBadge }}</span></sc-if>
+            </div>
+            <div onClick="{{ onMCap }}" style="width:54px;height:54px;border-radius:50%;background:var(--acc);color:var(--onAcc);display:flex;align-items:center;justify-content:center;cursor:pointer;margin:-14px 6px 0;box-shadow:0 10px 24px rgba(188,86,54,0.4);flex-shrink:0;" style-hover="background:var(--accHov);">
+              <svg width="22" height="22" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+            </div>
+            <div onClick="{{ onMDig }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ mDigC }};padding-top:4px;">
+              <svg width="19" height="19" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="1.5" width="11" height="13" rx="1.5" stroke="currentColor" stroke-width="1.5"></rect><path d="M5.2 5h5.6M5.2 8h5.6M5.2 11h3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;">{{ T.digest }}</span>
+            </div>
+            <div onClick="{{ onMCal }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ mCalC }};padding-top:4px;">
+              <svg width="19" height="19" viewBox="0 0 16 16" fill="none"><rect x="1.8" y="2.8" width="12.4" height="11.4" rx="1.5" stroke="currentColor" stroke-width="1.5"></rect><path d="M1.8 6.4h12.4M5.3 1.2v3M10.7 1.2v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+              <span style="font-size:10px;font-weight:600;">{{ T.calendar }}</span>
+            </div>
+          </div>
+
+          <!-- mobile task sheet -->
+          <sc-if value="{{ mOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;z-index:40;">
+              <div onClick="{{ mv.close }}" style="position:absolute;inset:0;background:var(--scrimSoft);"></div>
+              <div style="position:absolute;left:0;right:0;bottom:0;background:var(--panel);border-radius:22px 22px 0 0;padding:14px 18px 34px;display:flex;flex-direction:column;gap:12px;animation:sheetUp .24s ease;box-shadow:0 -16px 48px rgba(32,29,23,0.2);">
+                <div style="width:40px;height:4px;border-radius:2px;background:var(--lineStrong);margin:0 auto;"></div>
+                <div style="display:flex;align-items:center;gap:7px;">
+                  <sc-if value="{{ mv.idleShow }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 6px;border-radius:6px;background:{{ mv.idleBg }};color:{{ mv.idleC }};">{{ mv.idleL }}</span></sc-if>
+                  <sc-if value="{{ mv.hasProj }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--mut);"><span style="width:6px;height:6px;border-radius:50%;background:{{ mv.projColor }};"></span>{{ mv.projName }}</span></sc-if>
+                </div>
+                <div style="font-family:'Golos Text',sans-serif;font-weight:500;letter-spacing:-0.2px;font-size:19px;line-height:1.3;">{{ mv.title }}</div>
+                <div style="display:flex;gap:10px;align-items:center;">
+                  <div style="flex:1;min-width:0;position:relative;">
+                    <select value="{{ mv.statusVal }}" onChange="{{ mv.onStatusSel }}" style="appearance:none;-webkit-appearance:none;width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 32px 11px 12px;font-family:'Golos Text',sans-serif;font-size:13px;font-weight:600;color:var(--ink);outline:none;">
+                      <sc-for list="{{ mv.statusList }}" as="o" hint-placeholder-count="4">
+                        <option value="{{ o.v }}">{{ o.L }}</option>
+                      </sc-for>
+                    </select>
+                    <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--mut2);display:flex;"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M4 6.5L8 10.5l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:9px;flex-shrink:0;">
+                    <sc-for list="{{ mv.prDots }}" as="o" hint-placeholder-count="3">
+                      <span onClick="{{ o.on }}" title="{{ o.title }}" style="width:22px;height:22px;border-radius:50%;background:{{ o.bg }};border:2px solid {{ o.bd }};box-shadow:{{ o.sh }};flex-shrink:0;"></span>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="display:flex;gap:7px;">
+                  <div onClick="{{ mv.onDone }}" style="flex:1;text-align:center;font-size:12.5px;font-weight:600;padding:11px;border-radius:10px;background:var(--ok);color:var(--onInk);cursor:pointer;">{{ mv.doneL }}</div>
+                  <div onClick="{{ mv.onBump }}" style="flex:1;text-align:center;font-size:12.5px;font-weight:600;padding:11px;border-radius:10px;background:var(--acc);color:var(--onAcc);cursor:pointer;">{{ T.bump }}</div>
+                  <div onClick="{{ mv.zOpenM }}" style="flex:1;text-align:center;font-size:12.5px;font-weight:600;padding:11px;border-radius:10px;border:1px solid var(--line);color:var(--mut);background:var(--card);cursor:pointer;">{{ T.snoozeDots }}</div>
+                </div>
+                <div style="display:flex;gap:6px;overflow-x:auto;align-items:center;padding-bottom:2px;">
+                  <sc-for list="{{ mv.files }}" as="f" hint-placeholder-count="2">
+                    <div onClick="{{ f.open }}" style="display:flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:5px 8px;flex-shrink:0;cursor:pointer;">
+                      <sc-if value="{{ f.hasSrc }}" hint-placeholder-val="{{ false }}"><div style="width:26px;height:26px;border-radius:6px;background-image:url({{ f.src }});background-size:cover;background-position:center;background-color:var(--inset);"></div></sc-if>
+                      <sc-if value="{{ f.iconImg }}" hint-placeholder-val="{{ false }}"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="color:var(--mut2);"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1.4"></rect><circle cx="5.5" cy="6" r="1.3" fill="currentColor"></circle><path d="M2 12l3.5-3.5 2.5 2.5 3-3.5 3 3.5" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg></sc-if>
+                      <sc-if value="{{ f.iconFile }}" hint-placeholder-val="{{ true }}"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" style="color:var(--mut2);"><path d="M9 1.5H4.5A1.5 1.5 0 0 0 3 3v10a1.5 1.5 0 0 0 1.5 1.5h7A1.5 1.5 0 0 0 13 13V5.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path><path d="M9 1.5V5.5H13" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg></sc-if>
+                      <span style="font-size:10.5px;font-weight:500;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ f.name }}</span>
+                      <span onClick="{{ f.remove }}" style="display:flex;cursor:pointer;color:var(--mut2);"><svg width="8" height="8" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span>
+                    </div>
+                  </sc-for>
+                  <label style="display:flex;align-items:center;gap:4px;border:1px dashed var(--lineStrong);border-radius:9px;padding:7px 10px;font-size:10.5px;font-weight:600;color:var(--mut);cursor:pointer;flex-shrink:0;">+ {{ T.attach }}<input type="file" multiple="" style="display:none;" onChange="{{ mv.addFiles }}"></label>
+                </div>
+                <sc-if value="{{ mv.cmShow }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:5px;max-height:120px;overflow-y:auto;">
+                    <sc-for list="{{ mv.comments }}" as="c" hint-placeholder-count="2">
+                      <div style="background:var(--inset);border-radius:10px;padding:7px 10px;">
+                        <div style="font-size:12px;line-height:1.45;">{{ c.text }}</div>
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--mut2);margin-top:2px;">{{ c.time }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <div style="display:flex;gap:6px;">
+                  <input value="{{ mv.cmText }}" onChange="{{ mv.onCmText }}" onKeyDown="{{ mv.cmKey }}" placeholder="{{ T.cmPh }}" style="flex:1;background:var(--inset);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-family:'Golos Text',sans-serif;font-size:12.5px;color:var(--ink);">
+                  <div onClick="{{ mv.addCm }}" style="width:40px;height:40px;border-radius:10px;background:var(--acc);color:var(--onAcc);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M14.5 1.5L7 9M14.5 1.5L10 14.5 7 9 1.5 6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"></path></svg></div>
+                </div>
+                <sc-if value="{{ mv.chatShow }}" hint-placeholder-val="{{ false }}"><a href="{{ mv.chat }}" target="_blank" rel="noreferrer" style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:12.5px;font-weight:600;padding:11px;border-radius:10px;border:1px solid var(--line);text-decoration:none;background:var(--card);"><svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6.5 9.5l3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path><path d="M7.2 4.8l1.2-1.2a2.6 2.6 0 0 1 3.7 3.7l-1.2 1.2M8.8 11.2l-1.2 1.2a2.6 2.6 0 0 1-3.7-3.7l1.2-1.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>{{ T.openChat }}</a></sc-if>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- mobile capture sheet -->
+          <sc-if value="{{ mCapOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;z-index:50;">
+              <div onClick="{{ onCloseCap }}" style="position:absolute;inset:0;background:var(--scrimSoft);"></div>
+              <div style="position:absolute;left:0;right:0;bottom:0;background:var(--panel);border-radius:22px 22px 0 0;padding:14px 18px 34px;display:flex;flex-direction:column;gap:11px;animation:sheetUp .24s ease;box-shadow:0 -16px 48px rgba(32,29,23,0.2);">
+                <div style="width:40px;height:4px;border-radius:2px;background:var(--lineStrong);margin:0 auto;"></div>
+                <div style="font-family:'Golos Text',sans-serif;font-weight:500;letter-spacing:-0.2px;font-size:19px;">{{ T.capture }}</div>
+                <textarea value="{{ capText }}" onChange="{{ onCapText }}" placeholder="{{ T.capPhM }}" style="height:96px;resize:none;background:var(--inset);border:1px solid var(--line);border-radius:12px;padding:12px;font-family:'Golos Text',sans-serif;font-size:13px;line-height:1.5;color:var(--ink);"></textarea>
+                <sc-if value="{{ capHasItems }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:5px;max-height:150px;overflow-y:auto;">
+                    <sc-for list="{{ capRows }}" as="ci" hint-placeholder-count="3">
+                      <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px 8px 13px;">
+                        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:{{ ci.prBar }};"></span>
+                        <span style="flex:1;font-size:12.5px;font-weight:500;">{{ ci.title }}</span>
+                        <span onClick="{{ ci.remove }}" style="width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--mut2);"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <div style="display:flex;gap:7px;">
+                  <div onClick="{{ onExtract }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;font-size:12.5px;font-weight:600;padding:11px;border-radius:10px;background:var(--acc);color:var(--onAcc);cursor:pointer;"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M8 1l1.8 4.9L14.7 8l-4.9 2.1L8 15l-1.8-4.9L1.3 8l4.9-2.1z" fill="currentColor"></path></svg>{{ capBtnL }}</div>
+                  <sc-if value="{{ capHasItems }}" hint-placeholder-val="{{ false }}"><div onClick="{{ onAddAll }}" style="flex:1;text-align:center;font-size:12.5px;font-weight:600;padding:11px;border-radius:10px;background:var(--ink);color:var(--onInk);cursor:pointer;">{{ capAddL }}</div></sc-if>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- mobile profile sheet -->
+          <sc-if value="{{ mProfOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;z-index:56;">
+              <div onClick="{{ mProfClose }}" style="position:absolute;inset:0;background:var(--scrimSoft);"></div>
+              <div style="position:absolute;left:0;right:0;bottom:0;background:var(--panel);border-radius:22px 22px 0 0;padding:14px 18px 34px;display:flex;flex-direction:column;gap:15px;animation:sheetUp .24s ease;box-shadow:0 -16px 48px rgba(32,29,23,0.2);">
+                <div style="width:40px;height:4px;border-radius:2px;background:var(--lineStrong);margin:0 auto;"></div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <span style="width:42px;height:42px;border-radius:50%;background:var(--chipBg);color:var(--chipInk);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;flex-shrink:0;">{{ uInit }}</span>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:15px;font-weight:600;">{{ uName }}</div>
+                    <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--mut2);">{{ uEmail }}</div>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut2);margin-bottom:7px;">{{ T.language }}</div>
+                  <div style="display:flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;">
+                    <div onClick="{{ onEn }}" style="flex:1;text-align:center;padding:13px 0;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;background:{{ enBg }};color:{{ enC }};">EN</div>
+                    <div onClick="{{ onRu }}" style="flex:1;text-align:center;padding:13px 0;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;background:{{ ruBg }};color:{{ ruC }};">RU</div>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut2);margin-bottom:7px;">{{ T.theme }}</div>
+                  <div style="display:flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;">
+                    <div onClick="{{ onThL }}" style="flex:1;text-align:center;padding:13px 0;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;background:{{ thLBg }};color:{{ thLC }};">{{ T.light }}</div>
+                    <div onClick="{{ onThD }}" style="flex:1;text-align:center;padding:13px 0;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;background:{{ thDBg }};color:{{ thDC }};">{{ T.dark }}</div>
+                  </div>
+                </div>
+                <div onClick="{{ onSignOut }}" style="text-align:center;font-size:13.5px;font-weight:600;color:var(--hi);padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--card);">{{ T.signOut }}</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- mobile sign in -->
+          <sc-if value="{{ notAuthed }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;z-index:70;background:var(--bg);display:flex;flex-direction:column;padding:96px 22px 44px;">
+              <div style="display:flex;align-items:center;gap:8px;"><svg width="32" height="32" viewBox="0 0 48 48"><circle cx="15" cy="38" r="7.5" style="fill:var(--ink);"></circle><circle cx="24" cy="29" r="2.6" style="fill:var(--ink);"></circle><rect x="25" y="3" width="19" height="19" rx="7" style="fill:none;stroke:var(--ink);" stroke-width="5"></rect><circle cx="40.5" cy="18.5" r="4.4" style="fill:var(--bg);"></circle><circle cx="40.5" cy="18.5" r="3.1" style="fill:var(--acc);"></circle></svg><span style="font-family:'Golos Text',sans-serif;font-weight:400;font-size:26px;line-height:1;letter-spacing:-.3px;color:var(--ink);">b<span style="color:var(--acc);">o</span>ard</span></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut2);margin-top:6px;">{{ T.tagline }}</div>
+              <div style="font-family:'Golos Text',sans-serif;font-size:20px;line-height:1.5;color:var(--mut);margin-top:26px;text-wrap:pretty;">{{ T.authSub }}</div>
+              <div style="flex:1;"></div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div onClick="{{ onGoogle }}" style="display:flex;align-items:center;justify-content:center;height:52px;border-radius:14px;border:1px solid var(--lineStrong);background:var(--card);font-size:14.5px;font-weight:600;">{{ T.google }}</div>
+                <div onClick="{{ onApple }}" style="display:flex;align-items:center;justify-content:center;height:52px;border-radius:14px;background:var(--ink);color:var(--onInk);font-size:14.5px;font-weight:600;">{{ T.apple }}</div>
+              </div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.7;letter-spacing:.4px;color:var(--mut2);margin-top:16px;">{{ T.authNote }}</div>
+            </div>
+          </sc-if>
+
+          <!-- mobile file preview -->
+          <sc-if value="{{ mPvOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;z-index:60;background:rgba(32,29,23,0.9);display:flex;flex-direction:column;padding:52px 14px 30px;gap:12px;">
+              <div style="display:flex;align-items:center;gap:9px;">
+                <span style="flex:1;min-width:0;font-size:12.5px;font-weight:600;color:#F2EDE4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ mPv.name }}</span>
+                <sc-if value="{{ mPv.hasSrc }}" hint-placeholder-val="{{ false }}"><a href="{{ mPv.src }}" download="{{ mPv.name }}" style="font-size:11.5px;font-weight:600;padding:6px 10px;border-radius:8px;border:1px solid rgba(245,242,234,0.3);color:#F2EDE4;text-decoration:none;">{{ T.dl }}</a></sc-if>
+                <span onClick="{{ mPv.close }}" style="width:30px;height:30px;border-radius:9px;border:1px solid rgba(245,242,234,0.3);display:flex;align-items:center;justify-content:center;color:#F2EDE4;flex-shrink:0;"><svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span>
+              </div>
+              <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;">
+                <sc-if value="{{ mPv.hasSrc }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:center;justify-content:center;max-width:100%;max-height:100%;">{{ mPv.imgEl }}</div>
+                </sc-if>
+                <sc-if value="{{ mPv.noPrev }}" hint-placeholder-val="{{ true }}">
+                  <div style="width:100%;border-radius:14px;border:1px dashed rgba(245,242,234,0.28);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:34px 20px;">
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:1.4px;padding:5px 10px;border-radius:7px;background:rgba(245,242,234,0.12);color:#F2EDE4;">{{ mPv.extL }}</span>
+                    <span style="font-family:'Golos Text',sans-serif;font-style:italic;font-size:16px;color:#F2EDE4;">{{ T.pvNA }}</span>
+                    <span style="font-size:11.5px;line-height:1.5;color:rgba(245,242,234,0.7);text-align:center;text-wrap:pretty;">{{ T.pvNAsub }}</span>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- mobile snooze sheet -->
+          <sc-if value="{{ zOpenM }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;z-index:55;">
+              <div onClick="{{ zClose }}" style="position:absolute;inset:0;background:var(--scrimSoft);"></div>
+              <div style="position:absolute;left:0;right:0;bottom:0;background:var(--panel);border-radius:22px 22px 0 0;padding:14px 18px 34px;display:flex;flex-direction:column;gap:11px;animation:sheetUp .24s ease;box-shadow:0 -16px 48px rgba(32,29,23,0.2);">
+                <div style="width:40px;height:4px;border-radius:2px;background:var(--lineStrong);margin:0 auto;"></div>
+                <div style="font-family:'Golos Text',sans-serif;font-weight:500;letter-spacing:-0.2px;font-size:19px;">{{ T.zTitle }}</div>
+                <div style="display:flex;align-items:center;">
+                  <span onClick="{{ zPrev }}" style="width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--mut);"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M10 2.5L4.5 8l5.5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                  <span style="flex:1;text-align:center;font-size:13.5px;font-weight:600;">{{ zMonthLabel }}</span>
+                  <span onClick="{{ zNext }}" style="width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--mut);"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 2.5L11.5 8 6 13.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.8px;color:var(--mut2);text-align:center;text-transform:uppercase;">
+                  <span>{{ T.dw1 }}</span><span>{{ T.dw2 }}</span><span>{{ T.dw3 }}</span><span>{{ T.dw4 }}</span><span>{{ T.dw5 }}</span><span>{{ T.dw6 }}</span><span>{{ T.dw7 }}</span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:2px;">
+                  <sc-for list="{{ zWeeks }}" as="zw" hint-placeholder-count="5">
+                    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;">
+                      <sc-for list="{{ zw.days }}" as="dz" hint-placeholder-count="7">
+                        <div onClick="{{ dz.on }}" style="height:44px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;cursor:{{ dz.cur }};color:{{ dz.c }};background:{{ dz.bg }};">{{ dz.n }}</div>
+                      </sc-for>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </x-import>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;staleDays&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:7,&quot;min&quot;:3,&quot;max&quot;:30,&quot;step&quot;:1,&quot;unit&quot;:&quot;d&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;autoBump&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;showDone&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Board&quot;}}">
+class Component extends DCLogic {
+  state = this.seedState();
+
+  LNG = {
+    en: {
+      tagline: 'a board for thinking', board: 'Board', resurface: 'Review', digest: 'Digest', calendar: 'Calendar',
+      projects: 'Projects', allProjects: 'All projects', offline: 'Offline-ready', synced: 'synced just now', offlineM: 'offline-ready',
+      searchPh: 'Search tasks…', capture: 'Capture', chat: 'chat', nothingHere: 'nothing here — nice.',
+      daysIdle: 'days idle', daysShort: 'days', keep: 'Still relevant', snoozeLbl: 'Snooze', snoozeDots: 'Snooze…', zTitle: 'Snooze until…', zUntil: 'Snoozed until ', archive: 'Archive', bump: 'Bump',
+      noDust: 'Nothing forgotten. Check back in a few days.',
+      digTitle: 'Daily digest', digNote: 'drafted by Claude · refreshes every morning at 8:00',
+      dueToday: 'Due today', dustyPicks: 'Forgotten', recurring: 'Recurring',
+      nothingDue: 'nothing due — clear runway.', nothingSched: 'nothing scheduled this day.',
+      gcal: 'Google Calendar · two-way sync',
+      dw1: 'Mo', dw2: 'Tu', dw3: 'We', dw4: 'Th', dw5: 'Fr', dw6: 'Sa', dw7: 'Su',
+      status: 'Status', priority: 'Priority', claudeChat: 'Claude chat', openChat: 'Open linked chat', bumpTop: 'Bump to top',
+      pvNA: 'No preview available', pvNAsub: 'This file is attached by reference — open it in the app it came from.', dl: 'Download',
+      authSub: 'Your board, your thinking. Sign in to keep tasks, projects and Claude chats in sync.', google: 'Continue with Google', apple: 'Continue with Apple',
+      authNote: 'No passwords. We only read your name and email.', language: 'Language', signOut: 'Sign out', signedWith: 'via ', theme: 'Theme', light: 'Light', dark: 'Dark',
+      attachments: 'Attachments', comments: 'Comments', attach: 'Attach', cmPh: 'Write a comment… (Enter)', justNow: 'just now', projFilesL: 'Project files',
+      capSub: 'Paste anything — a Claude chat, meeting notes, a braindump. It becomes tasks.',
+      capPh: 'e.g. — figure out pricing page copy\n— urgent: renew domain\n— ask Claude about embeddings #research',
+      capPhM: 'Paste thoughts, notes, a chat…',
+      addOne: 'Add as one task', discard: 'Discard',
+      sInbox: 'Inbox', sFocus: 'In focus', sWaiting: 'Waiting', sWaitingOn: 'Waiting on', sDone: 'Done',
+      all: 'All', extract: 'Extract tasks', extracting: 'Extracting…', regen: 'Regenerate', thinking: 'Thinking…',
+      markDone: 'Mark done', reopen: 'Reopen',
+      today: 'today', tomorrow: 'tomorrow', overdue: 'overdue', snoozed: 'snoozed', idleSuf: 'd idle',
+      created: 'Created', lastTouched: 'Last touched', due: 'Due', repeats: 'Repeats', everyWeek: 'every week', weekly: 'weekly',
+      daysAgo: ' days ago', noProject: 'No project', lastT: 'last touched ',
+      sched: 'Scheduled', schedSel: 'Scheduled · selected day',
+      bumpSort: 'forgotten tasks first', prSort: 'sorted by priority',
+      tDone: 'Done — moved to Done', tBump: 'Bumped — idle counter reset', tSnooze: 'Snoozed for 7 days', tArch: 'Archived',
+      tKeep: 'Kept — bumped to top of its column', tMoved: 'Moved to ', tReopen: 'Reopened into In focus', tDoneS: 'Done ✓',
+      DOW: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+      DOWS: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+      MON: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+      MONF: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+    },
+    ru: {
+      tagline: 'доска для мыслей', board: 'Доска', resurface: 'Разбор', digest: 'Дайджест', calendar: 'Календарь',
+      projects: 'Проекты', allProjects: 'Все проекты', offline: 'Офлайн-режим', synced: 'синхронизировано', offlineM: 'офлайн',
+      searchPh: 'Поиск задач…', capture: 'Захват', chat: 'чат', nothingHere: 'здесь пусто — отлично.',
+      daysIdle: 'дней простоя', daysShort: 'дней', keep: 'Актуально', snoozeLbl: 'Отложить', snoozeDots: 'Отложить…', zTitle: 'Отложить до…', zUntil: 'Отложено до ', archive: 'В архив', bump: 'Поднять',
+      noDust: 'Забытых задач нет. Загляните через пару дней.',
+      digTitle: 'Дневной дайджест', digNote: 'пишет Claude · обновляется каждое утро в 8:00',
+      dueToday: 'На сегодня', dustyPicks: 'Забытые', recurring: 'Повторяющиеся',
+      nothingDue: 'дедлайнов нет — чистый день.', nothingSched: 'на этот день ничего нет.',
+      gcal: 'Google Calendar · двусторонняя синхронизация',
+      dw1: 'Пн', dw2: 'Вт', dw3: 'Ср', dw4: 'Чт', dw5: 'Пт', dw6: 'Сб', dw7: 'Вс',
+      status: 'Статус', priority: 'Приоритет', claudeChat: 'Чат Claude', openChat: 'Открыть чат', bumpTop: 'Поднять наверх',
+      pvNA: 'Предпросмотр недоступен', pvNAsub: 'Файл приложен ссылкой — откройте его в исходном приложении.', dl: 'Скачать',
+      authSub: 'Ваша доска, ваши мысли. Войдите, чтобы задачи, проекты и чаты с Claude были везде.', google: 'Продолжить с Google', apple: 'Продолжить с Apple',
+      authNote: 'Без паролей. Читаем только имя и e-mail.', language: 'Язык', signOut: 'Выйти', signedWith: 'через ', theme: 'Тема', light: 'Светлая', dark: 'Тёмная',
+      attachments: 'Вложения', comments: 'Комментарии', attach: 'Прикрепить', cmPh: 'Комментарий… (Enter)', justNow: 'только что', projFilesL: 'Файлы проекта',
+      capSub: 'Вставьте что угодно — чат с Claude, заметки, поток мыслей. Это станет задачами.',
+      capPh: 'напр. — продумать текст страницы тарифов\n— срочно: продлить домен\n— спросить Claude про эмбеддинги #research',
+      capPhM: 'Вставьте мысли, заметки, чат…',
+      addOne: 'Добавить как одну задачу', discard: 'Отмена',
+      sInbox: 'Инбокс', sFocus: 'В фокусе', sWaiting: 'Ожидание', sWaitingOn: 'Ожидание', sDone: 'Готово',
+      all: 'Все', extract: 'Извлечь задачи', extracting: 'Извлекаю…', regen: 'Обновить', thinking: 'Думаю…',
+      markDone: 'Завершить', reopen: 'Вернуть',
+      today: 'сегодня', tomorrow: 'завтра', overdue: 'просрочено', snoozed: 'отложено', idleSuf: 'д простоя',
+      created: 'Создано', lastTouched: 'Активность', due: 'Срок', repeats: 'Повтор', everyWeek: 'каждую неделю', weekly: 'еженед.',
+      daysAgo: ' дн. назад', noProject: 'Без проекта', lastT: 'активность: ',
+      sched: 'Запланировано', schedSel: 'Запланировано · выбранный день',
+      bumpSort: 'сначала забытые задачи', prSort: 'по приоритету',
+      tDone: 'Готово — перенесено в «Готово»', tBump: 'Поднято — счётчик сброшен', tSnooze: 'Отложено на 7 дней', tArch: 'В архиве',
+      tKeep: 'Оставлено — поднято наверх колонки', tMoved: 'Перемещено: ', tReopen: 'Возвращено в «В фокусе»', tDoneS: 'Готово ✓',
+      DOW: ['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],
+      DOWS: ['вс','пн','вт','ср','чт','пт','сб'],
+      MON: ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'],
+      MONF: ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+    },
+  };
+  tr() { return this.LNG[this.state.lang] || this.LNG.en; }
+
+  seedState() {
+    const d = 864e5, now = Date.now();
+    const P = [
+      { id: 'p1', name: 'AI Research', color: 'var(--acc)' },
+      { id: 'p2', name: 'Headboard Build', color: 'var(--ok)' },
+      { id: 'p3', name: 'Writing', color: '#6B7FA3' },
+      { id: 'p4', name: 'Home Ops', color: '#9A7B2D' },
+      { id: 'p5', name: 'Health', color: '#97658C' },
+    ];
+    const T = (id, title, proj, pr, status, idle, extra) => Object.assign({
+      id, title, proj, pr, status,
+      touched: now - idle * d, created: now - (idle + 4) * d,
+      tags: [], due: null, recur: null, chat: null, note: '', snoozedUntil: 0, doneAt: null, comments: [], files: [],
+    }, extra);
+    const tasks = [
+      T('t1', 'Compare vector DBs for the memory feature', 'p2', 0, 'inbox', 0, { tags: ['infra', 'claude'], chat: 'https://claude.ai/', note: 'Pinecone vs pgvector vs sqlite-vss. Need a call before the sync spike lands.', files: [{ id: 'sf1', name: 'benchmarks.csv', kind: 'file', size: 18400 }] }),
+      T('t2', 'Is spaced repetition the right resurfacing model?', 'p1', 1, 'inbox', 2, { tags: ['ux'], chat: 'https://claude.ai/' }),
+      T('t3', 'Book dentist appointment', 'p5', 1, 'inbox', 1, { due: now + 3 * d }),
+      T('t4', 'Outline essay: why personal boards fail', 'p3', 2, 'inbox', 4, { tags: ['essay'] }),
+      T('t16', 'Water the plants', 'p4', 2, 'inbox', 1, { recur: 'weekly', due: now + 1 * d }),
+      T('t5', 'Draft Headboard data model with Claude', 'p2', 0, 'focus', 0, { tags: ['claude'], due: now, chat: 'https://claude.ai/', note: 'Tasks, projects, activity log. Decide: single table + views, or separate entities.', comments: [{ id: 'sc1', text: 'Claude suggested a single-table design with views — reviewing tonight.', at: now - 0.1 * d }, { id: 'sc2', text: 'Compare with how Linear models issues before deciding.', at: now - 0.04 * d }], files: [{ id: 'sf2', name: 'data-model-v2.png', kind: 'img' }, { id: 'sf3', name: 'schema-notes.md', kind: 'file', size: 4200 }] }),
+      T('t6', 'Prompt library for task extraction', 'p1', 0, 'focus', 1, { tags: ['prompts'], chat: 'https://claude.ai/' }),
+      T('t7', 'Design the weekly review ritual', 'p2', 1, 'focus', 12, { tags: ['ux'], note: 'Sunday evening, 20 min. What does the board show first?', comments: [{ id: 'sc3', text: 'Maybe the digest IS the review — merge them?', at: now - 5 * d }] }),
+      T('t8', 'Rebuild morning routine', 'p5', 2, 'focus', 9, {}),
+      T('t15', 'Weekly digest review', 'p2', 1, 'focus', 3, { recur: 'weekly', due: now }),
+      T('t9', 'Accountant reply on LLC structure', 'p4', 1, 'waiting', 6, { due: now + 2 * d }),
+      T('t10', 'Calendar API beta invite', 'p2', 1, 'waiting', 15, { chat: 'https://claude.ai/', note: 'Waitlisted 2 weeks ago. Ping them or build ICS export instead?', files: [{ id: 'sf4', name: 'waitlist-confirmation.pdf', kind: 'file', size: 96000 }] }),
+      T('t11', "N.'s feedback on essay draft", 'p3', 2, 'waiting', 8, {}),
+      T('t12', 'Offline sync spike: CRDT vs op-log', 'p2', 1, 'done', 1, { chat: 'https://claude.ai/', doneAt: now - 1 * d }),
+      T('t13', 'Migrate notes out of Apple Notes', 'p4', 2, 'done', 2, { doneAt: now - 2 * d }),
+      T('t14', 'Interview notes → summary prompt', 'p1', 0, 'done', 0, { chat: 'https://claude.ai/', doneAt: now - 0.3 * d }),
+    ];
+    return {
+      projects: P, tasks, lang: 'en',
+      view: 'board', q: '', fPr: null, fProj: null, sel: null,
+      capOpen: false, capText: '', capItems: null, capBusy: false,
+      mView: 'board', mCol: 'focus', mSel: null, mCapOpen: false,
+      calSel: null, digestText: null, digestBusy: false, digestSeed: 0, snack: null, pv: null, mPv: null, theme: 'light',
+      zTask: null, zM: null, zMonth: 0, user: null, profOpen: false, mProfOpen: false,
+      dragId: null, dragCol: null, cmText: '',
+      projFiles: { p2: [{ id: 'pf1', name: 'headboard-moodboard.png', kind: 'img' }, { id: 'pf2', name: 'prd-v1.pdf', kind: 'file', size: 240000 }] },
+    };
+  }
+
+  componentDidMount() {
+    try {
+      const s = localStorage.getItem('oboard-v3');
+      if (s) {
+        const j = JSON.parse(s);
+        const up = {};
+        if (j && j.tasks && j.tasks.length) {
+          const reb = s => typeof s === 'string' ? s.replace(/oBoard|Offload/g, 'Headboard').replace(/\boboard\b|\boffload\b/g, 'headboard') : s;
+          up.tasks = j.tasks.map(t => Object.assign({}, t, { pr: Math.min(2, Math.max(0, t.pr | 0)), title: reb(t.title), note: reb(t.note) }));
+          up.digestText = reb(j.digestText || null);
+        }
+        if (j && j.lang) up.lang = j.lang;
+        if (j && j.projFiles) up.projFiles = j.projFiles;
+        if (j && j.user) up.user = j.user;
+        if (j && j.theme) up.theme = j.theme;
+        this.setState(up);
+      }
+    } catch (e) {}
+    try {
+      const saved = JSON.parse(localStorage.getItem('oboard-v3') || '{}').theme;
+      const th = saved || (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      if (th !== this.state.theme) this.setState({ theme: th });
+      this.applyTheme(th);
+    } catch (e) { this.applyTheme(this.state.theme); }
+  }
+  componentDidUpdate() {
+    try { localStorage.setItem('oboard-v3', JSON.stringify({ tasks: this.state.tasks, digestText: this.state.digestText, lang: this.state.lang, projFiles: this.state.projFiles, user: this.state.user, theme: this.state.theme })); } catch (e) {}
+  }
+
+  toast(msg) { clearTimeout(this._tt); this.setState({ snack: msg }); this._tt = setTimeout(() => this.setState({ snack: null }), 2400); }
+  zOpenFor(t, m) { return () => this.setState({ zTask: t.id, zM: m, zMonth: 0 }); }
+  pickZ(ts) {
+    const id = this.state.zTask; if (!id) return;
+    this.patch(id, { snoozedUntil: ts });
+    this.setState({ zTask: null, sel: null, mSel: null });
+    this.toast(this.tr().zUntil + this.fmtD(ts));
+  }
+  buildZCal() {
+    const t0 = new Date(); t0.setHours(0, 0, 0, 0);
+    const m0 = new Date(t0.getFullYear(), t0.getMonth() + this.state.zMonth, 1);
+    const start = new Date(m0); start.setDate(1 - ((m0.getDay() + 6) % 7));
+    const weeks = [];
+    for (let w = 0; w < 6; w++) {
+      const days = [];
+      for (let i = 0; i < 7; i++) {
+        const dt = new Date(start); dt.setDate(start.getDate() + w * 7 + i);
+        const ts = dt.getTime();
+        const inM = dt.getMonth() === m0.getMonth();
+        const dis = ts <= t0.getTime();
+        const today = ts === t0.getTime();
+        days.push({
+          k: 'z' + w + '-' + i, n: dt.getDate(),
+          c: dis ? 'var(--ghost)' : inM ? 'var(--ink)' : 'var(--faint)',
+          bg: today ? 'var(--sel)' : 'transparent',
+          hbg: dis ? (today ? 'var(--sel)' : 'transparent') : 'var(--heat2b)',
+          cur: dis ? 'default' : 'pointer',
+          on: dis ? (() => {}) : (() => this.pickZ(ts)),
+        });
+      }
+      weeks.push({ k: 'zw' + w, days });
+    }
+    return weeks;
+  }
+  moveTask(id, s) {
+    const T = this.tr();
+    const labels = { inbox: T.sInbox, focus: T.sFocus, waiting: T.sWaiting, done: T.sDone };
+    this.patch(id, { status: s, touched: Date.now(), doneAt: s === 'done' ? Date.now() : null });
+    this.toast(T.tMoved + labels[s]);
+  }
+  sizeHuman(b) { return b > 9e5 ? (b / 1e6).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1000)) + ' KB'; }
+  cmTime(at) { const T = this.tr(); if (Date.now() - at < 9e4) return T.justNow; if (this.sod(at) === this.sod(Date.now())) return T.today; return this.fmtD(at); }
+  attachToast(n) { return this.state.lang === 'ru' ? 'Прикреплено: ' + n : n === 1 ? '1 file attached' : n + ' files attached'; }
+  setTheme(t) { this.setState({ theme: t }); this.applyTheme(t); }
+  applyTheme(t) { try { document.body.classList.toggle('dark', t === 'dark'); } catch (e) {} }
+  onSignIn = p => {
+    const apple = p === 'apple';
+    this.setState({
+      user: { name: 'Sam Kern', email: apple ? 'sam.kern@icloud.com' : 'sam.kern@gmail.com', provider: apple ? 'Apple' : 'Google', initials: 'SK' },
+      profOpen: false, mProfOpen: false,
+    });
+  };
+  onSignOut = () => this.setState({ user: null, profOpen: false, mProfOpen: false, sel: null, mSel: null });
+
+  fileVm(f, remove, key) {
+    const sizeL = f.size ? this.sizeHuman(f.size) : '';
+    const ext = (String(f.name || '').split('.').pop() || 'file').toUpperCase().slice(0, 5);
+    const k = key || 'pv';
+    return {
+      k: f.id, name: f.name, sizeL, hasSrc: !!f.src, src: f.src || '',
+      iconImg: f.kind === 'img' && !f.src, iconFile: f.kind !== 'img',
+      open: () => this.setState({ [k]: { name: f.name, sizeL, hasSrc: !!f.src, src: f.src || '', extL: ext } }),
+      remove: e => { if (e && e.stopPropagation) e.stopPropagation(); remove(); },
+    };
+  }
+  pvVm(p, key, big) {
+    if (!p) return {};
+    const style = big
+      ? { display: 'block', maxWidth: '730px', maxHeight: '470px', borderRadius: '10px', background: 'var(--inset)', objectFit: 'contain' }
+      : { display: 'block', maxWidth: '100%', maxHeight: '100%', borderRadius: '12px', objectFit: 'contain' };
+    return Object.assign({}, p, {
+      noPrev: !p.hasSrc,
+      close: () => this.setState({ [key]: null }),
+      imgEl: p.hasSrc ? React.createElement('img', { src: p.src, alt: p.name, style }) : null,
+    });
+  }
+  fileRec(f) { return { id: 'f' + Date.now() + Math.random().toString(36).slice(2, 6), name: f.name, size: f.size, kind: /^image\//.test(f.type) ? 'img' : 'file' }; }
+  attachTo(taskId, fl) {
+    fl.forEach(f => {
+      const rec = this.fileRec(f);
+      const push = r => this.setState(s => ({ tasks: s.tasks.map(t => t.id === taskId ? Object.assign({}, t, { files: [...(t.files || []), r] }) : t) }));
+      if (rec.kind === 'img' && f.size < 15e5) { const rd = new FileReader(); rd.onload = () => push(Object.assign({}, rec, { src: rd.result })); rd.readAsDataURL(f); }
+      else push(rec);
+    });
+    this.toast(this.attachToast(fl.length));
+  }
+  attachProj(pid, fl) {
+    fl.forEach(f => {
+      const rec = this.fileRec(f);
+      const push = r => this.setState(s => ({ projFiles: Object.assign({}, s.projFiles, { [pid]: [...(s.projFiles[pid] || []), r] }) }));
+      if (rec.kind === 'img' && f.size < 15e5) { const rd = new FileReader(); rd.onload = () => push(Object.assign({}, rec, { src: rd.result })); rd.readAsDataURL(f); }
+      else push(rec);
+    });
+    this.toast(this.attachToast(fl.length));
+  }
+  addCmTo(taskId) {
+    const txt = this.state.cmText.trim(); if (!txt) return;
+    this.setState(s => ({ cmText: '', tasks: s.tasks.map(t => t.id === taskId ? Object.assign({}, t, { comments: [...(t.comments || []), { id: 'c' + Date.now(), text: txt, at: Date.now() }] }) : t) }));
+  }
+  patch(id, up) { this.setState(s => ({ tasks: s.tasks.map(t => t.id === id ? Object.assign({}, t, up) : t) })); }
+  idleOf(t) { return Math.max(0, Math.floor((Date.now() - t.touched) / 864e5)); }
+  staleTh() { return this.props.staleDays ?? 7; }
+  isStale(t) { return t.status !== 'done' && t.status !== 'archived' && this.idleOf(t) >= this.staleTh() && (!t.snoozedUntil || t.snoozedUntil < Date.now()); }
+  sod(ts) { const x = new Date(ts); x.setHours(0, 0, 0, 0); return x.getTime(); }
+  dueDiff(t) { return t.due == null ? null : Math.round((this.sod(t.due) - this.sod(Date.now())) / 864e5); }
+  dueLabel(t) {
+    const T = this.tr();
+    const df = this.dueDiff(t); if (df === null) return null;
+    if (df < 0) return T.overdue; if (df === 0) return T.today; if (df === 1) return T.tomorrow;
+    const dt = new Date(t.due);
+    if (df < 7) return T.DOWS[dt.getDay()] + ' ' + dt.getDate();
+    return this.fmtD(t.due);
+  }
+  fmtD(ts) {
+    const T = this.tr(), dt = new Date(ts);
+    return this.state.lang === 'ru' ? dt.getDate() + ' ' + T.MON[dt.getMonth()] : T.MON[dt.getMonth()] + ' ' + dt.getDate();
+  }
+
+  PR = [
+    { c: 'var(--onAcc)', bg: 'var(--hi)', bd: 'var(--hi)', bar: 'var(--hi)', en: ['HIGH', 'High'], ru: ['ВЫС', 'Высокий'] },
+    { c: 'var(--goldInk)', bg: 'var(--card)', bd: 'var(--med)', bar: 'var(--med)', en: ['MED', 'Medium'], ru: ['СРЕД', 'Средний'] },
+    { c: 'var(--mut2)', bg: 'transparent', bd: 'var(--lineStrong)', bar: 'var(--lineStrong)', en: ['LOW', 'Low'], ru: ['НИЗ', 'Низкий'] },
+  ];
+  prOf(i) {
+    const p = this.PR[Math.min(2, Math.max(0, i | 0))];
+    const L = p[this.state.lang === 'ru' ? 'ru' : 'en'];
+    return { L: L[0], full: L[1], c: p.c, bg: p.bg, bd: p.bd, bar: p.bar };
+  }
+
+  vm(t) {
+    const T = this.tr();
+    const stop = e => e.stopPropagation();
+    const idle = this.idleOf(t), stale = this.isStale(t);
+    const p = this.state.projects.find(x => x.id === t.proj) || null;
+    const pr = this.prOf(t.pr);
+    const df = this.dueDiff(t);
+    const snz = t.snoozedUntil && t.snoozedUntil > Date.now();
+    return {
+      k: t.id, id: t.id, title: t.title,
+      open: () => this.setState({ sel: t.id }), tapM: () => this.setState({ mSel: t.id }),
+      prL: pr.L, prC: pr.c, prBg: pr.bg, prBd: pr.bd, prBar: pr.bar,
+      idleShow: t.status !== 'done' && (idle >= 2 || snz), idleL: snz ? T.snoozed : idle + T.idleSuf,
+      topShow: t.status !== 'done',
+      idleC: stale ? 'var(--goldInk)' : 'var(--mut2)', idleBg: stale ? 'var(--heat2b)' : 'var(--inset)',
+      stale, idleN: idle,
+      cardBg: 'var(--card)', cardBd: stale ? 'var(--goldBd)' : 'var(--line)',
+      hasProj: !!p, projName: p ? p.name : '', projColor: p ? p.color : 'var(--mut2)',
+      tagShow: t.tags.length > 0, tagStr: t.tags.map(x => '#' + x).join(' '),
+      dueShow: df !== null && t.status !== 'done', dueL: this.dueLabel(t) || '',
+      dueC: df !== null && df < 0 ? 'var(--hi)' : df === 0 ? 'var(--acc)' : 'var(--mut2)',
+      recurShow: !!t.recur, recurL: T.weekly,
+      chatShow: !!t.chat, chat: t.chat || '#',
+      actShow: t.status !== 'done',
+      cmN: (t.comments || []).length, cmShow: (t.comments || []).length > 0,
+      fileN: (t.files || []).length, fileShow: (t.files || []).length > 0,
+      op: this.state.dragId === t.id ? 0.35 : 1,
+      dragStart: e => { try { e.dataTransfer.setData('text/plain', t.id); e.dataTransfer.effectAllowed = 'move'; } catch (x) {} this.setState({ dragId: t.id }); },
+      dragEnd: () => this.setState({ dragId: null, dragCol: null }),
+      done: e => { stop(e); this.patch(t.id, { status: 'done', doneAt: Date.now(), touched: Date.now() }); this.toast(T.tDone); },
+      bump: e => { stop(e); this.patch(t.id, { touched: Date.now(), snoozedUntil: 0 }); this.toast(T.tBump); },
+    };
+  }
+
+  vmDetail(t, closeKey) {
+    const T = this.tr();
+    const base = this.vm(t);
+    const close = () => this.setState({ [closeKey]: null });
+    const statusDefs = [
+      { k: 's0', L: T.sInbox, v: 'inbox' }, { k: 's1', L: T.sFocus, v: 'focus' },
+      { k: 's2', L: T.sWaiting, v: 'waiting' }, { k: 's3', L: T.sDone, v: 'done' },
+    ];
+    return Object.assign(base, {
+      close,
+      noteShow: !!t.note, note: t.note,
+      statusVal: t.status,
+      statusList: statusDefs.map(o => ({ k: o.k, v: o.v, L: o.L })),
+      onStatusSel: e => {
+        const v = e.target.value;
+        this.patch(t.id, { status: v, touched: Date.now(), doneAt: v === 'done' ? Date.now() : t.doneAt });
+        this.toast(T.tMoved + statusDefs.find(x => x.v === v).L);
+      },
+      prCur: this.prOf(t.pr).full,
+      prDots: [0, 1, 2].map(i => {
+        const p = this.prOf(i), sel = t.pr === i;
+        return {
+          k: 'pd' + i, title: p.full, bg: p.bar,
+          bd: sel ? 'var(--ink)' : 'transparent',
+          sh: sel ? 'inset 0 0 0 2px var(--panel)' : 'inset 0 0 0 1px rgba(32,29,23,0.10)',
+          on: () => this.patch(t.id, { pr: i }),
+        };
+      }),
+      metaRows: [
+        { k: 'm1', l: T.created, v: this.fmtD(t.created), c: 'var(--mut)' },
+        { k: 'm3', l: T.due, v: this.dueLabel(t) || '—', c: 'var(--mut)' },
+        { k: 'm4', l: T.repeats, v: t.recur ? T.everyWeek : '—', c: 'var(--mut)' },
+      ],
+      files: (t.files || []).map(f => this.fileVm(f, () => this.patch(t.id, { files: (t.files || []).filter(x => x.id !== f.id) }), closeKey === 'mSel' ? 'mPv' : 'pv')),
+      comments: (t.comments || []).map(c => ({ k: c.id, text: c.text, time: this.cmTime(c.at) })),
+      cmText: this.state.cmText,
+      onCmText: e => this.setState({ cmText: e.target.value }),
+      cmKey: e => { if (e.key === 'Enter') this.addCmTo(t.id); },
+      addCm: () => this.addCmTo(t.id),
+      addFiles: e => { const fl = Array.from(e.target.files || []); e.target.value = ''; if (fl.length) this.attachTo(t.id, fl); },
+      doneL: t.status === 'done' ? T.reopen : T.markDone,
+      onDone: () => { const done = t.status === 'done'; this.patch(t.id, { status: done ? 'focus' : 'done', doneAt: done ? null : Date.now(), touched: Date.now() }); close(); this.toast(done ? T.tReopen : T.tDoneS); },
+      onBump: () => { this.patch(t.id, { touched: Date.now(), snoozedUntil: 0 }); close(); this.toast(T.tBump); },
+      zOpen: this.zOpenFor(t, 'web'), zOpenM: this.zOpenFor(t, 'mob'),
+      onArchive: () => { this.patch(t.id, { status: 'archived' }); close(); this.toast(T.tArch); },
+    });
+  }
+
+  heuristic(text) {
+    const names = { p1: /claude|prompt|research|ai |model|embedding|эмбеддинг|промпт/i, p2: /headboard|offload|oboard|app|prototype|build|code|sync|api|приложени/i, p3: /write|writ|essay|draft|blog|post|стать|текст|эссе/i, p4: /home|clean|plant|tax|account|renew|domain|bill|дом|домен|счет|налог/i, p5: /health|doctor|dentist|gym|run|sleep|врач|зуб|спорт|сон/i };
+    return text.split(/\n+|(?:;\s+)/).map(l => l.replace(/^[\s\-\*•\[\]x]+/i, '').trim()).filter(l => l.length > 2).slice(0, 8).map(l => {
+      const tags = (l.match(/#([\wа-яё]+)/gi) || []).map(x => x.slice(1).toLowerCase());
+      let title = l.replace(/#[\wа-яё]+/gi, '').replace(/\s+/g, ' ').trim();
+      const urgent = /urgent|asap|today|срочно|сегодня/i.test(title);
+      title = title.replace(/^(urgent|asap|срочно)[:\s]+/i, '');
+      title = title.charAt(0).toUpperCase() + title.slice(1);
+      let proj = null; for (const k in names) if (names[k].test(l)) { proj = k; break; }
+      return { title: title.slice(0, 90), pr: urgent ? 0 : 1, tags: tags.slice(0, 2), proj };
+    });
+  }
+
+  onExtract = async () => {
+    const text = this.state.capText.trim();
+    if (!text || this.state.capBusy) return;
+    this.setState({ capBusy: true });
+    let items = null;
+    try {
+      if (window.claude && window.claude.complete) {
+        const pn = this.state.projects.map(p => '"' + p.name + '"').join(', ');
+        const r = await window.claude.complete('Extract actionable tasks from the text below. Respond with ONLY a JSON array, no prose. Each item: {"title": short imperative string in the same language as the input, "priority": 0|1|2 (0=high, 1=medium, 2=low), "tags": array of 0-2 lowercase single words, "project": one of [' + pn + '] or null}.\n\nTEXT:\n' + text);
+        const j = JSON.parse(r.slice(r.indexOf('['), r.lastIndexOf(']') + 1));
+        items = j.map(x => ({
+          title: String(x.title || '').slice(0, 90), pr: Math.min(2, Math.max(0, x.priority | 0)),
+          tags: Array.isArray(x.tags) ? x.tags.slice(0, 2).map(String) : [],
+          proj: (this.state.projects.find(p => p.name === x.project) || {}).id || null,
+        })).filter(x => x.title);
+      }
+    } catch (e) { items = null; }
+    if (!items || !items.length) items = this.heuristic(text);
+    this.setState({ capItems: items, capBusy: false });
+  };
+
+  addTasks(items) {
+    const now = Date.now();
+    const fresh = items.map((x, i) => ({
+      id: 'n' + now + i, title: x.title, proj: x.proj || null, pr: x.pr ?? 1, status: 'inbox',
+      touched: now, created: now, tags: x.tags || [], due: null, recur: null, chat: null, note: '', snoozedUntil: 0, doneAt: null,
+    }));
+    this.setState(s => ({ tasks: [...fresh, ...s.tasks], capOpen: false, mCapOpen: false, capText: '', capItems: null }));
+    const n = fresh.length;
+    this.toast(this.state.lang === 'ru' ? 'Добавлено в Инбокс: ' + n : n + (n === 1 ? ' task' : ' tasks') + ' added to Inbox');
+  }
+
+  canned(i, s) {
+    const arr = this.state.lang === 'ru' ? [
+      'На сегодня: ' + s.dueN + ' — начните с «' + s.dueFirst + '». Забытых задач: ' + s.staleN + '; «' + s.oldT + '» ждёт уже ' + s.oldI + ' дн. — пора решить: сделать, делегировать или отпустить. За неделю закрыто ' + s.doneW + ' — держите темп.',
+      'В фокусе ' + s.focusN + ' задач — ещё одна, и станет тесно. «' + s.oldT + '» (' + s.oldI + ' дн. простоя) — ваш самый старый открытый вопрос: закройте его или отпустите. За 7 дней завершено: ' + s.doneW + '.',
+      'Спокойный день: на сегодня ' + s.dueN + ', повторяющихся ' + s.recN + '. Забытых задач: ' + s.staleN + ' — откройте «Разбор» и отправьте в архив то, что уже не актуально.',
+    ] : [
+      s.dueN + ' due today — start with \u201C' + s.dueFirst + '\u201D. ' + s.staleN + ' tasks are forgotten; \u201C' + s.oldT + '\u201D has waited ' + s.oldI + ' days and deserves a verdict: do it, delegate it, or drop it. You closed ' + s.doneW + ' this week — keep the streak.',
+      'Focus is holding ' + s.focusN + ' tasks, which is one decision away from too many. \u201C' + s.oldT + '\u201D (' + s.oldI + ' days idle) is your oldest open loop — close it or let it go. ' + s.doneW + ' finished in the last 7 days.',
+      'A calm day: ' + s.dueN + ' due, ' + s.recN + ' recurring. ' + s.staleN + ' tasks are forgotten — open Review and archive what no longer matters.',
+    ];
+    return arr[i % arr.length];
+  }
+
+  onRegen = async () => {
+    if (this.state.digestBusy) return;
+    this.setState({ digestBusy: true });
+    const s = this.digestStats();
+    let text = null;
+    try {
+      if (window.claude && window.claude.complete) {
+        const langReq = this.state.lang === 'ru' ? ' Answer in Russian.' : '';
+        text = String(await window.claude.complete('You write a terse daily digest for a personal task board. Stats: ' + s.dueN + ' due today (' + s.dueFirst + '); ' + s.staleN + ' forgotten tasks, oldest "' + s.oldT + '" idle ' + s.oldI + ' days; ' + s.doneW + ' completed in the last week; ' + s.focusN + ' in focus. Write 2-3 plain sentences, direct, second person, no emoji, no markdown, no preamble.' + langReq)).trim();
+      }
+    } catch (e) { text = null; }
+    if (!text) text = this.canned(this.state.digestSeed + 1, s);
+    this.setState(st => ({ digestText: text, digestSeed: st.digestSeed + 1, digestBusy: false }));
+  };
+
+  live() { return this.state.tasks.filter(t => t.status !== 'archived'); }
+
+  digestStats() {
+    const live = this.live();
+    const due = live.filter(t => t.status !== 'done' && this.dueDiff(t) !== null && this.dueDiff(t) <= 0);
+    const stale = live.filter(t => this.isStale(t)).sort((a, b) => this.idleOf(b) - this.idleOf(a));
+    const doneW = live.filter(t => t.status === 'done' && t.doneAt && Date.now() - t.doneAt < 7 * 864e5).length;
+    return {
+      dueN: due.length, dueFirst: due[0] ? due[0].title : '—',
+      staleN: stale.length, oldT: stale[0] ? stale[0].title : '—', oldI: stale[0] ? this.idleOf(stale[0]) : 0,
+      doneW, focusN: live.filter(t => t.status === 'focus').length,
+      recN: live.filter(t => t.recur).length, due, stale,
+    };
+  }
+
+  buildCal() {
+    const now = new Date(); now.setHours(0, 0, 0, 0);
+    const y = now.getFullYear(), m = now.getMonth();
+    const first = new Date(y, m, 1);
+    const start = new Date(first); start.setDate(1 - ((first.getDay() + 6) % 7));
+    const live = this.live();
+    const weeks = [];
+    for (let w = 0; w < 6; w++) {
+      const days = [];
+      for (let i = 0; i < 7; i++) {
+        const dt = new Date(start); dt.setDate(start.getDate() + w * 7 + i);
+        const ts = dt.getTime();
+        const inM = dt.getMonth() === m, today = ts === now.getTime(), sel = this.state.calSel === ts;
+        const dayT = live.filter(t => t.due !== null && this.sod(t.due) === ts && t.status !== 'done');
+        const nT = dayT.length, future = ts > now.getTime();
+        const heavy = nT >= 3;
+        const heat = !inM || today || sel || !nT || !future ? null : heavy ? 'var(--heat2)' : 'var(--heat1)';
+        days.push({
+          k: 'c' + w + '-' + i, n: dt.getDate(),
+          c: today ? 'var(--onAcc)' : inM ? 'var(--ink)' : 'var(--ghost)',
+          bg: today ? 'var(--acc)' : sel ? 'var(--sel)' : heat || 'transparent',
+          bd: sel ? 'var(--lineStrong)' : heavy && future && inM && !today ? 'var(--heat2bd)' : 'transparent',
+          on: () => this.setState({ calSel: sel ? null : ts }),
+          hasN: nT > 0, nT,
+          nBg: today ? 'rgba(251,247,238,0.22)' : !future ? 'var(--inset)' : heavy ? 'var(--heat2b)' : 'var(--card)',
+          nC: today ? 'var(--onAcc)' : !future ? 'var(--faint)' : heavy ? 'var(--goldInk)' : 'var(--mut)',
+        });
+      }
+      weeks.push({ k: 'w' + w, days });
+    }
+    return weeks;
+  }
+
+  renderVals() {
+    const st = this.state, live = this.live(), T = this.tr();
+    const autoBump = this.props.autoBump ?? true;
+    const showDone = this.props.showDone ?? true;
+    const q = st.q.trim().toLowerCase();
+    const match = t => (!q || (t.title + ' ' + t.tags.join(' ')).toLowerCase().includes(q)) && (st.fPr === null || t.pr === st.fPr) && (!st.fProj || t.proj === st.fProj);
+    const byId = id => this.state.tasks.find(x => x.id === id);
+    const sortA = (a, b) => (b.stale - a.stale) || (a.stale ? b.idleN - a.idleN : 0) || (byId(a.id).pr - byId(b.id).pr) || (b.idleN - a.idleN);
+
+    const group = s => live.filter(t => t.status === s);
+    const colDefs = [
+      { key: 'inbox', label: T.sInbox, dot: 'var(--mut2)' },
+      { key: 'focus', label: T.sFocus, dot: 'var(--acc)' },
+      { key: 'waiting', label: T.sWaitingOn, dot: '#9A7B2D' },
+    ].concat(showDone ? [{ key: 'done', label: T.sDone, dot: 'var(--ok)' }] : []);
+
+    const colRows = colDefs.map(c => {
+      let cards = group(c.key).filter(match).map(t => this.vm(t));
+      if (c.key === 'done') cards = cards.sort((a, b) => (byId(b.id).doneAt || 0) - (byId(a.id).doneAt || 0)).slice(0, 8);
+      else if (autoBump) cards = cards.sort(sortA);
+      else cards = cards.sort((a, b) => byId(a.id).pr - byId(b.id).pr);
+      return {
+        k: c.key, label: c.label, dot: c.dot, count: cards.length, cards, empty: cards.length === 0,
+        over: e => { e.preventDefault(); if (this.state.dragCol !== c.key) this.setState({ dragCol: c.key }); },
+        drop: e => { e.preventDefault(); const id = (e.dataTransfer && e.dataTransfer.getData('text/plain')) || this.state.dragId; this.setState({ dragId: null, dragCol: null }); if (id) this.moveTask(id, c.key); },
+        bodyBg: this.state.dragCol === c.key && this.state.dragId ? 'var(--sel)' : 'transparent',
+        bodyBd: this.state.dragCol === c.key && this.state.dragId ? 'var(--lineStrong)' : 'transparent',
+      };
+    });
+
+    const stats = this.digestStats();
+    const resList = stats.stale.map(t => {
+      const v = this.vm(t);
+      return Object.assign(v, {
+        idleNL: String(v.idleN),
+        sub: (v.hasProj ? v.projName : T.noProject) + (v.tagShow ? ' · ' + v.tagStr : '') + ' · ' + T.lastT + this.fmtD(t.touched),
+        keep: () => { this.patch(t.id, { touched: Date.now(), snoozedUntil: 0 }); this.toast(T.tKeep); },
+        zOpen: this.zOpenFor(t, 'web'), zOpenM: this.zOpenFor(t, 'mob'),
+        drop: () => { this.patch(t.id, { status: 'archived' }); this.toast(T.tArch); },
+      });
+    });
+
+    const rowVm = (t, chipL, chipC) => {
+      const v = this.vm(t);
+      return { k: v.k, title: v.title, dotC: v.projColor, chipL, chipC, open: v.open, tapM: v.tapM };
+    };
+    const dueRows = stats.due.map(t => rowVm(t, this.dueDiff(t) < 0 ? T.overdue : T.today, this.dueDiff(t) < 0 ? 'var(--hi)' : 'var(--acc)'));
+    const pickRows = stats.stale.slice(0, 3).map(t => rowVm(t, this.idleOf(t) + T.idleSuf, 'var(--goldInk)'));
+    const recurRows = live.filter(t => t.recur).map(t => rowVm(t, T.everyWeek, 'var(--mut2)'));
+
+    const selT = st.sel ? live.find(t => t.id === st.sel) : null;
+    const mSelT = st.mSel ? live.find(t => t.id === st.mSel) : null;
+
+    const navBg = a => a ? 'var(--sel)' : 'transparent';
+    const navC = a => a ? 'var(--ink)' : 'var(--mut)';
+    const today = new Date();
+    const todayLabel = T.DOW[today.getDay()] + ', ' + this.fmtD(Date.now());
+
+    const prChips = [{ L: T.all, v: null }].concat([0, 1, 2].map(i => ({ L: this.prOf(i).full, v: i }))).map(o => ({
+      k: 'f' + o.L, L: o.L,
+      bg: st.fPr === o.v ? 'var(--chipBg)' : 'var(--card)', c: st.fPr === o.v ? 'var(--chipInk)' : 'var(--mut)', bd: st.fPr === o.v ? 'var(--lineStrong)' : 'var(--line)',
+      on: () => this.setState({ fPr: o.v }),
+    }));
+
+    const projRows = st.projects.map(p => ({
+      name: p.name, color: p.color,
+      count: live.filter(t => t.proj === p.id && t.status !== 'done').length,
+      bg: st.fProj === p.id ? 'var(--sel)' : 'transparent',
+      on: () => this.setState({ fProj: st.fProj === p.id ? null : p.id, view: 'board' }),
+    }));
+
+    const mColDefs = [
+      { key: 'inbox', L: T.sInbox }, { key: 'focus', L: T.sFocus }, { key: 'waiting', L: T.sWaiting }, { key: 'done', L: T.sDone },
+    ];
+    const mCols = mColDefs.map(c => ({
+      k: c.key, L: c.L, count: group(c.key).length,
+      bg: st.mCol === c.key ? 'var(--chipBg)' : 'var(--card)', c: st.mCol === c.key ? 'var(--chipInk)' : 'var(--mut)', bd: st.mCol === c.key ? 'var(--lineStrong)' : 'var(--line)',
+      on: () => this.setState({ mCol: c.key }),
+    }));
+    let mCards = group(st.mCol).map(t => this.vm(t));
+    mCards = st.mCol === 'done' ? mCards.slice(0, 8) : (autoBump ? mCards.sort(sortA) : mCards);
+
+    const mTitles = { board: T.board, resurface: T.resurface, digest: T.digTitle, calendar: T.calendar };
+    const openN = live.filter(t => t.status !== 'done').length;
+    const mSubs = {
+      board: st.lang === 'ru' ? 'открытых задач: ' + openN : openN + ' open tasks',
+      resurface: st.lang === 'ru' ? 'забытых: ' + resList.length : resList.length + ' forgotten',
+      digest: todayLabel, calendar: T.gcal,
+    };
+
+    const schedAll = live.filter(t => t.due !== null && t.status !== 'done').sort((a, b) => a.due - b.due);
+    const schedSel = st.calSel ? schedAll.filter(t => this.sod(t.due) === st.calSel) : schedAll;
+    const schedRows = schedSel.map(t => {
+      const v = this.vm(t);
+      return { k: v.k, title: v.title, dotC: v.projColor, dateL: this.dueLabel(t), dueC: v.dueC, recShow: !!t.recur, recL: T.weekly, on: v.open, tapM: v.tapM };
+    });
+
+    const monthLabel = T.MONF[today.getMonth()] + ' ' + today.getFullYear();
+    const langSel = l => this.setState({ lang: l });
+
+    return {
+      T, stop: e => e.stopPropagation(),
+      onEn: () => langSel('en'), onRu: () => langSel('ru'),
+      enBg: st.lang === 'en' ? 'var(--ink)' : 'var(--card)', enC: st.lang === 'en' ? 'var(--onInk)' : 'var(--mut2)',
+      ruBg: st.lang === 'ru' ? 'var(--ink)' : 'var(--card)', ruC: st.lang === 'ru' ? 'var(--onInk)' : 'var(--mut2)',
+      isDark: st.theme === 'dark',
+      onThL: () => this.setTheme('light'), onThD: () => this.setTheme('dark'),
+      thLBg: st.theme !== 'dark' ? 'var(--ink)' : 'var(--card)', thLC: st.theme !== 'dark' ? 'var(--onInk)' : 'var(--mut2)',
+      thDBg: st.theme === 'dark' ? 'var(--ink)' : 'var(--card)', thDC: st.theme === 'dark' ? 'var(--onInk)' : 'var(--mut2)',
+      todayLabel, q: st.q, onQ: e => this.setState({ q: e.target.value }),
+      onOpenCap: () => this.setState({ capOpen: true, capItems: null }),
+      onBoard: () => this.setState({ view: 'board' }), nBoardBg: navBg(st.view === 'board'), nBoardC: navC(st.view === 'board'),
+      onRes: () => this.setState({ view: 'resurface' }), nResBg: navBg(st.view === 'resurface'), nResC: navC(st.view === 'resurface'),
+      onDig: () => this.setState({ view: 'digest' }), nDigBg: navBg(st.view === 'digest'), nDigC: navC(st.view === 'digest'),
+      onCal: () => this.setState({ view: 'calendar' }), nCalBg: navBg(st.view === 'calendar'), nCalC: navC(st.view === 'calendar'),
+      resBadge: resList.length, resBadgeShow: resList.length > 0,
+      onAllProj: () => this.setState({ fProj: null }), allBg: st.fProj === null ? 'var(--sel)' : 'transparent',
+      totalCount: openN,
+      projRows,
+      isBoard: st.view === 'board', isRes: st.view === 'resurface', isDig: st.view === 'digest', isCal: st.view === 'calendar',
+      boardSub: autoBump ? T.bumpSort : T.prSort,
+      prChips, colRows,
+      resIntro: st.lang === 'ru' ? 'Забытых задач: ' + resList.length + ' — решите: оставить, отложить или в архив.' : resList.length + ' forgotten tasks — give each a verdict: keep, snooze, or drop.',
+      resRows: resList, resEmpty: resList.length === 0,
+      digStats: st.lang === 'ru' ? 'на сегодня: ' + stats.dueN + ' · забытых: ' + stats.staleN + ' · закрыто за неделю: ' + stats.doneW : stats.dueN + ' due today · ' + stats.staleN + ' forgotten · ' + stats.doneW + ' closed this week',
+      digPara: st.digestText || this.canned(0, stats),
+      digBtnL: st.digestBusy ? T.thinking : T.regen,
+      onRegen: this.onRegen,
+      dueRows, dueEmpty: dueRows.length === 0, pickRows, recurRows,
+      monthLabel, calWeeks: this.buildCal(),
+      schedTitle: st.calSel ? T.schedSel : T.sched,
+      schedRows, schedEmpty: schedRows.length === 0,
+      zOpenW: !!st.zTask && st.zM === 'web', zOpenM: !!st.zTask && st.zM === 'mob',
+      zClose: () => this.setState({ zTask: null }),
+      zPrev: () => this.setState(s => ({ zMonth: Math.max(0, s.zMonth - 1) })),
+      zNext: () => this.setState(s => ({ zMonth: Math.min(11, s.zMonth + 1) })),
+      zMonthLabel: T.MONF[new Date(today.getFullYear(), today.getMonth() + st.zMonth, 1).getMonth()] + ' ' + new Date(today.getFullYear(), today.getMonth() + st.zMonth, 1).getFullYear(),
+      zWeeks: this.buildZCal(),
+      projBarShow: !!st.fProj && st.view === 'board',
+      projBarName: (st.projects.find(p => p.id === st.fProj) || {}).name || '',
+      projBarColor: (st.projects.find(p => p.id === st.fProj) || {}).color || 'var(--mut2)',
+      projBarFiles: (st.fProj ? (st.projFiles[st.fProj] || []) : []).map(f => this.fileVm(f, () => this.setState(s => ({ projFiles: Object.assign({}, s.projFiles, { [st.fProj]: (s.projFiles[st.fProj] || []).filter(x => x.id !== f.id) }) })))),
+      onProjFiles: e => { const fl = Array.from(e.target.files || []); e.target.value = ''; if (fl.length && st.fProj) this.attachProj(st.fProj, fl); },
+      pvOpen: !!st.pv,
+      authed: !!st.user, notAuthed: !st.user,
+      onGoogle: () => this.onSignIn('google'), onApple: () => this.onSignIn('apple'), onSignOut: this.onSignOut,
+      uName: (st.user || {}).name || '', uEmail: (st.user || {}).email || '', uInit: (st.user || {}).initials || '',
+      uProv: T.signedWith + ((st.user || {}).provider || ''),
+      profOpen: st.profOpen, profBg: st.profOpen ? 'var(--sel)' : 'transparent',
+      onProf: () => this.setState(s => ({ profOpen: !s.profOpen })),
+      mProfOpen: st.mProfOpen,
+      onMProf: () => this.setState(s => ({ mProfOpen: !s.mProfOpen })),
+      mProfClose: () => this.setState({ mProfOpen: false }),
+      pv: this.pvVm(st.pv, 'pv', true),
+      mPvOpen: !!st.mPv,
+      mPv: this.pvVm(st.mPv, 'mPv', false),
+      drawerOpen: !!selT, dv: selT ? this.vmDetail(selT, 'sel') : {},
+      capOpen: st.capOpen, capText: st.capText,
+      onCapText: e => this.setState({ capText: e.target.value }),
+      capBtnL: st.capBusy ? T.extracting : T.extract,
+      onExtract: this.onExtract,
+      onAddSingle: () => { const t = st.capText.trim(); if (t) this.addTasks([{ title: t.slice(0, 90), pr: 1, tags: [], proj: null }]); },
+      capHasItems: !!(st.capItems && st.capItems.length),
+      capRows: (st.capItems || []).map((x, i) => {
+        const pr = this.prOf(x.pr);
+        const p = st.projects.find(pp => pp.id === x.proj);
+        return { k: 'ci' + i, title: x.title, prL: pr.L, prBg: pr.bg, prC: pr.c, prBd: pr.bd, prBar: pr.bar, hasProj: !!p, projName: p ? p.name : '', projColor: p ? p.color : 'var(--mut2)', remove: () => this.setState(s => ({ capItems: s.capItems.filter((_, j) => j !== i) })) };
+      }),
+      capAddL: st.lang === 'ru' ? 'Добавить (' + (st.capItems ? st.capItems.length : 0) + ')' : 'Add ' + (st.capItems ? st.capItems.length : 0) + (st.capItems && st.capItems.length === 1 ? ' task' : ' tasks'),
+      onAddAll: () => this.addTasks(st.capItems || []),
+      onCloseCap: () => this.setState({ capOpen: false, mCapOpen: false, capItems: null }),
+      snackShow: !!st.snack, snack: st.snack || '',
+      mIsBoard: st.mView === 'board', mIsRes: st.mView === 'resurface', mIsDig: st.mView === 'digest', mIsCal: st.mView === 'calendar',
+      mTitle: mTitles[st.mView], mSub: mSubs[st.mView],
+      onMBoard: () => this.setState({ mView: 'board' }), mBoardC: st.mView === 'board' ? 'var(--acc)' : 'var(--mut2)',
+      onMRes: () => this.setState({ mView: 'resurface' }), mResC: st.mView === 'resurface' ? 'var(--acc)' : 'var(--mut2)',
+      onMDig: () => this.setState({ mView: 'digest' }), mDigC: st.mView === 'digest' ? 'var(--acc)' : 'var(--mut2)',
+      onMCal: () => this.setState({ mView: 'calendar' }), mCalC: st.mView === 'calendar' ? 'var(--acc)' : 'var(--mut2)',
+      onMCap: () => this.setState({ mCapOpen: true, capItems: null }),
+      mCols, mCards, mEmpty: mCards.length === 0,
+      mOpen: !!mSelT, mv: mSelT ? this.vmDetail(mSelT, 'mSel') : {},
+      mCapOpen: st.mCapOpen,
+    };
+  }
+}
+</script>
+</body>
+</html>

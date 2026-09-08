@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Instrument+Sans:wght@400..700&family=Spline+Sans+Mono:wght@400..600&family=Space+Grotesk:wght@400..700&family=Hanken+Grotesk:wght@400..700&family=Instrument+Serif:ital@0;1&family=Archivo:wght@400..700&family=EB+Garamond:wght@400..700&family=Spectral:wght@400;500;600&family=Young+Serif&family=Unbounded:wght@400..600&family=Onest:wght@400..700&family=Golos+Text:wght@400..700&family=Literata:ital,opsz,wght@0,7..72,400..700;1,7..72,400..700&family=Karla:wght@400..700&family=Jost:wght@300..600&family=Manrope:wght@400..700&family=Cormorant:wght@300..600&family=Commissioner:wght@300..600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EFEDE7;font-family:'Instrument Sans',system-ui,sans-serif;color:#1a1a1a}
+a{color:#1a1a1a}a:hover{color:#000}
+.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}
+.dv-tid{font:600 10px 'Spline Sans Mono',monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:600 13px/1.2 'Instrument Sans',sans-serif;color:#1a1a1a}
+.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px 'Spline Sans Mono',monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 'Instrument Sans',sans-serif;color:rgba(0,0,0,.55)}
+.dv-card{max-width:100%;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}
+.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}
+.dv-next{margin:22px 0 0;font:12px/1.5 'Instrument Sans',sans-serif;color:rgba(0,0,0,.5)}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t7">
+<div class="dv-thd"><a class="dv-tid" href="#t7">7</a><span class="dv-tname">Headboard — новые знаки «доска в голове», без отсылок к старому лого</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="7a">
+<div class="dv-olabel"><a class="dv-oid" href="#7a">7a</a>Профиль — сетка стикеров в голове, один терракотовый</div>
+<div class="dv-card" style="width:400px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M17 44 V38.5 C11.5 35 8 29 8 22.5 C8 12.3 16 5 25.5 5 C34 5 41 11.5 41 20 C41 21.5 41.6 23 42.8 24.6 L45 27.6 C45.7 28.6 45.2 29.8 44 30.1 L41 30.9 V35 C41 38 38.7 40 35.5 40 H31 V44 Z M17 14 H21 A2 2 0 0 1 23 16 V20 A2 2 0 0 1 21 22 H17 A2 2 0 0 1 15 20 V16 A2 2 0 0 1 17 14 Z M28 14 H32 A2 2 0 0 1 34 16 V20 A2 2 0 0 1 32 22 H28 A2 2 0 0 1 26 20 V16 A2 2 0 0 1 28 14 Z M17 25 H21 A2 2 0 0 1 23 27 V31 A2 2 0 0 1 21 33 H17 A2 2 0 0 1 15 31 V27 A2 2 0 0 1 17 25 Z" fill="#1C1917"></path><rect x="26" y="25" width="8" height="8" rx="2" fill="#C8552F"></rect></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;letter-spacing:-0.3px;color:#1C1917;">headb<span style="color:#C8552F;">o</span>ard</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M17 44 V38.5 C11.5 35 8 29 8 22.5 C8 12.3 16 5 25.5 5 C34 5 41 11.5 41 20 C41 21.5 41.6 23 42.8 24.6 L45 27.6 C45.7 28.6 45.2 29.8 44 30.1 L41 30.9 V35 C41 38 38.7 40 35.5 40 H31 V44 Z M17 14 H21 A2 2 0 0 1 23 16 V20 A2 2 0 0 1 21 22 H17 A2 2 0 0 1 15 20 V16 A2 2 0 0 1 17 14 Z M28 14 H32 A2 2 0 0 1 34 16 V20 A2 2 0 0 1 32 22 H28 A2 2 0 0 1 26 20 V16 A2 2 0 0 1 28 14 Z M17 25 H21 A2 2 0 0 1 23 27 V31 A2 2 0 0 1 21 33 H17 A2 2 0 0 1 15 31 V27 A2 2 0 0 1 17 25 Z" fill="#F2EDE4"></path><rect x="26" y="25" width="8" height="8" rx="2" fill="#E0663A"></rect></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;letter-spacing:-0.3px;color:#F2EDE4;">headb<span style="color:#E0663A;">o</span>ard</span>
+    </div>
+  </div>
+  <div style="padding:16px 18px;display:flex;align-items:center;gap:14px;">
+    <span style="width:52px;height:52px;border-radius:14px;background:#FAF7F0;border:1px solid #E8E2D6;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M17 44 V38.5 C11.5 35 8 29 8 22.5 C8 12.3 16 5 25.5 5 C34 5 41 11.5 41 20 C41 21.5 41.6 23 42.8 24.6 L45 27.6 C45.7 28.6 45.2 29.8 44 30.1 L41 30.9 V35 C41 38 38.7 40 35.5 40 H31 V44 Z M17 14 H21 A2 2 0 0 1 23 16 V20 A2 2 0 0 1 21 22 H17 A2 2 0 0 1 15 20 V16 A2 2 0 0 1 17 14 Z M28 14 H32 A2 2 0 0 1 34 16 V20 A2 2 0 0 1 32 22 H28 A2 2 0 0 1 26 20 V16 A2 2 0 0 1 28 14 Z M17 25 H21 A2 2 0 0 1 23 27 V31 A2 2 0 0 1 21 33 H17 A2 2 0 0 1 15 31 V27 A2 2 0 0 1 17 25 Z" fill="#1C1917"></path><rect x="26" y="25" width="8" height="8" rx="2" fill="#C8552F"></rect></svg></span>
+    <span style="width:52px;height:52px;border-radius:14px;background:#C8552F;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M17 44 V38.5 C11.5 35 8 29 8 22.5 C8 12.3 16 5 25.5 5 C34 5 41 11.5 41 20 C41 21.5 41.6 23 42.8 24.6 L45 27.6 C45.7 28.6 45.2 29.8 44 30.1 L41 30.9 V35 C41 38 38.7 40 35.5 40 H31 V44 Z M17 14 H21 A2 2 0 0 1 23 16 V20 A2 2 0 0 1 21 22 H17 A2 2 0 0 1 15 20 V16 A2 2 0 0 1 17 14 Z M28 14 H32 A2 2 0 0 1 34 16 V20 A2 2 0 0 1 32 22 H28 A2 2 0 0 1 26 20 V16 A2 2 0 0 1 28 14 Z M17 25 H21 A2 2 0 0 1 23 27 V31 A2 2 0 0 1 21 33 H17 A2 2 0 0 1 15 31 V27 A2 2 0 0 1 17 25 Z M28 25 H32 A2 2 0 0 1 34 27 V31 A2 2 0 0 1 32 33 H28 A2 2 0 0 1 26 31 V27 A2 2 0 0 1 28 25 Z" fill="#FFF3EC"></path></svg></span>
+    <span style="font-size:11px;line-height:1.5;color:rgba(0,0,0,.5);">Классический профиль; стикеры —<br>вырезы, «прилепленная» задача — цветом.</span>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="7b">
+<div class="dv-olabel"><a class="dv-oid" href="#7b">7b</a>Открытая голова — незамкнутая дуга, внутри плитки доски</div>
+<div class="dv-card" style="width:400px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 48 48"><circle cx="24" cy="24" r="17" fill="none" stroke="#1C1917" stroke-width="6" stroke-linecap="round" stroke-dasharray="82 24.8" transform="rotate(-12 24 24)"></circle><rect x="16" y="16" width="6.5" height="6.5" rx="2" fill="#1C1917"></rect><rect x="25.5" y="16" width="6.5" height="6.5" rx="2" fill="#1C1917"></rect><rect x="16" y="25.5" width="6.5" height="6.5" rx="2" fill="#1C1917"></rect><rect x="25.5" y="25.5" width="6.5" height="6.5" rx="2" fill="#C8552F"></rect></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;letter-spacing:-0.3px;color:#1C1917;">headb<span style="color:#C8552F;">o</span>ard</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 48 48"><circle cx="24" cy="24" r="17" fill="none" stroke="#F2EDE4" stroke-width="6" stroke-linecap="round" stroke-dasharray="82 24.8" transform="rotate(-12 24 24)"></circle><rect x="16" y="16" width="6.5" height="6.5" rx="2" fill="#F2EDE4"></rect><rect x="25.5" y="16" width="6.5" height="6.5" rx="2" fill="#F2EDE4"></rect><rect x="16" y="25.5" width="6.5" height="6.5" rx="2" fill="#F2EDE4"></rect><rect x="25.5" y="25.5" width="6.5" height="6.5" rx="2" fill="#E0663A"></rect></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;letter-spacing:-0.3px;color:#F2EDE4;">headb<span style="color:#E0663A;">o</span>ard</span>
+    </div>
+  </div>
+  <div style="padding:16px 18px;display:flex;align-items:center;gap:14px;">
+    <span style="width:52px;height:52px;border-radius:14px;background:#FAF7F0;border:1px solid #E8E2D6;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><circle cx="24" cy="24" r="17" fill="none" stroke="#1C1917" stroke-width="6" stroke-linecap="round" stroke-dasharray="82 24.8" transform="rotate(-12 24 24)"></circle><rect x="16" y="16" width="6.5" height="6.5" rx="2" fill="#1C1917"></rect><rect x="25.5" y="16" width="6.5" height="6.5" rx="2" fill="#1C1917"></rect><rect x="16" y="25.5" width="6.5" height="6.5" rx="2" fill="#1C1917"></rect><rect x="25.5" y="25.5" width="6.5" height="6.5" rx="2" fill="#C8552F"></rect></svg></span>
+    <span style="width:52px;height:52px;border-radius:14px;background:#C8552F;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><circle cx="24" cy="24" r="17" fill="none" stroke="#FFF3EC" stroke-width="6" stroke-linecap="round" stroke-dasharray="82 24.8" transform="rotate(-12 24 24)"></circle><rect x="16" y="16" width="6.5" height="6.5" rx="2" fill="#FFF3EC"></rect><rect x="25.5" y="16" width="6.5" height="6.5" rx="2" fill="#FFF3EC"></rect><rect x="16" y="25.5" width="6.5" height="6.5" rx="2" fill="#FFF3EC"></rect><rect x="25.5" y="25.5" width="6.5" height="6.5" rx="2" fill="#FFF3EC"></rect></svg></span>
+    <span style="font-size:11px;line-height:1.5;color:rgba(0,0,0,.5);">«Открытый ум»: разомкнутый контур,<br>внутрь заходит сетка задач 2×2.</span>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="7c">
+<div class="dv-olabel"><a class="dv-oid" href="#7c">7c</a>Голова-доска — силуэт с прорезями-колонками</div>
+<div class="dv-card" style="width:400px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M18 6 H30 A11 11 0 0 1 41 17 V24 A11 11 0 0 1 30 35 H18 A11 11 0 0 1 7 24 V17 A11 11 0 0 1 18 6 Z M16.5 13 A2.5 2.5 0 0 1 19 15.5 V25 A2.5 2.5 0 0 1 14 25 V15.5 A2.5 2.5 0 0 1 16.5 13 Z M24 13 A2.5 2.5 0 0 1 26.5 15.5 V21 A2.5 2.5 0 0 1 21.5 21 V15.5 A2.5 2.5 0 0 1 24 13 Z M31.5 13 A2.5 2.5 0 0 1 34 15.5 V27 A2.5 2.5 0 0 1 29 27 V15.5 A2.5 2.5 0 0 1 31.5 13 Z" fill="#1C1917"></path><rect x="19" y="35" width="10" height="7" rx="3.5" fill="#1C1917"></rect><circle cx="24" cy="26.5" r="2.6" fill="#C8552F"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;letter-spacing:-0.3px;color:#1C1917;">headb<span style="color:#C8552F;">o</span>ard</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M18 6 H30 A11 11 0 0 1 41 17 V24 A11 11 0 0 1 30 35 H18 A11 11 0 0 1 7 24 V17 A11 11 0 0 1 18 6 Z M16.5 13 A2.5 2.5 0 0 1 19 15.5 V25 A2.5 2.5 0 0 1 14 25 V15.5 A2.5 2.5 0 0 1 16.5 13 Z M24 13 A2.5 2.5 0 0 1 26.5 15.5 V21 A2.5 2.5 0 0 1 21.5 21 V15.5 A2.5 2.5 0 0 1 24 13 Z M31.5 13 A2.5 2.5 0 0 1 34 15.5 V27 A2.5 2.5 0 0 1 29 27 V15.5 A2.5 2.5 0 0 1 31.5 13 Z" fill="#F2EDE4"></path><rect x="19" y="35" width="10" height="7" rx="3.5" fill="#F2EDE4"></rect><circle cx="24" cy="26.5" r="2.6" fill="#E0663A"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;letter-spacing:-0.3px;color:#F2EDE4;">headb<span style="color:#E0663A;">o</span>ard</span>
+    </div>
+  </div>
+  <div style="padding:16px 18px;display:flex;align-items:center;gap:14px;">
+    <span style="width:52px;height:52px;border-radius:14px;background:#FAF7F0;border:1px solid #E8E2D6;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M18 6 H30 A11 11 0 0 1 41 17 V24 A11 11 0 0 1 30 35 H18 A11 11 0 0 1 7 24 V17 A11 11 0 0 1 18 6 Z M16.5 13 A2.5 2.5 0 0 1 19 15.5 V25 A2.5 2.5 0 0 1 14 25 V15.5 A2.5 2.5 0 0 1 16.5 13 Z M24 13 A2.5 2.5 0 0 1 26.5 15.5 V21 A2.5 2.5 0 0 1 21.5 21 V15.5 A2.5 2.5 0 0 1 24 13 Z M31.5 13 A2.5 2.5 0 0 1 34 15.5 V27 A2.5 2.5 0 0 1 29 27 V15.5 A2.5 2.5 0 0 1 31.5 13 Z" fill="#1C1917"></path><rect x="19" y="35" width="10" height="7" rx="3.5" fill="#1C1917"></rect><circle cx="24" cy="26.5" r="2.6" fill="#C8552F"></circle></svg></span>
+    <span style="width:52px;height:52px;border-radius:14px;background:#C8552F;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M18 6 H30 A11 11 0 0 1 41 17 V24 A11 11 0 0 1 30 35 H18 A11 11 0 0 1 7 24 V17 A11 11 0 0 1 18 6 Z M16.5 13 A2.5 2.5 0 0 1 19 15.5 V25 A2.5 2.5 0 0 1 14 25 V15.5 A2.5 2.5 0 0 1 16.5 13 Z M24 13 A2.5 2.5 0 0 1 26.5 15.5 V21 A2.5 2.5 0 0 1 21.5 21 V15.5 A2.5 2.5 0 0 1 24 13 Z M31.5 13 A2.5 2.5 0 0 1 34 15.5 V27 A2.5 2.5 0 0 1 29 27 V15.5 A2.5 2.5 0 0 1 31.5 13 Z" fill="#FFF3EC"></path><rect x="19" y="35" width="10" height="7" rx="3.5" fill="#FFF3EC"></rect><circle cx="24" cy="26.5" r="2.6" fill="#C8552F"></circle></svg></span>
+    <span style="font-size:11px;line-height:1.5;color:rgba(0,0,0,.5);">Голова и есть доска: широкий силуэт<br>с шеей, колонки — прорези, задача — точка.</span>
+  </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Дальше: «беру <a class="dv-oid" href="#7a">7a</a> — переименуй приложение и поставь знак» · «профиль из <a class="dv-oid" href="#7a">7a</a>, но контуром» · «ещё варианты»</p>
+</section>
+
+<section class="dv-turn" id="t6">
+<div class="dv-thd"><a class="dv-tid" href="#t6">6</a><span class="dv-tname">Headboard — знак «доска в голове», 4 направления (палитра <a class="dv-oid" href="#1a">1a</a>)</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="6a">
+<div class="dv-olabel"><a class="dv-oid" href="#6a">6a</a>Аватар — голова и плечи, задача-точка в голове</div>
+<div class="dv-card" style="width:400px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 48 48"><circle cx="24" cy="16" r="10" fill="none" stroke="#1C1917" stroke-width="6"></circle><path d="M8 43 a16 16 0 0 1 32 0" fill="none" stroke="#1C1917" stroke-width="6" stroke-linecap="round"></path><circle cx="24" cy="16" r="4" fill="#C8552F"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;letter-spacing:-0.3px;color:#1C1917;">headb<span style="color:#C8552F;">o</span>ard</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 48 48"><circle cx="24" cy="16" r="10" fill="none" stroke="#F2EDE4" stroke-width="6"></circle><path d="M8 43 a16 16 0 0 1 32 0" fill="none" stroke="#F2EDE4" stroke-width="6" stroke-linecap="round"></path><circle cx="24" cy="16" r="4" fill="#E0663A"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;letter-spacing:-0.3px;color:#F2EDE4;">headb<span style="color:#E0663A;">o</span>ard</span>
+    </div>
+  </div>
+  <div style="padding:16px 18px;display:flex;align-items:center;gap:14px;">
+    <span style="width:52px;height:52px;border-radius:14px;background:#FAF7F0;border:1px solid #E8E2D6;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><circle cx="24" cy="16" r="10" fill="none" stroke="#1C1917" stroke-width="6"></circle><path d="M8 43 a16 16 0 0 1 32 0" fill="none" stroke="#1C1917" stroke-width="6" stroke-linecap="round"></path><circle cx="24" cy="16" r="4" fill="#C8552F"></circle></svg></span>
+    <span style="width:52px;height:52px;border-radius:14px;background:#C8552F;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><circle cx="24" cy="16" r="10" fill="none" stroke="#FFF3EC" stroke-width="6"></circle><path d="M8 43 a16 16 0 0 1 32 0" fill="none" stroke="#FFF3EC" stroke-width="6" stroke-linecap="round"></path><circle cx="24" cy="16" r="4" fill="#FFF3EC"></circle></svg></span>
+    <span style="font-size:11px;line-height:1.5;color:rgba(0,0,0,.5);">Человечный и простой; «задача сидит<br>в голове». Минимум деталей.</span>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="6b">
+<div class="dv-olabel"><a class="dv-oid" href="#6b">6b</a>Голова-круг, внутри колонки доски</div>
+<div class="dv-card" style="width:400px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 48 48"><circle cx="24" cy="24" r="18" fill="none" stroke="#1C1917" stroke-width="6"></circle><rect x="14.5" y="16" width="5.5" height="15" rx="2.75" fill="#1C1917"></rect><rect x="28" y="16" width="5.5" height="10" rx="2.75" fill="#1C1917"></rect><circle cx="24" cy="19" r="3.4" fill="#C8552F"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;letter-spacing:-0.3px;color:#1C1917;">headb<span style="color:#C8552F;">o</span>ard</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 48 48"><circle cx="24" cy="24" r="18" fill="none" stroke="#F2EDE4" stroke-width="6"></circle><rect x="14.5" y="16" width="5.5" height="15" rx="2.75" fill="#F2EDE4"></rect><rect x="28" y="16" width="5.5" height="10" rx="2.75" fill="#F2EDE4"></rect><circle cx="24" cy="19" r="3.4" fill="#E0663A"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;letter-spacing:-0.3px;color:#F2EDE4;">headb<span style="color:#E0663A;">o</span>ard</span>
+    </div>
+  </div>
+  <div style="padding:16px 18px;display:flex;align-items:center;gap:14px;">
+    <span style="width:52px;height:52px;border-radius:14px;background:#FAF7F0;border:1px solid #E8E2D6;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><circle cx="24" cy="24" r="18" fill="none" stroke="#1C1917" stroke-width="6"></circle><rect x="14.5" y="16" width="5.5" height="15" rx="2.75" fill="#1C1917"></rect><rect x="28" y="16" width="5.5" height="10" rx="2.75" fill="#1C1917"></rect><circle cx="24" cy="19" r="3.4" fill="#C8552F"></circle></svg></span>
+    <span style="width:52px;height:52px;border-radius:14px;background:#C8552F;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><circle cx="24" cy="24" r="18" fill="none" stroke="#FFF3EC" stroke-width="6"></circle><rect x="14.5" y="16" width="5.5" height="15" rx="2.75" fill="#FFF3EC"></rect><rect x="28" y="16" width="5.5" height="10" rx="2.75" fill="#FFF3EC"></rect><circle cx="24" cy="19" r="3.4" fill="#FFF3EC"></circle></svg></span>
+    <span style="font-size:11px;line-height:1.5;color:rgba(0,0,0,.5);">Буквально «board в голове»: круг-голова,<br>внутри две колонки и задача.</span>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="6c">
+<div class="dv-olabel"><a class="dv-oid" href="#6c">6c</a>Филл-голова с вырезом-доской</div>
+<div class="dv-card" style="width:400px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M21 4 H27 A13 13 0 0 1 40 17 V23 A13 13 0 0 1 27 36 H21 A13 13 0 0 1 8 23 V17 A13 13 0 0 1 21 4 Z M19 13 H29 A4.5 4.5 0 0 1 33.5 17.5 V22.5 A4.5 4.5 0 0 1 29 27 H19 A4.5 4.5 0 0 1 14.5 22.5 V17.5 A4.5 4.5 0 0 1 19 13 Z" fill="#1C1917"></path><rect x="19" y="36" width="10" height="7" rx="3.5" fill="#1C1917"></rect><circle cx="20" cy="20" r="3.2" fill="#C8552F"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;letter-spacing:-0.3px;color:#1C1917;">headb<span style="color:#C8552F;">o</span>ard</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M21 4 H27 A13 13 0 0 1 40 17 V23 A13 13 0 0 1 27 36 H21 A13 13 0 0 1 8 23 V17 A13 13 0 0 1 21 4 Z M19 13 H29 A4.5 4.5 0 0 1 33.5 17.5 V22.5 A4.5 4.5 0 0 1 29 27 H19 A4.5 4.5 0 0 1 14.5 22.5 V17.5 A4.5 4.5 0 0 1 19 13 Z" fill="#F2EDE4"></path><rect x="19" y="36" width="10" height="7" rx="3.5" fill="#F2EDE4"></rect><circle cx="20" cy="20" r="3.2" fill="#E0663A"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;letter-spacing:-0.3px;color:#F2EDE4;">headb<span style="color:#E0663A;">o</span>ard</span>
+    </div>
+  </div>
+  <div style="padding:16px 18px;display:flex;align-items:center;gap:14px;">
+    <span style="width:52px;height:52px;border-radius:14px;background:#FAF7F0;border:1px solid #E8E2D6;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M21 4 H27 A13 13 0 0 1 40 17 V23 A13 13 0 0 1 27 36 H21 A13 13 0 0 1 8 23 V17 A13 13 0 0 1 21 4 Z M19 13 H29 A4.5 4.5 0 0 1 33.5 17.5 V22.5 A4.5 4.5 0 0 1 29 27 H19 A4.5 4.5 0 0 1 14.5 22.5 V17.5 A4.5 4.5 0 0 1 19 13 Z" fill="#1C1917"></path><rect x="19" y="36" width="10" height="7" rx="3.5" fill="#1C1917"></rect><circle cx="20" cy="20" r="3.2" fill="#C8552F"></circle></svg></span>
+    <span style="width:52px;height:52px;border-radius:14px;background:#C8552F;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M21 4 H27 A13 13 0 0 1 40 17 V23 A13 13 0 0 1 27 36 H21 A13 13 0 0 1 8 23 V17 A13 13 0 0 1 21 4 Z M19 13 H29 A4.5 4.5 0 0 1 33.5 17.5 V22.5 A4.5 4.5 0 0 1 29 27 H19 A4.5 4.5 0 0 1 14.5 22.5 V17.5 A4.5 4.5 0 0 1 19 13 Z" fill="#FFF3EC"></path><rect x="19" y="36" width="10" height="7" rx="3.5" fill="#FFF3EC"></rect><circle cx="20" cy="20" r="3.2" fill="#C8552F"></circle></svg></span>
+    <span style="font-size:11px;line-height:1.5;color:rgba(0,0,0,.5);">Плотный «шлем» с шеей; доска —<br>вырез в голове, задача внутри выреза.</span>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="6d">
+<div class="dv-olabel"><a class="dv-oid" href="#6d">6d</a>Мысль-доска — голова думает тайлом из <a class="dv-oid" href="#1a">1a</a></div>
+<div class="dv-card" style="width:400px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 48 48"><circle cx="15" cy="38" r="7.5" fill="#1C1917"></circle><circle cx="24" cy="29" r="2.6" fill="#1C1917"></circle><rect x="25" y="3" width="19" height="19" rx="7" fill="none" stroke="#1C1917" stroke-width="5"></rect><circle cx="40.5" cy="18.5" r="4.4" fill="#FAF7F0"></circle><circle cx="40.5" cy="18.5" r="3.1" fill="#C8552F"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;letter-spacing:-0.3px;color:#1C1917;">headb<span style="color:#C8552F;">o</span>ard</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="38" height="38" viewBox="0 0 48 48"><circle cx="15" cy="38" r="7.5" fill="#F2EDE4"></circle><circle cx="24" cy="29" r="2.6" fill="#F2EDE4"></circle><rect x="25" y="3" width="19" height="19" rx="7" fill="none" stroke="#F2EDE4" stroke-width="5"></rect><circle cx="40.5" cy="18.5" r="4.4" fill="#171412"></circle><circle cx="40.5" cy="18.5" r="3.1" fill="#E0663A"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:23px;letter-spacing:-0.3px;color:#F2EDE4;">headb<span style="color:#E0663A;">o</span>ard</span>
+    </div>
+  </div>
+  <div style="padding:16px 18px;display:flex;align-items:center;gap:14px;">
+    <span style="width:52px;height:52px;border-radius:14px;background:#FAF7F0;border:1px solid #E8E2D6;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><circle cx="15" cy="38" r="7.5" fill="#1C1917"></circle><circle cx="24" cy="29" r="2.6" fill="#1C1917"></circle><rect x="25" y="3" width="19" height="19" rx="7" fill="none" stroke="#1C1917" stroke-width="5"></rect><circle cx="40.5" cy="18.5" r="4.4" fill="#FAF7F0"></circle><circle cx="40.5" cy="18.5" r="3.1" fill="#C8552F"></circle></svg></span>
+    <span style="width:52px;height:52px;border-radius:14px;background:#C8552F;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><circle cx="15" cy="38" r="7.5" fill="#FFF3EC"></circle><circle cx="24" cy="29" r="2.6" fill="#FFF3EC"></circle><rect x="25" y="3" width="19" height="19" rx="7" fill="none" stroke="#FFF3EC" stroke-width="5"></rect><circle cx="40.5" cy="18.5" r="4.4" fill="#C8552F"></circle><circle cx="40.5" cy="18.5" r="3.1" fill="#FFF3EC"></circle></svg></span>
+    <span style="font-size:11px;line-height:1.5;color:rgba(0,0,0,.5);">Голова «думает» мини-версией текущего<br>знака — преемственность с <a class="dv-oid" href="#1a">1a</a>.</span>
+  </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Дальше: «беру <a class="dv-oid" href="#6b">6b</a> — переименуй приложение в headboard и поставь знак» · «покажи <a class="dv-oid" href="#6a">6a</a> крупнее / тоньше» · «ещё варианты головы»</p>
+</section>
+
+<section class="dv-turn" id="t5">
+<div class="dv-thd"><a class="dv-tid" href="#t5">5</a><span class="dv-tname">Offload в стиле <a class="dv-oid" href="#1a">1a</a> — русская и английская версии</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="5a">
+<div class="dv-olabel"><a class="dv-oid" href="#5a">5a</a>1a · Newsreader + Instrument Sans — русский</div>
+<div class="dv-card" style="width:430px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#1C1917" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#FAF7F0"></circle><circle cx="37" cy="37" r="5.5" fill="#C8552F"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:25px;letter-spacing:-0.4px;color:#1C1917;"><span style="color:#C8552F;">o</span>ffload</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#F2EDE4" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#171412"></circle><circle cx="37" cy="37" r="5.5" fill="#E0663A"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:25px;letter-spacing:-0.4px;color:#F2EDE4;"><span style="color:#E0663A;">o</span>ffload</span>
+    </div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:14px;">
+    <div style="font-family:'Literata',serif;font-weight:500;font-size:26px;color:#1C1917;line-height:1.22;text-wrap:pretty;">Разгрузи голову. Доска разберёт сама.</div>
+    <div style="font-family:'Instrument Sans',sans-serif;font-size:13px;color:#6B655B;line-height:1.55;">Вставьте что угодно — чат с Claude, заметки, поток мыслей. Это станет задачами в трёх колонках.</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span style="font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;background:#C8552F;color:#FFF3EC;">Разобрать</span>
+      <span style="font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;border:1px solid #E8E2D6;color:#1C1917;background:#FFFFFF;">Отложить</span>
+      <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1px;padding:4px 8px;border-radius:6px;background:#F2EEE2;color:#8A8175;">INBOX · 4</span>
+    </div>
+    <div style="font-size:11.5px;color:rgba(0,0,0,.5);line-height:1.5;">Literata — заголовки (RU+EN) · Newsreader — только wordmark · Instrument Sans — интерфейс</div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#FFFFFF;border:1px solid #E8E2D6;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C8552F;"></span>
+        <div style="font-family:'Instrument Sans',sans-serif;font-size:12.5px;font-weight:600;color:#1C1917;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#F3EDE2;color:#8A6D1E;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#8A8175;">чт 28</span></div>
+      </div>
+      <div style="flex:1;background:#211D1A;border:1px solid #322C27;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#E0663A;"></span>
+        <div style="font-family:'Instrument Sans',sans-serif;font-size:12.5px;font-weight:600;color:#F2EDE4;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#33291B;color:#D9B25C;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#9B9285;">чт 28</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="5b">
+<div class="dv-olabel"><a class="dv-oid" href="#5b">5b</a>1a · Newsreader + Instrument Sans — English</div>
+<div class="dv-card" style="width:430px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#1C1917" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#FAF7F0"></circle><circle cx="37" cy="37" r="5.5" fill="#C8552F"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:25px;letter-spacing:-0.4px;color:#1C1917;"><span style="color:#C8552F;">o</span>ffload</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#F2EDE4" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#171412"></circle><circle cx="37" cy="37" r="5.5" fill="#E0663A"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:25px;letter-spacing:-0.4px;color:#F2EDE4;"><span style="color:#E0663A;">o</span>ffload</span>
+    </div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:14px;">
+    <div style="font-family:'Literata',serif;font-weight:500;font-size:26px;color:#1C1917;line-height:1.22;text-wrap:pretty;">Clear your head. The board sorts itself.</div>
+    <div style="font-family:'Instrument Sans',sans-serif;font-size:13px;color:#6B655B;line-height:1.55;">Paste anything — a Claude chat, notes, a braindump. It becomes tasks in three columns.</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span style="font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;background:#C8552F;color:#FFF3EC;">Sort it</span>
+      <span style="font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;border:1px solid #E8E2D6;color:#1C1917;background:#FFFFFF;">Snooze</span>
+      <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1px;padding:4px 8px;border-radius:6px;background:#F2EEE2;color:#8A8175;">INBOX · 4</span>
+    </div>
+    <div style="font-size:11.5px;color:rgba(0,0,0,.5);line-height:1.5;">Literata — headlines · Newsreader — wordmark only · Instrument Sans — UI</div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#FFFFFF;border:1px solid #E8E2D6;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C8552F;"></span>
+        <div style="font-family:'Instrument Sans',sans-serif;font-size:12.5px;font-weight:600;color:#1C1917;">Collect beta feedback</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#F3EDE2;color:#8A6D1E;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#8A8175;">Thu 28</span></div>
+      </div>
+      <div style="flex:1;background:#211D1A;border:1px solid #322C27;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#E0663A;"></span>
+        <div style="font-family:'Instrument Sans',sans-serif;font-size:12.5px;font-weight:600;color:#F2EDE4;">Collect beta feedback</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#33291B;color:#D9B25C;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#9B9285;">Thu 28</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Приложение уже в стиле <a class="dv-oid" href="#1a">1a</a> с wordmark «offload» — это финальная сверка RU/EN. Дальше: «утверждаем» · «заголовки тоньше, как в <a class="dv-oid" href="#4a">4a</a>»</p>
+</section>
+
+<section class="dv-turn" id="t4">
+<div class="dv-thd"><a class="dv-tid" href="#t4">4</a><span class="dv-tname">Offload — тонкие начертания на палитре <a class="dv-oid" href="#1a">1a</a> (все с кириллицей)</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="4a">
+<div class="dv-olabel"><a class="dv-oid" href="#4a">4a</a>Jost Light + Manrope — геометрическая тонкость, Bauhaus · английская версия</div>
+<div class="dv-card" style="width:430px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#1C1917" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#FAF7F0"></circle><circle cx="37" cy="37" r="5.5" fill="#C8552F"></circle></svg>
+      <span style="font-family:'Jost',sans-serif;font-weight:300;font-size:24px;letter-spacing:0.4px;color:#1C1917;"><span style="color:#C8552F;">o</span>ffload</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#F2EDE4" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#171412"></circle><circle cx="37" cy="37" r="5.5" fill="#E0663A"></circle></svg>
+      <span style="font-family:'Jost',sans-serif;font-weight:300;font-size:24px;letter-spacing:0.4px;color:#F2EDE4;"><span style="color:#E0663A;">o</span>ffload</span>
+    </div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:14px;">
+    <div style="font-family:'Jost',sans-serif;font-weight:300;font-size:28px;color:#1C1917;line-height:1.2;text-wrap:pretty;">Clear your head. The board sorts itself.</div>
+    <div style="font-family:'Manrope',sans-serif;font-size:13px;color:#6B655B;line-height:1.55;">Paste anything — a Claude chat, notes, a braindump. It becomes tasks in three columns.</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span style="font-family:'Manrope',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;background:#C8552F;color:#FFF3EC;">Sort it</span>
+      <span style="font-family:'Manrope',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;border:1px solid #E8E2D6;color:#1C1917;background:#FFFFFF;">Snooze</span>
+      <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1px;padding:4px 8px;border-radius:6px;background:#F2EEE2;color:#8A8175;">INBOX · 4</span>
+    </div>
+    <div style="font-size:11.5px;color:rgba(0,0,0,.5);line-height:1.5;">Jost Light 300 — заголовки и wordmark · Manrope — интерфейс</div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#FFFFFF;border:1px solid #E8E2D6;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C8552F;"></span>
+        <div style="font-family:'Manrope',sans-serif;font-size:12.5px;font-weight:600;color:#1C1917;">Collect beta feedback</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#F3EDE2;color:#8A6D1E;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#8A8175;">Thu 28</span></div>
+      </div>
+      <div style="flex:1;background:#211D1A;border:1px solid #322C27;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#E0663A;"></span>
+        <div style="font-family:'Manrope',sans-serif;font-size:12.5px;font-weight:600;color:#F2EDE4;">Collect beta feedback</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#33291B;color:#D9B25C;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#9B9285;">Thu 28</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="4b">
+<div class="dv-olabel"><a class="dv-oid" href="#4b">4b</a>Cormorant + Onest — тонкий контрастный сериф, воздух</div>
+<div class="dv-card" style="width:430px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#1C1917" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#FAF7F0"></circle><circle cx="37" cy="37" r="5.5" fill="#C8552F"></circle></svg>
+      <span style="font-family:'Cormorant',serif;font-weight:400;font-size:27px;letter-spacing:-0.2px;color:#1C1917;"><span style="color:#C8552F;">o</span>ffload</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#F2EDE4" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#171412"></circle><circle cx="37" cy="37" r="5.5" fill="#E0663A"></circle></svg>
+      <span style="font-family:'Cormorant',serif;font-weight:400;font-size:27px;letter-spacing:-0.2px;color:#F2EDE4;"><span style="color:#E0663A;">o</span>ffload</span>
+    </div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:14px;">
+    <div style="font-family:'Cormorant',serif;font-weight:300;font-size:30px;color:#1C1917;line-height:1.15;text-wrap:pretty;">Разгрузи голову. Доска разберёт сама.</div>
+    <div style="font-family:'Onest',sans-serif;font-size:13px;color:#6B655B;line-height:1.55;">Вставьте что угодно — чат с Claude, заметки, поток мыслей. Это станет задачами в трёх колонках.</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span style="font-family:'Onest',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;background:#C8552F;color:#FFF3EC;">Разобрать</span>
+      <span style="font-family:'Onest',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;border:1px solid #E8E2D6;color:#1C1917;background:#FFFFFF;">Отложить</span>
+      <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1px;padding:4px 8px;border-radius:6px;background:#F2EEE2;color:#8A8175;">INBOX · 4</span>
+    </div>
+    <div style="font-size:11.5px;color:rgba(0,0,0,.5);line-height:1.5;">Cormorant Light 300 — заголовки, 400 — wordmark · Onest — интерфейс</div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#FFFFFF;border:1px solid #E8E2D6;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C8552F;"></span>
+        <div style="font-family:'Onest',sans-serif;font-size:12.5px;font-weight:600;color:#1C1917;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#F3EDE2;color:#8A6D1E;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#8A8175;">чт 28</span></div>
+      </div>
+      <div style="flex:1;background:#211D1A;border:1px solid #322C27;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#E0663A;"></span>
+        <div style="font-family:'Onest',sans-serif;font-size:12.5px;font-weight:600;color:#F2EDE4;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#33291B;color:#D9B25C;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#9B9285;">чт 28</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="4c">
+<div class="dv-olabel"><a class="dv-oid" href="#4c">4c</a>Commissioner Light — одна тонкая семья на всё</div>
+<div class="dv-card" style="width:430px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#1C1917" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#FAF7F0"></circle><circle cx="37" cy="37" r="5.5" fill="#C8552F"></circle></svg>
+      <span style="font-family:'Commissioner',sans-serif;font-weight:300;font-size:24px;letter-spacing:-0.2px;color:#1C1917;"><span style="color:#C8552F;">o</span>ffload</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#F2EDE4" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#171412"></circle><circle cx="37" cy="37" r="5.5" fill="#E0663A"></circle></svg>
+      <span style="font-family:'Commissioner',sans-serif;font-weight:300;font-size:24px;letter-spacing:-0.2px;color:#F2EDE4;"><span style="color:#E0663A;">o</span>ffload</span>
+    </div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:14px;">
+    <div style="font-family:'Commissioner',sans-serif;font-weight:300;font-size:27px;letter-spacing:-0.3px;color:#1C1917;line-height:1.2;text-wrap:pretty;">Разгрузи голову. Доска разберёт сама.</div>
+    <div style="font-family:'Commissioner',sans-serif;font-size:13px;font-weight:400;color:#6B655B;line-height:1.55;">Вставьте что угодно — чат с Claude, заметки, поток мыслей. Это станет задачами в трёх колонках.</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span style="font-family:'Commissioner',sans-serif;font-size:13px;font-weight:500;padding:9px 16px;border-radius:10px;background:#C8552F;color:#FFF3EC;">Разобрать</span>
+      <span style="font-family:'Commissioner',sans-serif;font-size:13px;font-weight:500;padding:9px 16px;border-radius:10px;border:1px solid #E8E2D6;color:#1C1917;background:#FFFFFF;">Отложить</span>
+      <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1px;padding:4px 8px;border-radius:6px;background:#F2EEE2;color:#8A8175;">INBOX · 4</span>
+    </div>
+    <div style="font-size:11.5px;color:rgba(0,0,0,.5);line-height:1.5;">Commissioner: 300 — заголовки и wordmark, 400–500 — интерфейс (одна семья)</div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#FFFFFF;border:1px solid #E8E2D6;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C8552F;"></span>
+        <div style="font-family:'Commissioner',sans-serif;font-size:12.5px;font-weight:500;color:#1C1917;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#F3EDE2;color:#8A6D1E;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#8A8175;">чт 28</span></div>
+      </div>
+      <div style="flex:1;background:#211D1A;border:1px solid #322C27;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#E0663A;"></span>
+        <div style="font-family:'Commissioner',sans-serif;font-size:12.5px;font-weight:500;color:#F2EDE4;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#33291B;color:#D9B25C;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#9B9285;">чт 28</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Дальше: «беру <a class="dv-oid" href="#4a">4a</a> — переодень приложение» · «заголовки из <a class="dv-oid" href="#4b">4b</a>, интерфейс из <a class="dv-oid" href="#3a">3a</a>» · «ещё тоньше / другие пары»</p>
+</section>
+
+<section class="dv-turn" id="t3">
+<div class="dv-thd"><a class="dv-tid" href="#t3">3</a><span class="dv-tname">Offload — выбор шрифтов на палитре <a class="dv-oid" href="#1a">1a</a> (метки — Spline Sans Mono везде)</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="3a">
+<div class="dv-olabel"><a class="dv-oid" href="#3a">3a</a>Unbounded + Onest — характерный, смелые заголовки</div>
+<div class="dv-card" style="width:430px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#1C1917" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#FAF7F0"></circle><circle cx="37" cy="37" r="5.5" fill="#C8552F"></circle></svg>
+      <span style="font-family:'Unbounded',sans-serif;font-weight:500;font-size:18px;letter-spacing:-0.3px;color:#1C1917;"><span style="color:#C8552F;">o</span>ffload</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#F2EDE4" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#171412"></circle><circle cx="37" cy="37" r="5.5" fill="#E0663A"></circle></svg>
+      <span style="font-family:'Unbounded',sans-serif;font-weight:500;font-size:18px;letter-spacing:-0.3px;color:#F2EDE4;"><span style="color:#E0663A;">o</span>ffload</span>
+    </div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:14px;">
+    <div style="font-family:'Unbounded',sans-serif;font-weight:500;font-size:20px;letter-spacing:-0.2px;color:#1C1917;line-height:1.15;text-wrap:pretty;">Разгрузи голову. Доска разберёт сама.</div>
+    <div style="font-family:'Onest',sans-serif;font-size:13px;color:#6B655B;line-height:1.55;">Вставьте что угодно — чат с Claude, заметки, поток мыслей. Это станет задачами в трёх колонках.</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span style="font-family:'Onest',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;background:#C8552F;color:#FFF3EC;">Разобрать</span>
+      <span style="font-family:'Onest',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;border:1px solid #E8E2D6;color:#1C1917;background:#FFFFFF;">Отложить</span>
+      <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1px;padding:4px 8px;border-radius:6px;background:#F2EEE2;color:#8A8175;">INBOX · 4</span>
+    </div>
+    <div style="font-size:11.5px;color:rgba(0,0,0,.5);line-height:1.5;">Unbounded — заголовки и wordmark · Onest — интерфейс</div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#FFFFFF;border:1px solid #E8E2D6;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C8552F;"></span>
+        <div style="font-family:'Onest',sans-serif;font-size:12.5px;font-weight:600;color:#1C1917;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#F3EDE2;color:#8A6D1E;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#8A8175;">чт 28</span></div>
+      </div>
+      <div style="flex:1;background:#211D1A;border:1px solid #322C27;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#E0663A;"></span>
+        <div style="font-family:'Onest',sans-serif;font-size:12.5px;font-weight:600;color:#F2EDE4;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#33291B;color:#D9B25C;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#9B9285;">чт 28</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="3b">
+<div class="dv-olabel"><a class="dv-oid" href="#3b">3b</a>Golos Text — одна семья на всё, швейцарский минимал</div>
+<div class="dv-card" style="width:430px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#1C1917" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#FAF7F0"></circle><circle cx="37" cy="37" r="5.5" fill="#C8552F"></circle></svg>
+      <span style="font-family:'Golos Text',sans-serif;font-weight:700;font-size:23px;letter-spacing:-0.6px;color:#1C1917;"><span style="color:#C8552F;">o</span>ffload</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#F2EDE4" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#171412"></circle><circle cx="37" cy="37" r="5.5" fill="#E0663A"></circle></svg>
+      <span style="font-family:'Golos Text',sans-serif;font-weight:700;font-size:23px;letter-spacing:-0.6px;color:#F2EDE4;"><span style="color:#E0663A;">o</span>ffload</span>
+    </div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:14px;">
+    <div style="font-family:'Golos Text',sans-serif;font-weight:700;font-size:25px;letter-spacing:-0.5px;color:#1C1917;line-height:1.18;text-wrap:pretty;">Разгрузи голову. Доска разберёт сама.</div>
+    <div style="font-family:'Golos Text',sans-serif;font-size:13px;color:#6B655B;line-height:1.55;">Вставьте что угодно — чат с Claude, заметки, поток мыслей. Это станет задачами в трёх колонках.</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span style="font-family:'Golos Text',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;background:#C8552F;color:#FFF3EC;">Разобрать</span>
+      <span style="font-family:'Golos Text',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border-radius:10px;border:1px solid #E8E2D6;color:#1C1917;background:#FFFFFF;">Отложить</span>
+      <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1px;padding:4px 8px;border-radius:6px;background:#F2EEE2;color:#8A8175;">INBOX · 4</span>
+    </div>
+    <div style="font-size:11.5px;color:rgba(0,0,0,.5);line-height:1.5;">Golos Text — заголовки, wordmark и интерфейс (одна семья)</div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#FFFFFF;border:1px solid #E8E2D6;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C8552F;"></span>
+        <div style="font-family:'Golos Text',sans-serif;font-size:12.5px;font-weight:600;color:#1C1917;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#F3EDE2;color:#8A6D1E;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#8A8175;">чт 28</span></div>
+      </div>
+      <div style="flex:1;background:#211D1A;border:1px solid #322C27;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#E0663A;"></span>
+        <div style="font-family:'Golos Text',sans-serif;font-size:12.5px;font-weight:600;color:#F2EDE4;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#33291B;color:#D9B25C;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#9B9285;">чт 28</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="3c">
+<div class="dv-olabel"><a class="dv-oid" href="#3c">3c</a>Literata + Karla — книжная тёплая, если серифы, то другие</div>
+<div class="dv-card" style="width:430px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#1C1917" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#FAF7F0"></circle><circle cx="37" cy="37" r="5.5" fill="#C8552F"></circle></svg>
+      <span style="font-family:'Literata',serif;font-weight:500;font-size:23px;letter-spacing:-0.2px;color:#1C1917;"><span style="color:#C8552F;">o</span>ffload</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:24px 20px;display:flex;align-items:center;gap:11px;">
+      <svg width="36" height="36" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#F2EDE4" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#171412"></circle><circle cx="37" cy="37" r="5.5" fill="#E0663A"></circle></svg>
+      <span style="font-family:'Literata',serif;font-weight:500;font-size:23px;letter-spacing:-0.2px;color:#F2EDE4;"><span style="color:#E0663A;">o</span>ffload</span>
+    </div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:14px;">
+    <div style="font-family:'Literata',serif;font-weight:500;font-size:24px;color:#1C1917;line-height:1.22;text-wrap:pretty;">Разгрузи голову. Доска разберёт сама.</div>
+    <div style="font-family:'Karla',sans-serif;font-size:13px;color:#6B655B;line-height:1.55;">Вставьте что угодно — чат с Claude, заметки, поток мыслей. Это станет задачами в трёх колонках.</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span style="font-family:'Karla',sans-serif;font-size:13px;font-weight:700;padding:9px 16px;border-radius:10px;background:#C8552F;color:#FFF3EC;">Разобрать</span>
+      <span style="font-family:'Karla',sans-serif;font-size:13px;font-weight:700;padding:9px 16px;border-radius:10px;border:1px solid #E8E2D6;color:#1C1917;background:#FFFFFF;">Отложить</span>
+      <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1px;padding:4px 8px;border-radius:6px;background:#F2EEE2;color:#8A8175;">INBOX · 4</span>
+    </div>
+    <div style="font-size:11.5px;color:rgba(0,0,0,.5);line-height:1.5;">Literata — заголовки и wordmark · Karla — интерфейс</div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#FFFFFF;border:1px solid #E8E2D6;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C8552F;"></span>
+        <div style="font-family:'Karla',sans-serif;font-size:12.5px;font-weight:700;color:#1C1917;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#F3EDE2;color:#8A6D1E;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#8A8175;">чт 28</span></div>
+      </div>
+      <div style="flex:1;background:#211D1A;border:1px solid #322C27;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#E0663A;"></span>
+        <div style="font-family:'Karla',sans-serif;font-size:12.5px;font-weight:700;color:#F2EDE4;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#33291B;color:#D9B25C;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#9B9285;">чт 28</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Дальше: «беру <a class="dv-oid" href="#3a">3a</a> — переодень приложение» · «покажи <a class="dv-oid" href="#3b">3b</a> с серифом из <a class="dv-oid" href="#3c">3c</a> в заголовках» · «ещё пары»</p>
+</section>
+
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Риффы на <a class="dv-oid" href="#1a">1a</a> — тёплый минимал, другие акценты и знаки</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="2a">
+<div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Шалфей — травяной акцент, EB Garamond, точка внутри доски</div>
+<div class="dv-card" style="width:430px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#F8F6EF;padding:26px 22px;display:flex;align-items:center;gap:12px;">
+      <svg width="40" height="40" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#1E1C15" stroke-width="7"></rect><circle cx="29" cy="19" r="5.5" fill="#6E7F45"></circle></svg>
+      <span style="font-family:'EB Garamond',serif;font-weight:600;font-size:26px;letter-spacing:-0.3px;color:#1E1C15;"><span style="color:#6E7F45;">o</span>board</span>
+    </div>
+    <div style="flex:1;background:#15140F;padding:26px 22px;display:flex;align-items:center;gap:12px;">
+      <svg width="40" height="40" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#EFEDE0" stroke-width="7"></rect><circle cx="29" cy="19" r="5.5" fill="#A8BC6E"></circle></svg>
+      <span style="font-family:'EB Garamond',serif;font-weight:600;font-size:26px;letter-spacing:-0.3px;color:#EFEDE0;"><span style="color:#A8BC6E;">o</span>board</span>
+    </div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:16px;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span style="width:54px;height:54px;border-radius:14px;background:#F8F6EF;border:1px solid #E6E1D0;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#1E1C15" stroke-width="7"></rect><circle cx="29" cy="19" r="5.5" fill="#6E7F45"></circle></svg></span>
+      <span style="width:54px;height:54px;border-radius:14px;background:#6E7F45;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#F4F8E4" stroke-width="7"></rect><circle cx="29" cy="19" r="5.5" fill="#F4F8E4"></circle></svg></span>
+      <span style="font-size:11px;line-height:1.5;color:rgba(0,0,0,.5);">Тот же «o»-тайл, но задача-точка<br>живёт внутри поля доски.</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1.2px;color:rgba(0,0,0,.45);">LIGHT</span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#F8F6EF;border:1px solid #E6E1D0;color:#85806E;font:500 9px 'Spline Sans Mono',monospace;"><span>Фон</span><span>F8F6EF</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#FFFFFF;border:1px solid #E6E1D0;color:#85806E;font:500 9px 'Spline Sans Mono',monospace;"><span>Карточка</span><span>FFFFFF</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#1E1C15;color:#B5B09C;font:500 9px 'Spline Sans Mono',monospace;"><span>Чернила</span><span>1E1C15</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#85806E;color:#F4F1E5;font:500 9px 'Spline Sans Mono',monospace;"><span>Втор. текст</span><span>85806E</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#6E7F45;color:#F4F8E4;font:500 9px 'Spline Sans Mono',monospace;"><span>Акцент</span><span>6E7F45</span></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1.2px;color:rgba(0,0,0,.45);">DARK</span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#15140F;color:#7C7864;font:500 9px 'Spline Sans Mono',monospace;"><span>Фон</span><span>15140F</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#1E1D16;color:#8B876F;font:500 9px 'Spline Sans Mono',monospace;"><span>Карточка</span><span>1E1D16</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#EFEDE0;border:1px solid #E6E1D0;color:#6B6753;font:500 9px 'Spline Sans Mono',monospace;"><span>Текст</span><span>EFEDE0</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#97927D;color:#1E1D16;font:500 9px 'Spline Sans Mono',monospace;"><span>Втор. текст</span><span>97927D</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#A8BC6E;color:#1F2608;font:500 9px 'Spline Sans Mono',monospace;"><span>Акцент</span><span>A8BC6E</span></span>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'EB Garamond',serif;font-size:25px;font-weight:600;color:#1E1C15;line-height:1.25;">Три колонки. Ничего лишнего.</div>
+      <div style="font-size:12.5px;color:#6B6753;margin-top:5px;line-height:1.5;">EB Garamond — заголовки · Instrument Sans — интерфейс · Spline Sans Mono — метки</div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#FFFFFF;border:1px solid #E6E1D0;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#6E7F45;"></span>
+        <div style="font-size:12.5px;font-weight:600;color:#1E1C15;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#EDEBDB;color:#5C6B33;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#85806E;">чт 28</span></div>
+      </div>
+      <div style="flex:1;background:#1E1D16;border:1px solid #2E2C21;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#A8BC6E;"></span>
+        <div style="font-size:12.5px;font-weight:600;color:#EFEDE0;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#2C311B;color:#C3D591;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#97927D;">чт 28</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="2b">
+<div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>Охра — янтарный акцент, Spectral, точка выходит из контура</div>
+<div class="dv-card" style="width:430px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF6EE;padding:26px 22px;display:flex;align-items:center;gap:12px;">
+      <svg width="40" height="40" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#201B12" stroke-width="7"></rect><rect x="17" y="34" width="14" height="14" fill="#FAF6EE"></rect><circle cx="24" cy="41.5" r="5" fill="#A87A1F"></circle></svg>
+      <span style="font-family:'Spectral',serif;font-weight:500;font-size:25px;letter-spacing:-0.3px;color:#201B12;"><span style="color:#A87A1F;">o</span>board</span>
+    </div>
+    <div style="flex:1;background:#16130C;padding:26px 22px;display:flex;align-items:center;gap:12px;">
+      <svg width="40" height="40" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#F2ECDD" stroke-width="7"></rect><rect x="17" y="34" width="14" height="14" fill="#16130C"></rect><circle cx="24" cy="41.5" r="5" fill="#D9A93F"></circle></svg>
+      <span style="font-family:'Spectral',serif;font-weight:500;font-size:25px;letter-spacing:-0.3px;color:#F2ECDD;"><span style="color:#D9A93F;">o</span>board</span>
+    </div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:16px;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span style="width:54px;height:54px;border-radius:14px;background:#FAF6EE;border:1px solid #EAE2CF;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#201B12" stroke-width="7"></rect><rect x="17" y="34" width="14" height="14" fill="#FAF6EE"></rect><circle cx="24" cy="41.5" r="5" fill="#A87A1F"></circle></svg></span>
+      <span style="width:54px;height:54px;border-radius:14px;background:#A87A1F;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#FFF3D9" stroke-width="7"></rect><rect x="17" y="34" width="14" height="14" fill="#A87A1F"></rect><circle cx="24" cy="41.5" r="5" fill="#FFF3D9"></circle></svg></span>
+      <span style="font-size:11px;line-height:1.5;color:rgba(0,0,0,.5);">Контур разомкнут снизу — задача<br>выходит из доски в мир.</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1.2px;color:rgba(0,0,0,.45);">LIGHT</span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#FAF6EE;border:1px solid #EAE2CF;color:#8C8270;font:500 9px 'Spline Sans Mono',monospace;"><span>Фон</span><span>FAF6EE</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#FFFFFF;border:1px solid #EAE2CF;color:#8C8270;font:500 9px 'Spline Sans Mono',monospace;"><span>Карточка</span><span>FFFFFF</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#201B12;color:#B7AE9C;font:500 9px 'Spline Sans Mono',monospace;"><span>Чернила</span><span>201B12</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#8C8270;color:#F6F1E6;font:500 9px 'Spline Sans Mono',monospace;"><span>Втор. текст</span><span>8C8270</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#A87A1F;color:#FFF3D9;font:500 9px 'Spline Sans Mono',monospace;"><span>Акцент</span><span>A87A1F</span></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1.2px;color:rgba(0,0,0,.45);">DARK</span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#16130C;color:#7E7660;font:500 9px 'Spline Sans Mono',monospace;"><span>Фон</span><span>16130C</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#201C12;color:#8D856E;font:500 9px 'Spline Sans Mono',monospace;"><span>Карточка</span><span>201C12</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#F2ECDD;border:1px solid #EAE2CF;color:#6E6753;font:500 9px 'Spline Sans Mono',monospace;"><span>Текст</span><span>F2ECDD</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#9C9077;color:#201C12;font:500 9px 'Spline Sans Mono',monospace;"><span>Втор. текст</span><span>9C9077</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#D9A93F;color:#33230A;font:500 9px 'Spline Sans Mono',monospace;"><span>Акцент</span><span>D9A93F</span></span>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Spectral',serif;font-size:24px;font-weight:500;color:#201B12;line-height:1.25;">Три колонки. Ничего лишнего.</div>
+      <div style="font-size:12.5px;color:#6E6753;margin-top:5px;line-height:1.5;">Spectral — заголовки · Instrument Sans — интерфейс · Spline Sans Mono — метки</div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#FFFFFF;border:1px solid #EAE2CF;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#A87A1F;"></span>
+        <div style="font-size:12.5px;font-weight:600;color:#201B12;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#F3ECDA;color:#8A6D1E;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#8C8270;">чт 28</span></div>
+      </div>
+      <div style="flex:1;background:#201C12;border:1px solid #322B1D;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#D9A93F;"></span>
+        <div style="font-size:12.5px;font-weight:600;color:#F2ECDD;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#38301A;color:#E3C377;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#9C9077;">чт 28</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="2c">
+<div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>Слива — приглушённо-винный акцент, Young Serif, плотный тайл</div>
+<div class="dv-card" style="width:430px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F2;padding:26px 22px;display:flex;align-items:center;gap:12px;">
+      <svg width="40" height="40" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M18 5h12a13 13 0 0 1 13 13v12a13 13 0 0 1-13 13H18A13 13 0 0 1 5 30V18A13 13 0 0 1 18 5Zm6 9.5a9.5 9.5 0 1 0 0 19 9.5 9.5 0 0 0 0-19Z" fill="#201618"></path><circle cx="24" cy="24" r="5" fill="#8A4F5D"></circle></svg>
+      <span style="font-family:'Young Serif',serif;font-size:23px;letter-spacing:-0.5px;color:#201618;"><span style="color:#8A4F5D;">o</span>board</span>
+    </div>
+    <div style="flex:1;background:#171114;padding:26px 22px;display:flex;align-items:center;gap:12px;">
+      <svg width="40" height="40" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M18 5h12a13 13 0 0 1 13 13v12a13 13 0 0 1-13 13H18A13 13 0 0 1 5 30V18A13 13 0 0 1 18 5Zm6 9.5a9.5 9.5 0 1 0 0 19 9.5 9.5 0 0 0 0-19Z" fill="#F3ECEE"></path><circle cx="24" cy="24" r="5" fill="#C98A9A"></circle></svg>
+      <span style="font-family:'Young Serif',serif;font-size:23px;letter-spacing:-0.5px;color:#F3ECEE;"><span style="color:#C98A9A;">o</span>board</span>
+    </div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:16px;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span style="width:54px;height:54px;border-radius:14px;background:#FAF7F2;border:1px solid #EAE1DC;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M18 5h12a13 13 0 0 1 13 13v12a13 13 0 0 1-13 13H18A13 13 0 0 1 5 30V18A13 13 0 0 1 18 5Zm6 9.5a9.5 9.5 0 1 0 0 19 9.5 9.5 0 0 0 0-19Z" fill="#201618"></path><circle cx="24" cy="24" r="5" fill="#8A4F5D"></circle></svg></span>
+      <span style="width:54px;height:54px;border-radius:14px;background:#8A4F5D;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><path fill-rule="evenodd" d="M18 5h12a13 13 0 0 1 13 13v12a13 13 0 0 1-13 13H18A13 13 0 0 1 5 30V18A13 13 0 0 1 18 5Zm6 9.5a9.5 9.5 0 1 0 0 19 9.5 9.5 0 0 0 0-19Z" fill="#FFE9EE"></path><circle cx="24" cy="24" r="5" fill="#FFE9EE"></circle></svg></span>
+      <span style="font-size:11px;line-height:1.5;color:rgba(0,0,0,.5);">Инверсия 1a: плотный тайл,<br>«o» — вырез, задача внутри.</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1.2px;color:rgba(0,0,0,.45);">LIGHT</span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#FAF7F2;border:1px solid #EAE1DC;color:#8D8083;font:500 9px 'Spline Sans Mono',monospace;"><span>Фон</span><span>FAF7F2</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#FFFFFF;border:1px solid #EAE1DC;color:#8D8083;font:500 9px 'Spline Sans Mono',monospace;"><span>Карточка</span><span>FFFFFF</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#201618;color:#B3A7AA;font:500 9px 'Spline Sans Mono',monospace;"><span>Чернила</span><span>201618</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#8D8083;color:#F5EFF1;font:500 9px 'Spline Sans Mono',monospace;"><span>Втор. текст</span><span>8D8083</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#8A4F5D;color:#FFE9EE;font:500 9px 'Spline Sans Mono',monospace;"><span>Акцент</span><span>8A4F5D</span></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1.2px;color:rgba(0,0,0,.45);">DARK</span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#171114;color:#7E7176;font:500 9px 'Spline Sans Mono',monospace;"><span>Фон</span><span>171114</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#221A1E;color:#8D8085;font:500 9px 'Spline Sans Mono',monospace;"><span>Карточка</span><span>221A1E</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#F3ECEE;border:1px solid #EAE1DC;color:#6B5F63;font:500 9px 'Spline Sans Mono',monospace;"><span>Текст</span><span>F3ECEE</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#9C8D91;color:#221A1E;font:500 9px 'Spline Sans Mono',monospace;"><span>Втор. текст</span><span>9C8D91</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#C98A9A;color:#38141D;font:500 9px 'Spline Sans Mono',monospace;"><span>Акцент</span><span>C98A9A</span></span>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Young Serif',serif;font-size:22px;color:#201618;line-height:1.3;">Три колонки. Ничего лишнего.</div>
+      <div style="font-size:12.5px;color:#6B5F63;margin-top:5px;line-height:1.5;">Young Serif — заголовки · Instrument Sans — интерфейс · Spline Sans Mono — метки</div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#FFFFFF;border:1px solid #EAE1DC;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#8A4F5D;"></span>
+        <div style="font-size:12.5px;font-weight:600;color:#201618;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#F2E7EA;color:#7A4552;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#8D8083;">чт 28</span></div>
+      </div>
+      <div style="flex:1;background:#221A1E;border:1px solid #322528;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C98A9A;"></span>
+        <div style="font-size:12.5px;font-weight:600;color:#F3ECEE;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#3A2A30;color:#DCA9B7;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#9C8D91;">чт 28</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Дальше: «редизайним приложение в <a class="dv-oid" href="#1a">1a</a>» · «возьми знак <a class="dv-oid" href="#2b">2b</a> с палитрой <a class="dv-oid" href="#1a">1a</a>» · «ещё варианты»</p>
+</section>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">oBoard — логотип, палитры light/dark, типографика</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Тёплая бумага — эволюция текущего стиля, спокойный минимал</div>
+<div class="dv-card" style="width:430px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FAF7F0;padding:26px 22px;display:flex;align-items:center;gap:12px;">
+      <svg width="40" height="40" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#1C1917" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#FAF7F0"></circle><circle cx="37" cy="37" r="5.5" fill="#C8552F"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:25px;letter-spacing:-0.4px;color:#1C1917;"><span style="color:#C8552F;">o</span>board</span>
+    </div>
+    <div style="flex:1;background:#171412;padding:26px 22px;display:flex;align-items:center;gap:12px;">
+      <svg width="40" height="40" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#F2EDE4" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#171412"></circle><circle cx="37" cy="37" r="5.5" fill="#E0663A"></circle></svg>
+      <span style="font-family:'Newsreader',serif;font-weight:500;font-size:25px;letter-spacing:-0.4px;color:#F2EDE4;"><span style="color:#E0663A;">o</span>board</span>
+    </div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:16px;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span style="width:54px;height:54px;border-radius:14px;background:#FAF7F0;border:1px solid #E8E2D6;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#1C1917" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#FAF7F0"></circle><circle cx="37" cy="37" r="5.5" fill="#C8552F"></circle></svg></span>
+      <span style="width:54px;height:54px;border-radius:14px;background:#C8552F;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><rect x="5" y="5" width="38" height="38" rx="13" fill="none" stroke="#FFF6EF" stroke-width="7"></rect><circle cx="37" cy="37" r="7.5" fill="#C8552F"></circle><circle cx="37" cy="37" r="5.5" fill="#FFF6EF"></circle></svg></span>
+      <span style="font-size:11px;line-height:1.5;color:rgba(0,0,0,.5);">Знак — «доска-o» с точкой-задачей.<br>Иконки для светлой темы и акцентная.</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1.2px;color:rgba(0,0,0,.45);">LIGHT</span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#FAF7F0;border:1px solid #E8E2D6;color:#8A8175;font:500 9px 'Spline Sans Mono',monospace;"><span>Фон</span><span>FAF7F0</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#FFFFFF;border:1px solid #E8E2D6;color:#8A8175;font:500 9px 'Spline Sans Mono',monospace;"><span>Карточка</span><span>FFFFFF</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#1C1917;color:#B9B2A6;font:500 9px 'Spline Sans Mono',monospace;"><span>Чернила</span><span>1C1917</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#8A8175;color:#F5F1E8;font:500 9px 'Spline Sans Mono',monospace;"><span>Втор. текст</span><span>8A8175</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#C8552F;color:#FFE9DE;font:500 9px 'Spline Sans Mono',monospace;"><span>Акцент</span><span>C8552F</span></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1.2px;color:rgba(0,0,0,.45);">DARK</span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#171412;color:#7D766B;font:500 9px 'Spline Sans Mono',monospace;"><span>Фон</span><span>171412</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#211D1A;color:#8A8275;font:500 9px 'Spline Sans Mono',monospace;"><span>Карточка</span><span>211D1A</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#F2EDE4;border:1px solid #E8E2D6;color:#6E675C;font:500 9px 'Spline Sans Mono',monospace;"><span>Текст</span><span>F2EDE4</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#9B9285;color:#211D1A;font:500 9px 'Spline Sans Mono',monospace;"><span>Втор. текст</span><span>9B9285</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#E0663A;color:#3A1408;font:500 9px 'Spline Sans Mono',monospace;"><span>Акцент</span><span>E0663A</span></span>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Newsreader',serif;font-size:24px;font-weight:500;color:#1C1917;line-height:1.25;">Три колонки. Ничего лишнего.</div>
+      <div style="font-size:12.5px;color:#6E675C;margin-top:5px;line-height:1.5;">Newsreader — заголовки · Instrument Sans — интерфейс · Spline Sans Mono — метки</div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#FFFFFF;border:1px solid #E8E2D6;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C8552F;"></span>
+        <div style="font-size:12.5px;font-weight:600;color:#1C1917;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#F3EDE2;color:#8A6D1E;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#8A8175;">чт 28</span></div>
+      </div>
+      <div style="flex:1;background:#211D1A;border:1px solid #322C27;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#E0663A;"></span>
+        <div style="font-size:12.5px;font-weight:600;color:#F2EDE4;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#33291B;color:#D9B25C;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#9B9285;">чт 28</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Графит + лайм — технологичный, «инструментальный» минимал</div>
+<div class="dv-card" style="width:430px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#F6F7F5;padding:26px 22px;display:flex;align-items:center;gap:12px;">
+      <svg width="40" height="40" viewBox="0 0 48 48"><rect x="8" y="8" width="9" height="26" rx="4.5" fill="#16181A"></rect><rect x="31" y="14" width="9" height="26" rx="4.5" fill="#16181A"></rect><circle cx="24" cy="24" r="6" fill="#7BB01F"></circle></svg>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:23px;letter-spacing:-0.8px;color:#16181A;">oboard</span>
+    </div>
+    <div style="flex:1;background:#0E100F;padding:26px 22px;display:flex;align-items:center;gap:12px;">
+      <svg width="40" height="40" viewBox="0 0 48 48"><rect x="8" y="8" width="9" height="26" rx="4.5" fill="#EDF2E9"></rect><rect x="31" y="14" width="9" height="26" rx="4.5" fill="#EDF2E9"></rect><circle cx="24" cy="24" r="6" fill="#C6F454"></circle></svg>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:23px;letter-spacing:-0.8px;color:#EDF2E9;">oboard</span>
+    </div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:16px;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span style="width:54px;height:54px;border-radius:14px;background:#16181A;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><rect x="8" y="8" width="9" height="26" rx="4.5" fill="#EDF2E9"></rect><rect x="31" y="14" width="9" height="26" rx="4.5" fill="#EDF2E9"></rect><circle cx="24" cy="24" r="6" fill="#C6F454"></circle></svg></span>
+      <span style="width:54px;height:54px;border-radius:14px;background:#C6F454;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><rect x="8" y="8" width="9" height="26" rx="4.5" fill="#101408"></rect><rect x="31" y="14" width="9" height="26" rx="4.5" fill="#101408"></rect><circle cx="24" cy="24" r="6" fill="#101408"></circle></svg></span>
+      <span style="font-size:11px;line-height:1.5;color:rgba(0,0,0,.5);">Знак — две колонки и задача-точка<br>между ними. Точка = «o».</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1.2px;color:rgba(0,0,0,.45);">LIGHT</span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#F6F7F5;border:1px solid #E3E6E1;color:#7A8087;font:500 9px 'Spline Sans Mono',monospace;"><span>Фон</span><span>F6F7F5</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#FFFFFF;border:1px solid #E3E6E1;color:#7A8087;font:500 9px 'Spline Sans Mono',monospace;"><span>Карточка</span><span>FFFFFF</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#16181A;color:#A9AFB6;font:500 9px 'Spline Sans Mono',monospace;"><span>Графит</span><span>16181A</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#7A8087;color:#EFF1EE;font:500 9px 'Spline Sans Mono',monospace;"><span>Втор. текст</span><span>7A8087</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#7BB01F;color:#F2FFD9;font:500 9px 'Spline Sans Mono',monospace;"><span>Акцент</span><span>7BB01F</span></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1.2px;color:rgba(0,0,0,.45);">DARK</span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#0E100F;color:#6C736C;font:500 9px 'Spline Sans Mono',monospace;"><span>Фон</span><span>0E100F</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#171A18;color:#7E857E;font:500 9px 'Spline Sans Mono',monospace;"><span>Карточка</span><span>171A18</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#EDF2E9;border:1px solid #E3E6E1;color:#5C635C;font:500 9px 'Spline Sans Mono',monospace;"><span>Текст</span><span>EDF2E9</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#8A938B;color:#141614;font:500 9px 'Spline Sans Mono',monospace;"><span>Втор. текст</span><span>8A938B</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#C6F454;color:#243004;font:500 9px 'Spline Sans Mono',monospace;"><span>Акцент</span><span>C6F454</span></span>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:23px;font-weight:600;letter-spacing:-0.6px;color:#16181A;line-height:1.25;">Три колонки. Ничего лишнего.</div>
+      <div style="font-size:12.5px;color:#5C635C;margin-top:5px;line-height:1.5;font-family:'Hanken Grotesk',sans-serif;">Space Grotesk — заголовки · Hanken Grotesk — интерфейс · Spline Sans Mono — метки</div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#FFFFFF;border:1px solid #E3E6E1;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;font-family:'Hanken Grotesk',sans-serif;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#7BB01F;"></span>
+        <div style="font-size:12.5px;font-weight:600;color:#16181A;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#EDF3E0;color:#55771A;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#7A8087;">чт 28</span></div>
+      </div>
+      <div style="flex:1;background:#171A18;border:1px solid #262B27;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;font-family:'Hanken Grotesk',sans-serif;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#C6F454;"></span>
+        <div style="font-size:12.5px;font-weight:600;color:#EDF2E9;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#2A331B;color:#B9E36B;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#8A938B;">чт 28</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Чернила + кобальт — издательская типографика, чистый белый/чёрный</div>
+<div class="dv-card" style="width:430px">
+  <div style="display:flex;">
+    <div style="flex:1;background:#FFFFFF;padding:26px 22px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #E6E6E2;">
+      <svg width="40" height="40" viewBox="0 0 48 48"><circle cx="24" cy="24" r="16" fill="none" stroke="#0A0A0A" stroke-width="6.5" stroke-linecap="round" stroke-dasharray="80 20.5" transform="rotate(-55 24 24)"></circle><circle cx="35.4" cy="12.9" r="5" fill="#2442E4"></circle></svg>
+      <span style="font-family:'Instrument Serif',serif;font-size:27px;letter-spacing:-0.2px;color:#0A0A0A;">o<span style="font-style:italic;">board</span></span>
+    </div>
+    <div style="flex:1;background:#0B0B0C;padding:26px 22px;display:flex;align-items:center;gap:12px;">
+      <svg width="40" height="40" viewBox="0 0 48 48"><circle cx="24" cy="24" r="16" fill="none" stroke="#F4F4F1" stroke-width="6.5" stroke-linecap="round" stroke-dasharray="80 20.5" transform="rotate(-55 24 24)"></circle><circle cx="35.4" cy="12.9" r="5" fill="#5B72FF"></circle></svg>
+      <span style="font-family:'Instrument Serif',serif;font-size:27px;letter-spacing:-0.2px;color:#F4F4F1;">o<span style="font-style:italic;">board</span></span>
+    </div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:16px;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span style="width:54px;height:54px;border-radius:14px;background:#0A0A0A;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><circle cx="24" cy="24" r="16" fill="none" stroke="#F4F4F1" stroke-width="6.5" stroke-linecap="round" stroke-dasharray="80 20.5" transform="rotate(-55 24 24)"></circle><circle cx="35.4" cy="12.9" r="5" fill="#5B72FF"></circle></svg></span>
+      <span style="width:54px;height:54px;border-radius:14px;background:#2442E4;display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 48 48"><circle cx="24" cy="24" r="16" fill="none" stroke="#FFFFFF" stroke-width="6.5" stroke-linecap="round" stroke-dasharray="80 20.5" transform="rotate(-55 24 24)"></circle><circle cx="35.4" cy="12.9" r="5" fill="#FFFFFF"></circle></svg></span>
+      <span style="font-size:11px;line-height:1.5;color:rgba(0,0,0,.5);">Знак — разомкнутое «o»: задача,<br>выходящая из потока. Точка = фокус.</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1.2px;color:rgba(0,0,0,.45);">LIGHT</span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#FFFFFF;border:1px solid #E6E6E2;color:#6F6F6C;font:500 9px 'Spline Sans Mono',monospace;"><span>Фон</span><span>FFFFFF</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#F5F5F3;border:1px solid #E6E6E2;color:#6F6F6C;font:500 9px 'Spline Sans Mono',monospace;"><span>Панель</span><span>F5F5F3</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#0A0A0A;color:#9C9C98;font:500 9px 'Spline Sans Mono',monospace;"><span>Чернила</span><span>0A0A0A</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#6F6F6C;color:#F0F0ED;font:500 9px 'Spline Sans Mono',monospace;"><span>Втор. текст</span><span>6F6F6C</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#2442E4;color:#DDE3FF;font:500 9px 'Spline Sans Mono',monospace;"><span>Акцент</span><span>2442E4</span></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <span style="font:600 9px 'Spline Sans Mono',monospace;letter-spacing:1.2px;color:rgba(0,0,0,.45);">DARK</span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#0B0B0C;color:#6A6A6E;font:500 9px 'Spline Sans Mono',monospace;"><span>Фон</span><span>0B0B0C</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#151517;color:#77777B;font:500 9px 'Spline Sans Mono',monospace;"><span>Карточка</span><span>151517</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#F4F4F1;border:1px solid #E6E6E2;color:#5F5F5C;font:500 9px 'Spline Sans Mono',monospace;"><span>Текст</span><span>F4F4F1</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#8C8C90;color:#141416;font:500 9px 'Spline Sans Mono',monospace;"><span>Втор. текст</span><span>8C8C90</span></span>
+        <span style="display:flex;align-items:center;justify-content:space-between;height:26px;border-radius:7px;padding:0 9px;background:#5B72FF;color:#0A1140;font:500 9px 'Spline Sans Mono',monospace;"><span>Акцент</span><span>5B72FF</span></span>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Instrument Serif',serif;font-size:26px;color:#0A0A0A;line-height:1.2;">Три колонки. <span style="font-style:italic;color:#2442E4;">Ничего лишнего.</span></div>
+      <div style="font-size:12.5px;color:#6F6F6C;margin-top:5px;line-height:1.5;font-family:'Archivo',sans-serif;">Instrument Serif — заголовки · Archivo — интерфейс · Spline Sans Mono — метки</div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#FFFFFF;border:1px solid #E6E6E2;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;font-family:'Archivo',sans-serif;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#2442E4;"></span>
+        <div style="font-size:12.5px;font-weight:600;color:#0A0A0A;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#EDF0FF;color:#2442E4;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#6F6F6C;">чт 28</span></div>
+      </div>
+      <div style="flex:1;background:#151517;border:1px solid #26262A;border-radius:11px;padding:11px 11px 11px 15px;position:relative;overflow:hidden;font-family:'Archivo',sans-serif;">
+        <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#5B72FF;"></span>
+        <div style="font-size:12.5px;font-weight:600;color:#F4F4F1;">Собрать бета-отзывы</div>
+        <div style="display:flex;gap:6px;margin-top:7px;align-items:center;"><span style="font:600 8.5px 'Spline Sans Mono',monospace;padding:2px 6px;border-radius:5px;background:#1E2340;color:#93A3FF;">memory-app</span><span style="font:500 9px 'Spline Sans Mono',monospace;color:#8C8C90;">чт 28</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Дальше: «редизайним приложение в стиле <a class="dv-oid" href="#1a">1a</a>» · «покажи <a class="dv-oid" href="#1b">1b</a> с тёплым серым» · «ещё направления»</p>
+</section>
+
+</x-dc>
+</body>
+</html>
