@@ -1,0 +1,25 @@
+.gitignore
+  s_2372cb08d633fa::t_7651660dcd16e0 10-11
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_e0859c25fcc862 61,77-81
+apps/api/README.md
+  s_2372cb08d633fa::t_067ca9d06cad89 1-108
+package.json
+  s_2372cb08d633fa::t_253a5dea3afd12 14-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "d249986284cdab3ab483bd3e0f6da327ac239f4e",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
