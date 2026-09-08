@@ -1,0 +1,43 @@
+apps/api/.config/dotnet-tools.json
+  s_2372cb08d633fa::t_6ac7966ce2a40a 1-13
+apps/api/Headboard.Api.Tests/Headboard.Api.Tests.csproj
+  s_2372cb08d633fa::t_a65efc0ee86244 1-26
+apps/api/Headboard.Api.sln
+  s_2372cb08d633fa::t_94a3a40dc5089f 1-48
+apps/api/Headboard.Api/Data/AppDb.cs
+  s_2372cb08d633fa::t_92fd600a583e2a 1-55
+apps/api/Headboard.Api/Data/Entities.cs
+  s_2372cb08d633fa::t_7ec20afb8e6469 1-70
+apps/api/Headboard.Api/Data/Migrations/20260908183441_Initial.Designer.cs
+  s_2372cb08d633fa::t_be928f50ef3134 1-240
+apps/api/Headboard.Api/Data/Migrations/20260908183441_Initial.cs
+  s_2372cb08d633fa::t_45ceaf75b554e8 1-188
+apps/api/Headboard.Api/Data/Migrations/AppDbModelSnapshot.cs
+  s_2372cb08d633fa::t_1a24033db19827 1-237
+apps/api/Headboard.Api/Headboard.Api.csproj
+  s_2372cb08d633fa::t_554800ff9a0e69 1-22
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_9d668bdd4620ab 1-48
+apps/api/Headboard.Api/Properties/launchSettings.json
+  s_2372cb08d633fa::t_a81ac9479cc6fb 1-14
+apps/api/Headboard.Api/appsettings.Development.json
+  s_2372cb08d633fa::t_df5775b6d732a9 1-14
+apps/api/Headboard.Api/appsettings.json
+  s_2372cb08d633fa::t_18064a0580f546 1-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "90e6ff8d9d7e71adcdb432e24d45c9f996afcd18",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
