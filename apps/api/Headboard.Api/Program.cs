@@ -22,12 +22,13 @@ builder.Services.ConfigureHttpJsonOptions(o =>
 });
 
 // Database: SQLite by default, PostgreSQL when ConnectionStrings:Postgres is present.
-var postgres = builder.Configuration.GetConnectionString("Postgres");
-var sqlite = builder.Configuration.GetConnectionString("Sqlite") ?? "Data Source=headboard.db";
-builder.Services.AddDbContext<AppDb>(o =>
+// Resolved lazily from DI so the final configuration (incl. test overrides) is used.
+builder.Services.AddDbContext<AppDb>((sp, o) =>
 {
+    var cfg = sp.GetRequiredService<IConfiguration>();
+    var postgres = cfg.GetConnectionString("Postgres");
     if (!string.IsNullOrWhiteSpace(postgres)) o.UseNpgsql(postgres);
-    else o.UseSqlite(sqlite);
+    else o.UseSqlite(cfg.GetConnectionString("Sqlite") is { Length: > 0 } s ? s : "Data Source=headboard.db");
 });
 
 // Auth: HS256 JWT issued by TokenService; external id-tokens verified per provider.
@@ -80,6 +81,7 @@ app.MapTasks();
 app.MapComments();
 app.MapProjects();
 app.MapSettings();
+app.MapFiles();
 
 app.Run();
 
