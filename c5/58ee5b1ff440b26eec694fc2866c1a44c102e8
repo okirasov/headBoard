@@ -1,0 +1,37 @@
+apps/api/Headboard.Api.Tests/TasksTests.cs
+  s_2372cb08d633fa::t_cf735c728411a0 1-180
+apps/api/Headboard.Api/Comments/CommentEndpoints.cs
+  s_2372cb08d633fa::t_43bd5a738ad0e2 1-48
+apps/api/Headboard.Api/Files/FileRefDto.cs
+  s_2372cb08d633fa::t_4ef4c5b0e19060 1-23
+apps/api/Headboard.Api/Files/LocalStorage.cs
+  s_2372cb08d633fa::t_6da15f67e3713c 1-32
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_ca88f96abca741 4-8,54,79-82
+apps/api/Headboard.Api/Projects/ProjectEndpoints.cs
+  s_2372cb08d633fa::t_ca3fcc5699790c 1-88
+apps/api/Headboard.Api/Settings/SettingsEndpoints.cs
+  s_2372cb08d633fa::t_68efa3b8761f66 1-42
+apps/api/Headboard.Api/Tasks/TaskDto.cs
+  s_2372cb08d633fa::t_68e947a689cefb 1-45
+apps/api/Headboard.Api/Tasks/TaskEndpoints.cs
+  s_2372cb08d633fa::t_6d91053c514a41 1-125
+apps/api/Headboard.Api/Tasks/TaskMapper.cs
+  s_2372cb08d633fa::t_6bf27f77c50453 1-158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "c558ee5b1ff440b26eec694fc2866c1a44c102e8",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
