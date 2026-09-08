@@ -1,7 +1,10 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Headboard.Api.Auth;
 using Headboard.Api.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +25,28 @@ builder.Services.AddDbContext<AppDb>(o =>
     else o.UseSqlite(sqlite);
 });
 
+// Auth: HS256 JWT issued by TokenService; external id-tokens verified per provider.
+// Options are bound lazily so they see the final configuration (tests override it in memory).
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+    .Configure<IConfiguration>((o, cfg) =>
+    {
+        var issuer = TokenService.Issuer(cfg);
+        o.MapInboundClaims = false;
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidIssuer = issuer,
+            ValidAudience = issuer,
+            IssuerSigningKey = TokenService.SigningKey(cfg),
+            NameClaimType = "name",
+            ClockSkew = TimeSpan.FromMinutes(1),
+        };
+    });
+builder.Services.AddAuthorization();
+builder.Services.AddSingleton<TokenService>();
+builder.Services.AddSingleton<GoogleVerifier>();
+builder.Services.AddSingleton<AppleVerifier>();
+
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
@@ -40,8 +65,11 @@ using (var scope = app.Services.CreateScope())
 }
 
 if (app.Environment.IsDevelopment()) app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGet("/health", () => Results.Ok(new { ok = true }));
+app.MapAuth();
 
 app.Run();
 
