@@ -1,6 +1,11 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Headboard.Api.Auth;
+using Headboard.Api.Comments;
+using Headboard.Api.Files;
+using Headboard.Api.Projects;
+using Headboard.Api.Settings;
+using Headboard.Api.Tasks;
 using Headboard.Api.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +51,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddSingleton<TokenService>();
 builder.Services.AddSingleton<GoogleVerifier>();
 builder.Services.AddSingleton<AppleVerifier>();
+builder.Services.AddSingleton<LocalStorage>();
 
 if (builder.Environment.IsDevelopment())
 {
@@ -70,6 +76,10 @@ app.UseAuthorization();
 
 app.MapGet("/health", () => Results.Ok(new { ok = true }));
 app.MapAuth();
+app.MapTasks();
+app.MapComments();
+app.MapProjects();
+app.MapSettings();
 
 app.Run();
 
