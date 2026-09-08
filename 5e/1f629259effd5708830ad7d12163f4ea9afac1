@@ -1,0 +1,41 @@
+apps/web/.env.example
+  s_2372cb08d633fa::t_503e005c182641 1-2
+apps/web/src/App.tsx
+  s_2372cb08d633fa::t_b2eda6917d278a 3,16
+apps/web/src/components/capture/CaptureModal.tsx
+  s_2372cb08d633fa::t_0db28546a24abe 4,24,28-31,66
+apps/web/src/lib/api.ts
+  s_2372cb08d633fa::t_2c66e3ee515b13 1-6
+apps/web/src/lib/auth.ts
+  s_2372cb08d633fa::t_b9196a164c58df 1-23
+apps/web/src/store/sync.ts
+  s_2372cb08d633fa::t_51b96167b2cbb5 1-110
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_7c4ad8d530476d 22-23,69,81,208-209,222
+apps/web/src/views/auth/SignIn.tsx
+  s_2372cb08d633fa::t_8f763f09b04f89 1,17-18
+apps/web/src/views/digest/DigestView.tsx
+  s_2372cb08d633fa::t_3fb7db5049d104 5,20,23-25,44
+packages/core/src/api.test.ts
+  s_2372cb08d633fa::t_a464bc9c6fd0ee 1-28
+packages/core/src/api.ts
+  s_2372cb08d633fa::t_be22fbb410bb4b 1-76
+packages/core/src/index.ts
+  s_2372cb08d633fa::t_7a557123356dce 9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "5e1f629259effd5708830ad7d12163f4ea9afac1",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
