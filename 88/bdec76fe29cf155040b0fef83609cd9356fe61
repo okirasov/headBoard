@@ -1,0 +1,23 @@
+apps/api/Headboard.Api.Tests/FilesTests.cs
+  s_2372cb08d633fa::t_26f00495ab7fce 1-100
+apps/api/Headboard.Api/Files/FileEndpoints.cs
+  s_2372cb08d633fa::t_3a71c02a03855e 1-85
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_3b774d0ef4329c 25-26,28-29,31,84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "88bdec76fe29cf155040b0fef83609cd9356fe61",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
