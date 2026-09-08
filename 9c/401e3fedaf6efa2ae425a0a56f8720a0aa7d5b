@@ -1,0 +1,19 @@
+docs/superpowers/specs/2026-09-08-headboard-implementation-design.md
+  s_2372cb08d633fa::t_1e377463307859 1-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "9c401e3fedaf6efa2ae425a0a56f8720a0aa7d5b",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
