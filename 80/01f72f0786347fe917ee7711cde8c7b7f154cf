@@ -1,0 +1,21 @@
+.gitignore
+  s_2372cb08d633fa::t_af895d9e820c3a 13
+apps/web/src/store/sync.ts
+  s_2372cb08d633fa::t_9033db2398e2c5 1,12,14,57-62,66-77,86-94,97,106-113,122,133
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "8001f72f0786347fe917ee7711cde8c7b7f154cf",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
