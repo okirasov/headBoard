@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Headboard.Api.Ai;
 using Headboard.Api.Auth;
 using Headboard.Api.Comments;
 using Headboard.Api.Files;
@@ -53,6 +54,7 @@ builder.Services.AddSingleton<TokenService>();
 builder.Services.AddSingleton<GoogleVerifier>();
 builder.Services.AddSingleton<AppleVerifier>();
 builder.Services.AddSingleton<LocalStorage>();
+builder.Services.AddHttpClient<AnthropicClient>(AnthropicClient.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(60));
 
 if (builder.Environment.IsDevelopment())
 {
@@ -82,6 +84,7 @@ app.MapComments();
 app.MapProjects();
 app.MapSettings();
 app.MapFiles();
+app.MapAi();
 
 app.Run();
 
