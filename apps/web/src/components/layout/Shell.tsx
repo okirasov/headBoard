@@ -2,6 +2,9 @@ import { useStore } from '../../store/useStore';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import { BoardView } from '../../views/board/BoardView';
+import { ReviewView } from '../../views/review/ReviewView';
+import { DigestView } from '../../views/digest/DigestView';
+import { CalendarView } from '../../views/calendar/CalendarView';
 
 export function Shell() {
   const view = useStore(s => s.view);
@@ -11,6 +14,9 @@ export function Shell() {
       <main className="flex min-w-0 flex-1 flex-col">
         <TopBar />
         {view === 'board' && <BoardView />}
+        {view === 'review' && <ReviewView />}
+        {view === 'digest' && <DigestView />}
+        {view === 'calendar' && <CalendarView />}
       </main>
     </div>
   );
