@@ -1,0 +1,61 @@
+.claude/launch.json
+  s_2372cb08d633fa::t_617d723e5ae5bb 1-6
+apps/web/src/App.tsx
+  s_2372cb08d633fa::t_518b645a2e90db 1-6,8-17
+apps/web/src/components/brand/Logo.tsx
+  s_2372cb08d633fa::t_ff37b821978c91 1-40
+apps/web/src/components/files/FileChip.tsx
+  s_2372cb08d633fa::t_5a39b1355ca3fe 1-45
+apps/web/src/components/layout/NavItem.tsx
+  s_2372cb08d633fa::t_54d5e072c80ec7 1-18
+apps/web/src/components/layout/ProfileMenu.tsx
+  s_2372cb08d633fa::t_bcd4fc742425d1 1-73
+apps/web/src/components/layout/ProjectList.tsx
+  s_2372cb08d633fa::t_8b1294549ab2a4 1-34
+apps/web/src/components/layout/Shell.tsx
+  s_2372cb08d633fa::t_749b5961382b2d 1-17
+apps/web/src/components/layout/Sidebar.tsx
+  s_2372cb08d633fa::t_0fc094a16df6d9 1-37
+apps/web/src/components/layout/TopBar.tsx
+  s_2372cb08d633fa::t_812ac5fa678722 1-32
+apps/web/src/components/ui/Icons.tsx
+  s_2372cb08d633fa::t_0d26e37a63a033 1-69
+apps/web/src/components/ui/Snackbar.tsx
+  s_2372cb08d633fa::t_04b1929bd7e733 1-9
+apps/web/src/components/ui/primitives.tsx
+  s_2372cb08d633fa::t_251943da6028c1 1-111
+apps/web/src/lib/useT.ts
+  s_2372cb08d633fa::t_b31f3b3be264de 1-8
+apps/web/src/views/auth/SignIn.tsx
+  s_2372cb08d633fa::t_4d0b684bf0f4f8 1-25
+apps/web/src/views/board/BoardView.tsx
+  s_2372cb08d633fa::t_1a54abb7f4f2d8 1-49
+apps/web/src/views/board/Column.tsx
+  s_2372cb08d633fa::t_d0035f9af9c1d1 1-44
+apps/web/src/views/board/ProjectFilesBar.tsx
+  s_2372cb08d633fa::t_81100f4f2095f6 1-25
+apps/web/src/views/board/SeedHint.tsx
+  s_2372cb08d633fa::t_13acfc0a5d7394 1-23
+apps/web/src/views/board/TaskCard.tsx
+  s_2372cb08d633fa::t_abc1a77c0bc4f8 1-100
+apps/web/src/vite-env.d.ts
+  s_2372cb08d633fa::t_b4687a78403425 1
+apps/web/tailwind.config.ts
+  s_2372cb08d633fa::t_28bf8079766b84 25-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "0836b55caaa1960619c0beeecacd50a14a0979de",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
