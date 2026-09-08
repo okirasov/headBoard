@@ -6,3 +6,4 @@ export * from './calendar';
 export * from './digest';
 export * from './capture';
 export * from './tokens';
+export * from './api';

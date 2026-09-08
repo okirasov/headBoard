@@ -19,6 +19,8 @@ export interface PersistedSlice {
   lang: Lang;
   theme: Theme;
   showDone: boolean;
+  /** API JWT when signed in through apps/api; null in local-only mode. */
+  token: string | null;
 }
 
 export interface UiSlice {
@@ -64,6 +66,7 @@ export interface Actions {
   setLang: (lang: Lang) => void;
   setTheme: (theme: Theme) => void;
   signIn: (provider: Provider, user?: Partial<User>) => void;
+  setAuth: (token: string, user: User) => void;
   signOut: () => void;
   toast: (msg: string) => void;
   openSnooze: (id: string) => void;
@@ -75,7 +78,7 @@ export interface Actions {
 export type Store = PersistedSlice & UiSlice & Actions;
 
 const initialPersisted: PersistedSlice = {
-  tasks: [], projects: [], projFiles: {}, digestText: null, user: null, lang: 'en', theme: 'light', showDone: true,
+  tasks: [], projects: [], projFiles: {}, digestText: null, user: null, lang: 'en', theme: 'light', showDone: true, token: null,
 };
 
 const initialUi: UiSlice = {
@@ -202,7 +205,8 @@ export const useStore = create<Store>()(
             profOpen: false,
           });
         },
-        signOut: () => set({ user: null, profOpen: false, sel: null }),
+        setAuth: (token, user) => set({ token, user, profOpen: false }),
+        signOut: () => set(s => ({ user: null, profOpen: false, sel: null, token: null, ...(s.token ? { tasks: [], projects: [], projFiles: {}, digestText: null } : {}) })),
         toast,
         openSnooze: id => set({ zTask: id, zMonth: 0 }),
         closeSnooze: () => set({ zTask: null }),
@@ -215,7 +219,7 @@ export const useStore = create<Store>()(
       storage: createJSONStorage(() => safeStorage()),
       partialize: s => ({
         tasks: s.tasks, projects: s.projects, projFiles: s.projFiles, digestText: s.digestText,
-        user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone,
+        user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token,
       }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<PersistedSlice>;

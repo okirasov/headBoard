@@ -1,6 +1,7 @@
 import { type CaptureItem, heuristicExtract, phrases, PRIORITY_BAR_TOKEN } from '@headboard/core';
 import { useStore } from '../../store/useStore';
 import { useT } from '../../lib/useT';
+import { api } from '../../lib/api';
 import { Button, Dot, Scrim } from '../ui/primitives';
 import { IcSpark, IcX } from '../ui/Icons';
 import { cx } from '../../lib/cx';
@@ -20,12 +21,14 @@ export function CaptureModal() {
   const close = () => set({ capOpen: false, capItems: null });
   const hasItems = !!capItems?.length;
 
-  const extract = () => {
+  const extract = async () => {
     const text = capText.trim();
     if (!text || capBusy) return;
     set({ capBusy: true });
-    // Local heuristic now; the API milestone routes this through /ai/extract with the same fallback.
-    set({ capItems: heuristicExtract(text, projects), capBusy: false });
+    let items: CaptureItem[] = [];
+    if (api) { try { items = await api.ai.extract(text, projects); } catch { items = []; } }
+    if (!items.length) items = heuristicExtract(text, projects);
+    set({ capItems: items, capBusy: false });
   };
   const addSingle = () => { const t = capText.trim(); if (t) addTasks([{ title: t.slice(0, 90), pr: 1, tags: [], proj: null }]); };
   const remove = (i: number) => set({ capItems: (capItems ?? []).filter((_, j) => j !== i) });
@@ -60,7 +63,7 @@ export function CaptureModal() {
           </div>
         )}
         <div className="flex items-center gap-8">
-          <Button className="rounded-10 px-15 py-9 text-13" onClick={extract}><IcSpark size={12} />{capBusy ? T.extracting : T.extract}</Button>
+          <Button className="rounded-10 px-15 py-9 text-13" onClick={() => void extract()}><IcSpark size={12} />{capBusy ? T.extracting : T.extract}</Button>
           <Button variant="outline" hoverTone="acc" className="rounded-10 px-15 py-9 text-13" onClick={addSingle}>{T.addOne}</Button>
           <div className="flex-1" />
           {hasItems && <Button variant="ink" className="rounded-10 px-15 py-9 text-13" onClick={() => addTasks(capItems as CaptureItem[])}>{phrases.addN(capItems!.length, lang)}</Button>}
