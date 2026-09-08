@@ -1,0 +1,35 @@
+apps/api/Headboard.Api.Tests/ApiFactory.cs
+  s_2372cb08d633fa::t_da55b46aea9d73 1-57
+apps/api/Headboard.Api.Tests/AuthTests.cs
+  s_2372cb08d633fa::t_cc68ea37c00f06 1-69
+apps/api/Headboard.Api.Tests/TestAnthropic.cs
+  s_2372cb08d633fa::t_82966431418cc5 1-12
+apps/api/Headboard.Api/Auth/AppleVerifier.cs
+  s_2372cb08d633fa::t_214bdc085c1440 1-44
+apps/api/Headboard.Api/Auth/AuthEndpoints.cs
+  s_2372cb08d633fa::t_e4fff0c29fd020 1-95
+apps/api/Headboard.Api/Auth/CurrentUser.cs
+  s_2372cb08d633fa::t_0b56b08fc26124 1-13
+apps/api/Headboard.Api/Auth/GoogleVerifier.cs
+  s_2372cb08d633fa::t_2d2e030fc14ea6 1-27
+apps/api/Headboard.Api/Auth/TokenService.cs
+  s_2372cb08d633fa::t_ae911348a310b8 1-40
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_09a0f9609e8cfe 3,5,7,28-49,68-69,72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "fceacf55c4f0a9b1be04f0972dcd42f2eb601679",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
