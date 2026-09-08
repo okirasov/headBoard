@@ -58,6 +58,7 @@ builder.Services.AddHttpClient<AnthropicClient>(AnthropicClient.HttpClientName, 
 
 if (builder.Environment.IsDevelopment())
 {
+    builder.Services.AddOpenApi();
     builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
         .WithOrigins("http://localhost:5173", "http://localhost:8081")
         .AllowAnyHeader()
@@ -73,7 +74,11 @@ using (var scope = app.Services.CreateScope())
     else db.Database.EnsureCreated(); // Postgres: migrations are SQLite-generated; see README.
 }
 
-if (app.Environment.IsDevelopment()) app.UseCors();
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors();
+    app.MapOpenApi(); // GET /openapi/v1.json
+}
 app.UseAuthentication();
 app.UseAuthorization();
 
