@@ -26,7 +26,29 @@ import { ProfileSheet } from './src/sheets/ProfileSheet';
 
 SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
+/** Dev convenience: EXPO_PUBLIC_DEV_AUTOLOGIN=1 signs in a mock user and seeds sample data on an empty board. */
+function useDevAutologin() {
+  const user = useStore(s => s.user);
+  const tasks = useStore(s => s.tasks);
+  useEffect(() => {
+    if (!__DEV__ || process.env.EXPO_PUBLIC_DEV_AUTOLOGIN !== '1') return;
+    const st = useStore.getState();
+    if (!user) st.signIn('Google');
+    if (tasks.length === 0) import('./src/store/devSeed').then(({ buildSeed }) => { const s = buildSeed(); st.loadSeed(s.tasks, s.projects, s.projFiles); });
+    // Optional screen/theme/lang presets for screenshot verification.
+    const v = process.env.EXPO_PUBLIC_DEV_VIEW; if (v === 'board' || v === 'review' || v === 'digest' || v === 'calendar') st.set({ mView: v });
+    const th = process.env.EXPO_PUBLIC_DEV_THEME; if (th === 'dark' || th === 'light') st.set({ theme: th });
+    const lg = process.env.EXPO_PUBLIC_DEV_LANG; if (lg === 'ru' || lg === 'en') st.set({ lang: lg });
+    const sheet = process.env.EXPO_PUBLIC_DEV_SHEET;
+    if (tasks.length && sheet === 'task') st.set({ mSel: tasks.find(x => x.files.length && x.comments.length)?.id ?? tasks[0].id });
+    if (sheet === 'profile') st.set({ mProfOpen: true });
+    if (sheet === 'capture') st.set({ mCapOpen: true, capText: '- urgent: renew domain\n- ask Claude about embeddings #research' });
+    if (tasks.length && sheet === 'snooze') st.set({ zTask: tasks[0].id });
+  }, [user, tasks.length]);
+}
+
 function Root() {
+  useDevAutologin();
   const { t, theme } = useTheme();
   const { T, lang } = useT();
   const now = useNow();
