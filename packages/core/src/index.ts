@@ -7,3 +7,4 @@ export * from './digest';
 export * from './capture';
 export * from './tokens';
 export * from './api';
+export * from './sync';

@@ -52,9 +52,10 @@ export function createApi(baseUrl: string, getToken: () => string | null) {
       remove: (id: string) => req<void>('DELETE', '/projects/' + encodeURIComponent(id)),
     },
     files: {
-      upload: (file: Blob, name: string, target: { taskId?: string; projectId?: string }) => {
+      /** `part` is a Blob on web or a `{uri, name, type}` descriptor in React Native. */
+      upload: (part: Blob | { uri: string; name: string; type: string }, name: string, target: { taskId?: string; projectId?: string }) => {
         const fd = new FormData();
-        fd.append('file', file, name);
+        if (part instanceof Blob) fd.append('file', part, name); else fd.append('file', part as unknown as Blob);
         const q = target.taskId ? '?taskId=' + encodeURIComponent(target.taskId) : target.projectId ? '?projectId=' + encodeURIComponent(target.projectId) : '';
         return req<FileRef>('POST', '/files' + q, undefined, fd);
       },

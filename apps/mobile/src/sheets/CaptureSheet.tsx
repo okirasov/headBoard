@@ -1,5 +1,6 @@
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import { heuristicExtract, phrases, PRIORITY_BAR_TOKEN } from '@headboard/core';
+import { type CaptureItem, heuristicExtract, phrases, PRIORITY_BAR_TOKEN } from '@headboard/core';
+import { api } from '../lib/api';
 import { useStore } from '../store/useStore';
 import { useTheme } from '../theme/ThemeContext';
 import { useT } from '../lib/useT';
@@ -19,7 +20,15 @@ export function CaptureSheet() {
   const set = useStore(s => s.set);
   const addTasks = useStore(s => s.addTasks);
   const close = () => set({ mCapOpen: false, capItems: null });
-  const extract = () => { const text = capText.trim(); if (!text || capBusy) return; set({ capItems: heuristicExtract(text, projects) }); };
+  const extract = async () => {
+    const text = capText.trim();
+    if (!text || capBusy) return;
+    set({ capBusy: true });
+    let items: CaptureItem[] = [];
+    if (api) { try { items = await api.ai.extract(text, projects); } catch { items = []; } }
+    if (!items.length) items = heuristicExtract(text, projects);
+    set({ capItems: items, capBusy: false });
+  };
   const items = capItems ?? [];
   return (
     <Sheet open={open} onClose={close} gap={11}>
@@ -44,7 +53,7 @@ export function CaptureSheet() {
         </ScrollView>
       )}
       <View style={{ flexDirection: 'row', gap: 7 }}>
-        <Btn label={capBusy ? T.extracting : T.extract} icon={<IcSpark size={11} color={t.onAcc} />} style={{ flex: 1 }} onPress={extract} />
+        <Btn label={capBusy ? T.extracting : T.extract} icon={<IcSpark size={11} color={t.onAcc} />} style={{ flex: 1 }} onPress={() => void extract()} />
         {items.length > 0 && <Btn variant="ink" label={phrases.addN(items.length, lang)} style={{ flex: 1 }} onPress={() => addTasks(items)} />}
       </View>
     </Sheet>

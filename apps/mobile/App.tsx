@@ -7,6 +7,8 @@ import { IBMPlexMono_400Regular, IBMPlexMono_500Medium, IBMPlexMono_600SemiBold 
 import * as SplashScreen from 'expo-splash-screen';
 import { digestStats, phrases, todayLabel } from '@headboard/core';
 import { useStore } from './src/store/useStore';
+import { startSync } from './src/store/sync';
+import { signInWith } from './src/lib/auth';
 import { ThemeProvider, useTheme } from './src/theme/ThemeContext';
 import { useT } from './src/lib/useT';
 import { useNow } from './src/lib/useNow';
@@ -26,15 +28,24 @@ import { ProfileSheet } from './src/sheets/ProfileSheet';
 
 SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
+let devResetDone = false;
+
 /** Dev convenience: EXPO_PUBLIC_DEV_AUTOLOGIN=1 signs in a mock user and seeds sample data on an empty board. */
 function useDevAutologin() {
   const user = useStore(s => s.user);
   const tasks = useStore(s => s.tasks);
   useEffect(() => {
     if (!__DEV__ || process.env.EXPO_PUBLIC_DEV_AUTOLOGIN !== '1') return;
+    // EXPO_PUBLIC_DEV_RESET=1 wipes persisted state once per launch so the run starts from the sign-in gate.
+    if (process.env.EXPO_PUBLIC_DEV_RESET === '1' && !devResetDone) {
+      devResetDone = true;
+      useStore.persist.clearStorage();
+      useStore.setState({ user: null, token: null, tasks: [], projects: [], projFiles: {}, digestText: null });
+      return;
+    }
     const st = useStore.getState();
-    if (!user) st.signIn('Google');
-    if (tasks.length === 0) import('./src/store/devSeed').then(({ buildSeed }) => { const s = buildSeed(); st.loadSeed(s.tasks, s.projects, s.projFiles); });
+    if (!user) { void signInWith('Google'); return; }
+    if (tasks.length === 0 && !st.token) import('./src/store/devSeed').then(({ buildSeed }) => { const s = buildSeed(); st.loadSeed(s.tasks, s.projects, s.projFiles); });
     // Optional screen/theme/lang presets for screenshot verification.
     const v = process.env.EXPO_PUBLIC_DEV_VIEW; if (v === 'board' || v === 'review' || v === 'digest' || v === 'calendar') st.set({ mView: v });
     const th = process.env.EXPO_PUBLIC_DEV_THEME; if (th === 'dark' || th === 'light') st.set({ theme: th });
@@ -49,6 +60,7 @@ function useDevAutologin() {
 
 function Root() {
   useDevAutologin();
+  useEffect(() => { void startSync(); }, []);
   const { t, theme } = useTheme();
   const { T, lang } = useT();
   const now = useNow();

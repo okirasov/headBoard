@@ -22,9 +22,9 @@ npm run api            # .NET API on http://localhost:5080
 npm test && npm run typecheck
 ```
 
-Web talks to the API when `apps/web/.env` sets `VITE_API_URL` (see `.env.example`); without it the app works fully offline on `localStorage` (key `headboard-v1`). Sign-in through the API uses the development login until Google/Apple client ids are configured (see `apps/api/README.md`). AI extraction and digest call the API and fall back to local heuristics when the API or the Anthropic key is missing.
+Web talks to the API when `apps/web/.env` sets `VITE_API_URL` (see `.env.example`); mobile when `EXPO_PUBLIC_API_URL` is set (e.g. `EXPO_PUBLIC_API_URL=http://localhost:5081 npm run mobile`; use the Mac's LAN IP on a physical device). Without an API both work fully offline (web `localStorage`, mobile AsyncStorage, key `headboard-v1`). Sync is offline-first and shared: `packages/core/src/sync.ts` pulls server state on sign-in (server wins when it has tasks, otherwise local data is pushed) and then diffs every store change into POST/PATCH/DELETE calls; failed pushes retry. Sign-in through the API uses the development login until Google/Apple client ids are configured (see `apps/api/README.md`). AI extraction and digest call the API and fall back to local heuristics when the API or the Anthropic key is missing.
 
-Development helpers: an empty board shows a "Load sample data" button in dev builds (web and mobile). Mobile also accepts `EXPO_PUBLIC_DEV_AUTOLOGIN=1`, `EXPO_PUBLIC_DEV_VIEW`, `EXPO_PUBLIC_DEV_THEME`, `EXPO_PUBLIC_DEV_LANG`, `EXPO_PUBLIC_DEV_SHEET` for screenshot verification.
+Development helpers: an empty board shows a "Load sample data" button in dev builds (web and mobile). Mobile also accepts `EXPO_PUBLIC_DEV_AUTOLOGIN=1`, `EXPO_PUBLIC_DEV_RESET=1`, `EXPO_PUBLIC_DEV_VIEW`, `EXPO_PUBLIC_DEV_THEME`, `EXPO_PUBLIC_DEV_LANG`, `EXPO_PUBLIC_DEV_SHEET` for screenshot verification.
 
 ## Design rules enforced in code
 

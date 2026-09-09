@@ -7,6 +7,7 @@ export async function pickFiles(): Promise<FileRef[]> {
   if (res.canceled) return [];
   return res.assets.map(a => {
     const img = /^image\//.test(a.mimeType ?? '');
-    return { id: 'f' + Date.now() + Math.random().toString(36).slice(2, 6), name: a.name, size: a.size, kind: img ? 'img' : 'file', ...(img ? { src: a.uri } : {}) } as FileRef;
+    // `src` holds the local uri for every picked file: images use it for preview, the sync engine uploads it.
+    return { id: 'f' + Date.now() + Math.random().toString(36).slice(2, 6), name: a.name, size: a.size, kind: img ? 'img' : 'file', src: a.uri } as FileRef;
   });
 }

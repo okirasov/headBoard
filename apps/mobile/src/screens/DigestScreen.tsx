@@ -3,6 +3,7 @@ import { type Task, cannedDigest, digestStats, digestStatsLine, dueDiff, idleDay
 import { useStore } from '../store/useStore';
 import { useTheme } from '../theme/ThemeContext';
 import { useT } from '../lib/useT';
+import { api } from '../lib/api';
 import { txt } from '../theme/type';
 import { Card, Dot, EmptyLine, SectionTitle, Btn } from '../components/ui';
 import { IcSpark } from '../components/Icons';
@@ -30,13 +31,20 @@ export function DigestScreen({ now }: { now: number }) {
   const digestSeed = useStore(s => s.digestSeed);
   const set = useStore(s => s.set);
   const stats = digestStats(tasks, now);
-  const regen = () => { if (digestBusy) return; set({ digestText: cannedDigest(digestSeed + 1, stats, lang), digestSeed: digestSeed + 1 }); };
+  const regen = async () => {
+    if (digestBusy) return;
+    set({ digestBusy: true });
+    let text: string | null = null;
+    if (api) { try { text = (await api.ai.digest(stats, lang)).text.trim() || null; } catch { text = null; } }
+    if (!text) text = cannedDigest(digestSeed + 1, stats, lang);
+    set({ digestText: text, digestSeed: digestSeed + 1, digestBusy: false });
+  };
   return (
     <View style={{ gap: 10 }}>
       <Card pad={16}>
         <Text style={[txt(9.5, { mono: true, upper: true, ls: 0.8, color: t.mut2 }), { marginBottom: 9 }]}>{digestStatsLine(stats, lang)}</Text>
         <Text style={txt(16, { color: t.ink, lh: 1.55 })}>{digestText ?? cannedDigest(0, stats, lang)}</Text>
-        <Btn variant="outline" color={t.acc} label={digestBusy ? T.thinking : T.regen} size={12} pad={8} radius={9} style={{ alignSelf: 'flex-start', marginTop: 12, paddingHorizontal: 13 }} icon={<IcSpark size={11} color={t.acc} />} onPress={regen} />
+        <Btn variant="outline" color={t.acc} label={digestBusy ? T.thinking : T.regen} size={12} pad={8} radius={9} style={{ alignSelf: 'flex-start', marginTop: 12, paddingHorizontal: 13 }} icon={<IcSpark size={11} color={t.acc} />} onPress={() => void regen()} />
       </Card>
       <Card style={{ paddingVertical: 14, paddingHorizontal: 16 }}>
         <SectionTitle>{T.dueToday}</SectionTitle>
