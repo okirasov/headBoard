@@ -98,10 +98,10 @@
 <p>Репозиторий устроен как npm workspaces. Всё, что можно вычислить без пользовательского интерфейса, вынесено в <code>packages/core</code> и покрыто тестами; три приложения только рендерят результат и вызывают действия стора.</p>
 <div class="tbl"><table>
 <tr><th>Пакет</th><th>Роль</th><th>Стек</th><th>Проверки</th></tr>
-<tr><td><code>packages/core</code></td><td>Модель, словари EN/RU, значения дизайн-токенов, чистые доменные функции, типизированный API-клиент, движок синхронизации</td><td>TypeScript 5, ESM, vitest 2</td><td>32 теста</td></tr>
-<tr><td><code>apps/web</code></td><td>Десктоп-клиент, референс 1440×900</td><td>React 19.2, Vite 5, Tailwind 3.4, zustand 4</td><td>7 тестов стора, typecheck, production build</td></tr>
+<tr><td><code>packages/core</code></td><td>Модель, словари EN/RU, значения дизайн-токенов, палитра проектов, чистые доменные функции, типизированный API-клиент, движок синхронизации</td><td>TypeScript 5, ESM, vitest 2</td><td>37 тестов</td></tr>
+<tr><td><code>apps/web</code></td><td>Десктоп-клиент, референс 1440×900</td><td>React 19.2, Vite 5, Tailwind 3.4, zustand 4</td><td>9 тестов стора, typecheck, production build</td></tr>
 <tr><td><code>apps/mobile</code></td><td>iOS и Android, единый UI, референс 402×874</td><td>Expo SDK 57, React Native 0.86, react-native-svg, AsyncStorage, zustand 5</td><td>typecheck (TypeScript 6), скриншоты симулятора</td></tr>
-<tr><td><code>apps/api</code></td><td>Авторизация, хранение данных, файлы, настройки, AI</td><td>.NET 10 minimal API, EF Core 10, SQLite / PostgreSQL, JwtBearer, Google.Apis.Auth</td><td>38 xunit-тестов через WebApplicationFactory</td></tr>
+<tr><td><code>apps/api</code></td><td>Авторизация, хранение данных, файлы, настройки, AI, фоновые задания: дайджест, напоминания, Google Calendar</td><td>.NET 10 minimal API, EF Core 10, SQLite / PostgreSQL, JwtBearer, Google.Apis.Auth</td><td>58 xunit-тестов через WebApplicationFactory</td></tr>
 <tr><td><code>docs/</code></td><td>Спека решений, планы реализации, этот документ</td><td>Markdown, HTML</td><td></td></tr>
 <tr><td><code>design_handoff_headboard/</code></td><td>Дизайн-референс (прототип, бренд, шрифты). Не часть продукта</td><td>HTML-прототип</td><td></td></tr>
 </table></div>
@@ -448,9 +448,9 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <h2 id="testing">13. Тесты, сборка, инструменты</h2>
 <div class="tbl"><table>
 <tr><th>Уровень</th><th>Что проверяется</th><th>Команда</th></tr>
-<tr><td>core · vitest</td><td>Словари (равенство ключей), даты и метки, простой и «забытость», сортировки, сетки календаря и пресеты snooze, статистика дайджеста, эвристика захвата и парсинг ответа модели, API-клиент (заголовки, ошибки, 204), движок синхронизации (сервер побеждает, порядок пуша, диф, загрузка файлов, 401), совпадение web-CSS с токенами</td><td><code>npm test -w @headboard/core</code></td></tr>
-<tr><td>web · vitest + jsdom</td><td>Действия стора: moveTask, bump, toggleDone, addTasks, archive, комментарии и файлы, вход и выход</td><td><code>npm test -w @headboard/web</code></td></tr>
-<tr><td>api · xunit</td><td>Dev-логин и <code>/me</code>, CRUD задач и изоляция пользователей, комментарии, загрузка файла и content type, 503 без ключа и разбор ответа модели через фейковый handler. Каждый factory использует свою SQLite и каталог хранения во временной папке</td><td><code>dotnet test</code> в <code>apps/api</code></td></tr>
+<tr><td>core · vitest</td><td>Словари (равенство ключей), даты и метки, простой и «забытость», архив, сортировки, сетки календаря и пресеты snooze, статистика дайджеста, эвристика захвата и парсинг ответа модели, палитра и создание проектов, API-клиент (заголовки, ошибки, 204), движок синхронизации (сервер побеждает, порядок пуша, диф, загрузка файлов, зона и дайджест, слияние задач, 401), совпадение web-CSS с токенами</td><td><code>npm test -w @headboard/core</code></td></tr>
+<tr><td>web · vitest + jsdom</td><td>Действия стора: moveTask, bump, toggleDone, addTasks, archive/restore/delete, проекты (добавить, переименовать, удалить с отвязкой задач), комментарии и файлы, вход и выход</td><td><code>npm test -w @headboard/web</code></td></tr>
+<tr><td>api · xunit</td><td>Dev-логин и <code>/me</code>, обмен Google code, CRUD задач и изоляция пользователей, архив, комментарии, загрузка файла и content type, AI 503/разбор ответа, планировщик дайджеста, Google Calendar против фейкового API (подключение, исходящий и входящий потоки, удаление, отключение), push-подписки и ежедневный нотификатор с фейковым отправителем. Каждый factory использует свою SQLite и каталог хранения во временной папке</td><td><code>dotnet test</code> в <code>apps/api</code></td></tr>
 <tr><td>Типы</td><td>tsc для core, web, mobile (TypeScript 6 в mobile)</td><td><code>npm run typecheck</code>, <code>npx tsc --noEmit</code></td></tr>
 <tr><td>Сборка</td><td>Vite production build, <code>dotnet build</code> без предупреждений</td><td><code>npm run build</code></td></tr>
 <tr><td>Визуальная сверка</td><td>Web в браузере на 1440×900, обе темы и языка; mobile скриншотами симулятора <code>xcrun simctl io booted screenshot</code> через dev-флаги</td><td>вручную / по скриптам</td></tr>
@@ -487,6 +487,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
   <li><b>Push только по делу.</b> Одно уведомление в день и только при наличии забытых задач; текст считается на сервере из тех же правил, что и дайджест. Каналы спрятаны за <code>IPushSender</code>, поэтому web и mobile добавляются и тестируются одинаково, а «мёртвые» подписки удаляются сами.</li>
   <li><b>Календарь: отдельный календарь «Headboard» и поллинг.</b> Не трогаем основной календарь пользователя, зеркалим только задачи со сроком; входящие изменения читаем инкрементально каждые 5 минут и сразу после правок вместо push-каналов, которым нужен публичный https.</li>
   <li><b>Дайджест генерирует сервер, а не клиент по таймеру.</b> Только API работает постоянно и знает все данные; клиенты лишь присылают зону и подхватывают результат. Статистика посчитана заново на сервере по правилам ядра, промпт общий.</li>
+  <li><b>Проекты редактируются на месте, цвета из палитры.</b> Экран настроек не модалка, а вью в основной области (web) и экран из профиль-шторки (mobile); имя правится инлайн, цвет выбирается из восьми свотчей ядра, два из которых следуют теме. Удаление проекта никогда не удаляет задачи: и клиент, и сервер снимают с них проект.</li>
   <li><b>Архив как статус, а не корзина.</b> Архивирование остаётся обратимым <code>PATCH</code>, удаление явное и двухшаговое; экран архива в web получил пятый нав-пункт, в mobile живёт в профиль-шторке, чтобы не ломать таб-бар из четырёх вкладок с FAB.</li>
   <li><b>Четыре дополнительных токена</b> для цветов прототипа вне таблицы вместо литералов, чтобы правило «только токены» проверялось автоматически.</li>
 </ul>
