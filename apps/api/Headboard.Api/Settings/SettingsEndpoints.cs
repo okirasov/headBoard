@@ -5,10 +5,10 @@ using Headboard.Api.Tasks;
 namespace Headboard.Api.Settings;
 
 /// <summary>Wire shape of core <c>Settings</c>. <c>DigestAt</c> is server-owned; <c>TimeZone</c> is an IANA id.</summary>
-public record SettingsDto(string Lang, string Theme, bool ShowDone, string? DigestText, long? DigestAt, string? TimeZone)
+public record SettingsDto(string Lang, string Theme, bool ShowDone, string? DigestText, long? DigestAt, string? TimeZone, bool? NotifyStale)
 {
-    public static SettingsDto Defaults => new("en", "light", true, null, null, null);
-    public static SettingsDto From(SettingsRow r) => new(r.Lang, r.Theme, r.ShowDone, r.DigestText, r.DigestAt, r.TimeZone);
+    public static SettingsDto Defaults => new("en", "light", true, null, null, null, true);
+    public static SettingsDto From(SettingsRow r) => new(r.Lang, r.Theme, r.ShowDone, r.DigestText, r.DigestAt, r.TimeZone, r.NotifyStale);
 }
 
 public static class SettingsEndpoints
@@ -37,6 +37,7 @@ public static class SettingsEndpoints
             // null means "no change": a client that never had a digest must not erase the scheduled one.
             if (body.DigestText is not null && body.DigestText != row.DigestText) { row.DigestText = body.DigestText; row.DigestAt = Wire.Now(); }
             if (!string.IsNullOrWhiteSpace(body.TimeZone)) row.TimeZone = body.TimeZone;
+            if (body.NotifyStale is { } ns) row.NotifyStale = ns;
             await db.SaveChangesAsync();
             return Results.Ok(SettingsDto.From(row));
         });

@@ -9,6 +9,7 @@ import { digestStats, phrases, todayLabel } from '@headboard/core';
 import { useStore } from './src/store/useStore';
 import { startSync, refreshSettings } from './src/store/sync';
 import { devOrMockSignIn } from './src/lib/auth';
+import { listenForNotificationTaps } from './src/lib/push';
 import { ThemeProvider, useTheme } from './src/theme/ThemeContext';
 import { useT } from './src/lib/useT';
 import { useNow } from './src/lib/useNow';
@@ -66,6 +67,7 @@ function Root() {
     const sub = AppState.addEventListener('change', st => { if (st === 'active') void refreshSettings(); });
     return () => sub.remove();
   }, []);
+  useEffect(() => listenForNotificationTaps(), []);
   const { t, theme } = useTheme();
   const { T, lang } = useT();
   const now = useNow();

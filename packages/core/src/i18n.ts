@@ -24,6 +24,7 @@ export interface Dict {
   tDone: string; tBump: string; tSnooze: string; tArch: string; tKeep: string; tMoved: string; tReopen: string; tDoneS: string;
   showDone: string; zTomorrow: string; z3d: string; zWeek: string; zMonth: string;
   digestUpdated: string;
+  notifications: string; notifyOn: string; notifyOff: string; notifyDenied: string; notifyUnavailable: string; notifyTest: string; notifyTestSent: string; notifyHint: string;
   gcalConnect: string; gcalConnected: string; gcalSyncing: string; gcalSyncNow: string; gcalDisconnect: string; gcalError: string; gcalReauth: string; gcalUnavailable: string; gcalDenied: string; gcalHint: string; gcalSynced: string;
   archiveTitle: string; restore: string; deleteForever: string; confirmDelete: string; archiveEmpty: string; archivedOn: string; archivedBadge: string; tRestored: string; tDeleted: string;
   seedDemo: string;
@@ -63,6 +64,7 @@ export const EN: Dict = {
   tKeep: 'Kept — bumped to top of its column', tMoved: 'Moved to ', tReopen: 'Reopened into In focus', tDoneS: 'Done ✓',
   showDone: 'Done', zTomorrow: 'Tomorrow', z3d: '+3 days', zWeek: 'Next week', zMonth: 'Next month',
   digestUpdated: 'updated ',
+  notifications: 'Reminders', notifyOn: 'On', notifyOff: 'Off', notifyDenied: 'Notifications are blocked in the browser settings', notifyUnavailable: 'Push is not available here', notifyTest: 'Send test', notifyTestSent: 'Test notification sent', notifyHint: 'Once a day at 9:00: forgotten tasks, if any.',
   gcalConnect: 'Connect Google Calendar', gcalConnected: 'Google Calendar · two-way sync', gcalSyncing: 'syncing…', gcalSyncNow: 'Sync now', gcalDisconnect: 'Disconnect', gcalError: 'Google Calendar · sync error', gcalReauth: 'Google Calendar · reconnect needed', gcalUnavailable: 'Google Calendar · not configured', gcalDenied: 'Calendar access was not granted', gcalHint: 'Tasks with a due date appear as all-day events in a “Headboard” calendar. Moves, renames and new events sync back.', gcalSynced: 'synced ',
   archiveTitle: 'Archive', restore: 'Restore to Inbox', deleteForever: 'Delete', confirmDelete: 'Delete for good?', archiveEmpty: 'Archive is empty — nothing dropped yet.', archivedOn: 'archived ', archivedBadge: 'archived', tRestored: 'Restored to Inbox', tDeleted: 'Deleted',
   seedDemo: 'Load sample data',
@@ -105,6 +107,7 @@ export const RU: Dict = {
   tKeep: 'Оставлено — поднято наверх колонки', tMoved: 'Перемещено: ', tReopen: 'Возвращено в «В фокусе»', tDoneS: 'Готово ✓',
   showDone: 'Готово', zTomorrow: 'Завтра', z3d: '+3 дня', zWeek: 'Через неделю', zMonth: 'Через месяц',
   digestUpdated: 'обновлено ',
+  notifications: 'Напоминания', notifyOn: 'Вкл', notifyOff: 'Выкл', notifyDenied: 'Уведомления запрещены в настройках браузера', notifyUnavailable: 'Push здесь недоступен', notifyTest: 'Тест', notifyTestSent: 'Тестовое уведомление отправлено', notifyHint: 'Раз в день в 9:00: забытые задачи, если они есть.',
   gcalConnect: 'Подключить Google Calendar', gcalConnected: 'Google Calendar · двусторонняя синхронизация', gcalSyncing: 'синхронизация…', gcalSyncNow: 'Синхронизировать', gcalDisconnect: 'Отключить', gcalError: 'Google Calendar · ошибка синхронизации', gcalReauth: 'Google Calendar · нужно переподключить', gcalUnavailable: 'Google Calendar · не настроен', gcalDenied: 'Доступ к календарю не выдан', gcalHint: 'Задачи со сроком появляются событиями на весь день в календаре «Headboard». Переносы, переименования и новые события возвращаются на доску.', gcalSynced: 'синхронизировано ',
   archiveTitle: 'Архив', restore: 'Вернуть в Инбокс', deleteForever: 'Удалить', confirmDelete: 'Удалить навсегда?', archiveEmpty: 'Архив пуст — ничего не отпущено.', archivedOn: 'в архиве с ', archivedBadge: 'в архиве', tRestored: 'Возвращено в Инбокс', tDeleted: 'Удалено',
   seedDemo: 'Загрузить пример',

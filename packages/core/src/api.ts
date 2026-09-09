@@ -8,7 +8,11 @@ export interface Settings {
   digestAt?: number | null;
   /** IANA time zone the scheduler uses for this user's 08:00. */
   timeZone?: string | null;
+  /** Daily push about forgotten tasks. */
+  notifyStale?: boolean;
 }
+export interface PushConfig { webPush: boolean; vapidPublicKey: string | null; expo: boolean }
+export interface PushSubscriptionInfo { id: string; kind: 'webpush' | 'expo'; label: string | null; createdAt: number; lastSentAt: number | null }
 export interface ProjectWithFiles extends Project { files?: FileRef[] }
 export interface CalendarStatus { available: boolean; connected: boolean; calendarId: string | null; lastSyncAt: number | null; lastError: string | null; connectedAt: number | null }
 
@@ -70,6 +74,14 @@ export function createApi(baseUrl: string, getToken: () => string | null) {
       },
       contentUrl: (id: string) => base + '/files/' + encodeURIComponent(id) + '/content',
       remove: (id: string) => req<void>('DELETE', '/files/' + encodeURIComponent(id)),
+    },
+    push: {
+      config: () => req<PushConfig>('GET', '/push/config'),
+      list: () => req<PushSubscriptionInfo[]>('GET', '/push/subscriptions'),
+      subscribeWeb: (sub: { endpoint: string; keys: { p256dh: string; auth: string } }, label?: string) => req<PushSubscriptionInfo>('POST', '/push/subscribe', { kind: 'webpush', endpoint: sub.endpoint, keys: sub.keys, label }),
+      subscribeExpo: (token: string, label?: string) => req<PushSubscriptionInfo>('POST', '/push/subscribe', { kind: 'expo', token, label }),
+      unsubscribe: (endpointOrToken: string) => req<void>('DELETE', '/push/subscribe', { endpoint: endpointOrToken }),
+      test: () => req<{ sent: number }>('POST', '/push/test'),
     },
     calendar: {
       status: () => req<CalendarStatus>('GET', '/calendar'),

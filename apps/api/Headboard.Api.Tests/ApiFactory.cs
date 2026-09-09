@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Headboard.Api.Tests;
 
@@ -24,6 +25,9 @@ public class ApiFactory : WebApplicationFactory<Program>
     public HttpMessageHandler? GoogleHandler { get; init; }
     /// <summary>When set, the Google Calendar HttpClient uses this handler (fake OAuth + Calendar v3).</summary>
     public HttpMessageHandler? GoogleCalendarHandler { get; init; }
+    public string VapidPublicKey { get; init; } = "";
+    /// <summary>When set, replaces both push senders with this fake (records payloads, never touches the network).</summary>
+    public Headboard.Api.Push.IPushSender? PushSender { get; init; }
     public string GoogleWebClientId { get; init; } = "";
     public string GoogleClientSecret { get; init; } = "";
 
@@ -44,9 +48,19 @@ public class ApiFactory : WebApplicationFactory<Program>
             ["Auth:GoogleClientSecret"] = GoogleClientSecret,
             ["Digest:Enabled"] = "false",
             ["Calendar:Enabled"] = "false",
+            ["Notify:Enabled"] = "false",
+            ["Push:VapidPublicKey"] = VapidPublicKey,
+            ["Push:VapidPrivateKey"] = VapidPublicKey.Length > 0 ? "test-private" : "",
         }));
         if (AnthropicHandler is not null)
             builder.ConfigureTestServices(s => TestAnthropic.Register(s, AnthropicHandler));
+        if (PushSender is not null)
+            builder.ConfigureTestServices(s =>
+            {
+                s.RemoveAll<Headboard.Api.Push.IPushSender>();
+                s.AddSingleton(PushSender);
+                s.AddSingleton<Headboard.Api.Push.IPushSender>(new KindAlias(PushSender, "expo"));
+            });
         if (GoogleCalendarHandler is not null)
             builder.ConfigureTestServices(s => s.AddHttpClient(Headboard.Api.Calendar.GoogleCalendarClient.HttpClientName).ConfigurePrimaryHttpMessageHandler(() => GoogleCalendarHandler));
         if (GoogleHandler is not null)
@@ -69,4 +83,12 @@ public class ApiFactory : WebApplicationFactory<Program>
         base.Dispose(disposing);
         try { Directory.Delete(Root, recursive: true); } catch { /* best effort */ }
     }
+}
+
+/// <summary>Presents a fake sender under another kind so one fake serves both "webpush" and "expo".</summary>
+internal sealed class KindAlias(Headboard.Api.Push.IPushSender inner, string kind) : Headboard.Api.Push.IPushSender
+{
+    public string Kind => kind;
+    public bool IsConfigured => inner.IsConfigured;
+    public Task<Headboard.Api.Push.PushResult> SendAsync(Headboard.Api.Data.PushSubscriptionRow sub, Headboard.Api.Push.PushPayload payload, CancellationToken ct) => inner.SendAsync(sub, payload, ct);
 }

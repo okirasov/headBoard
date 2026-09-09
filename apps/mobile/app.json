@@ -29,8 +29,20 @@
       "expo-splash-screen",
       "expo-sharing",
       "expo-web-browser",
-      "expo-apple-authentication"
+      "expo-apple-authentication",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/android-icon-monochrome.png",
+          "color": "#C8552F"
+        }
+      ]
     ],
-    "scheme": "headboard"
+    "scheme": "headboard",
+    "extra": {
+      "eas": {
+        "projectId": ""
+      }
+    }
   }
 }

@@ -44,6 +44,10 @@ Uses the same Google web client as sign-in (`Auth:GoogleWebClientId` + `Auth:Goo
 - Inbound uses incremental listing (`syncToken`, 410 → full resync): date moves and renames update the task when the event changed after the task was last touched, cancelled events clear the task's date, events created directly in the Headboard calendar become Inbox tasks (and are tagged back). Our own pushes are recognised by fingerprint and ignored.
 - Deleted tasks leave their event id in `CalendarLinks.PendingDeletesJson`; the next pass removes the event.
 
+## Push reminders about forgotten tasks
+
+`StaleNotifier` evaluates every opted-in user (`Settings.NotifyStale`, toggled from the profile menu) once a day after `Notify:Hour` in their time zone: if `digestStats` finds forgotten tasks (idle ≥ 7 days, not snoozed), every registered device gets one notification (`StaleMessage`: “N forgotten tasks — “title” has waited X days…”, EN/RU) with deep link `/?view=review`. Devices: `POST /push/subscribe` with `{kind:"webpush", endpoint, keys}` (browser, VAPID) or `{kind:"expo", token}` (mobile, Expo Push API); `DELETE /push/subscribe`, `GET /push/subscriptions`, `GET /push/config` (VAPID public key), `POST /push/test`. Subscriptions that push services report as gone (404/410, `DeviceNotRegistered`) or that fail 5 times are dropped.
+
 ## Tests
 
 ```bash
@@ -81,6 +85,11 @@ Keys can be set in `appsettings*.json`, environment variables (`Jwt__Secret`, ..
 | `Calendar:PollIntervalSeconds` | `300` | Full pass over connected users; task mutations and "sync now" trigger immediate passes. |
 | `Calendar:RedirectUri` | `{host}/calendar/oauth/callback` | Must be registered as an authorized redirect URI of the Google web client. |
 | `Calendar:AllowedReturnUrls` | localhost web/Expo, `headboard://` | Prefixes the OAuth flow may redirect back to. |
+| `Push:VapidPublicKey`, `Push:VapidPrivateKey` | — | VAPID key pair for Web Push (generate once with `npx web-push generate-vapid-keys`). Without them `/push/subscribe` for `webpush` returns 503; Expo pushes need no keys. |
+| `Push:Subject` | `mailto:hello@headboard.app` | VAPID subject (contact) sent to push services. |
+| `Notify:Enabled` | `true` | Runs the daily forgotten-tasks notifier (`StaleNotifier`). |
+| `Notify:Hour` | `9` | Local hour after which the reminder is evaluated once per day. |
+| `Notify:CheckIntervalSeconds` | `60` | Notifier polling interval. |
 
 ### Database schema
 

@@ -1,4 +1,7 @@
+import { useEffect, useState } from 'react';
 import { useStore } from '../../store/useStore';
+import { api } from '../../lib/api';
+import { type PushState, disablePush, enablePush, pushState } from '../../lib/push';
 import { useT } from '../../lib/useT';
 import { Kicker, Segmented } from '../ui/primitives';
 import { IcChevronUp } from '../ui/Icons';
@@ -21,6 +24,24 @@ export function ProfileBlock() {
   const setLang = useStore(s => s.setLang);
   const setTheme = useStore(s => s.setTheme);
   const signOut = useStore(s => s.signOut);
+  const notifyStale = useStore(s => s.notifyStale);
+  const toast = useStore(s => s.toast);
+  const [push, setPush] = useState<PushState>('off');
+  useEffect(() => { if (profOpen) void pushState().then(setPush); }, [profOpen]);
+  const setNotify = async (on: boolean) => {
+    if (on) {
+      const st = await enablePush();
+      setPush(st);
+      if (st === 'denied') toast(T.notifyDenied);
+      else if (st === 'unavailable' || st === 'unsupported') toast(T.notifyUnavailable);
+      set({ notifyStale: st === 'on' });
+    } else {
+      await disablePush();
+      setPush('off');
+      set({ notifyStale: false });
+    }
+  };
+  const sendTest = async () => { try { const r = await api?.push.test(); toast(r && r.sent > 0 ? T.notifyTestSent : T.notifyUnavailable); } catch { toast(T.notifyUnavailable); } };
   if (!user) return null;
   return (
     <div className="relative border-t border-line pt-10">
@@ -39,6 +60,13 @@ export function ProfileBlock() {
             <Kicker size={9} className="mb-6">{T.theme}</Kicker>
             <Segmented value={theme} onChange={setTheme} options={[{ v: 'light', label: T.light }, { v: 'dark', label: T.dark }]} />
           </div>
+          {api && (
+            <div>
+              <div className="mb-6 flex items-center"><Kicker size={9}>{T.notifications}</Kicker><span className="flex-1" />{push === 'on' && <button type="button" onClick={() => void sendTest()} className="cursor-pointer font-mono text-9 uppercase tracking-kicker text-mut2 hover:text-acc">{T.notifyTest}</button>}</div>
+              <Segmented value={push === 'on' && notifyStale ? 'on' : 'off'} onChange={v => void setNotify(v === 'on')} options={[{ v: 'on', label: T.notifyOn }, { v: 'off', label: T.notifyOff }]} />
+              <div className="mt-5 font-mono text-9 text-mut2">{T.notifyHint}</div>
+            </div>
+          )}
           <div className="h-px bg-line" />
           <button type="button" onClick={signOut} className="cursor-pointer p-1 text-left text-12.5 font-semibold leading-normal text-hi">{T.signOut}</button>
         </div>

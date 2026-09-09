@@ -17,6 +17,8 @@ export interface PersistedSlice {
   digestText: string | null;
   /** Server-owned time of the last digest change (08:00 scheduler or manual regenerate). */
   digestAt: number | null;
+  /** Daily push about forgotten tasks. */
+  notifyStale: boolean;
   user: User | null;
   lang: Lang;
   theme: Theme;
@@ -82,7 +84,7 @@ export interface Actions {
 export type Store = PersistedSlice & UiSlice & Actions;
 
 const initialPersisted: PersistedSlice = {
-  tasks: [], projects: [], projFiles: {}, digestText: null, digestAt: null, user: null, lang: 'en', theme: 'light', showDone: true, token: null,
+  tasks: [], projects: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, user: null, lang: 'en', theme: 'light', showDone: true, token: null,
 };
 
 const initialUi: UiSlice = {
@@ -232,7 +234,7 @@ export const useStore = create<Store>()(
       storage: createJSONStorage(() => safeStorage()),
       partialize: s => ({
         tasks: s.tasks, projects: s.projects, projFiles: s.projFiles, digestText: s.digestText,
-        digestAt: s.digestAt, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token,
+        digestAt: s.digestAt, notifyStale: s.notifyStale, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token,
       }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<PersistedSlice>;

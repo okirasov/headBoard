@@ -167,7 +167,7 @@ public class TasksTests(ApiFactory f) : IClassFixture<ApiFactory>
     {
         var (c, _) = await f.LoginAsync("settings@example.com");
         var defaults = (await c.GetFromJsonAsync<Headboard.Api.Settings.SettingsDto>("/settings", J))!;
-        Assert.Equal(new Headboard.Api.Settings.SettingsDto("en", "light", true, null, null, null), defaults);
+        Assert.Equal(new Headboard.Api.Settings.SettingsDto("en", "light", true, null, null, null, true), defaults);
 
         var put = await c.PutAsJsonAsync("/settings", new { lang = "ru", theme = "dark", showDone = false, digestText = "Спокойный день" }, J);
         Assert.Equal(HttpStatusCode.OK, put.StatusCode);

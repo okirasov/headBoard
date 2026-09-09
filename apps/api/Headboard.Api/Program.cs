@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Headboard.Api.Ai;
 using Headboard.Api.Auth;
 using Headboard.Api.Calendar;
+using Headboard.Api.Push;
 using Headboard.Api.Comments;
 using Headboard.Api.Files;
 using Headboard.Api.Projects;
@@ -64,6 +65,13 @@ builder.Services.AddSingleton<Headboard.Api.Calendar.CalendarState>();
 builder.Services.AddScoped<Headboard.Api.Calendar.CalendarSyncService>();
 builder.Services.AddSingleton<Headboard.Api.Calendar.CalendarSyncScheduler>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<Headboard.Api.Calendar.CalendarSyncScheduler>());
+builder.Services.AddHttpClient(Headboard.Api.Push.ExpoPushSender.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(20));
+builder.Services.AddSingleton<Headboard.Api.Push.WebPushSender>();
+builder.Services.AddSingleton<Headboard.Api.Push.IPushSender>(sp => sp.GetRequiredService<Headboard.Api.Push.WebPushSender>());
+builder.Services.AddSingleton<Headboard.Api.Push.IPushSender, Headboard.Api.Push.ExpoPushSender>();
+builder.Services.AddScoped<Headboard.Api.Push.PushDispatcher>();
+builder.Services.AddSingleton<Headboard.Api.Push.StaleNotifier>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<Headboard.Api.Push.StaleNotifier>());
 builder.Services.AddSingleton<Headboard.Api.Digest.DigestScheduler>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<Headboard.Api.Digest.DigestScheduler>());
 
@@ -102,6 +110,7 @@ app.MapSettings();
 app.MapFiles();
 app.MapAi();
 app.MapCalendar();
+app.MapPush();
 
 app.Run();
 

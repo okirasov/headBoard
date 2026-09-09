@@ -4,7 +4,7 @@ import type { Api } from './api';
 
 const now = Date.now();
 function fakeStore(init: Partial<SyncState>) {
-  let state: SyncState = { token: 'tok', tasks: [], projects: [], projFiles: {}, lang: 'en', theme: 'light', showDone: true, digestText: null, digestAt: null, ...init };
+  let state: SyncState = { token: 'tok', tasks: [], projects: [], projFiles: {}, lang: 'en', theme: 'light', showDone: true, digestText: null, digestAt: null, notifyStale: true, ...init };
   const subs = new Set<(s: SyncState) => void>();
   return {
     getState: () => state,

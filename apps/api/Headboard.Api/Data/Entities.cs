@@ -75,6 +75,9 @@ public class SettingsRow
     public long? DigestAt { get; set; }
     /// <summary>IANA time zone for the 08:00 digest.</summary>
     public string? TimeZone { get; set; }
+    /// <summary>Daily push about forgotten tasks (default on).</summary>
+    public bool NotifyStale { get; set; } = true;
+    public long? LastStaleNotifyAt { get; set; }
 }
 
 /// <summary>Per-user Google Calendar connection: offline refresh token, the dedicated calendar and the incremental sync cursor.</summary>
@@ -91,4 +94,21 @@ public class CalendarLinkRow
     public long ConnectedAt { get; set; }
     /// <summary>JSON array of event ids whose tasks were deleted; removed from the calendar on the next pass.</summary>
     public string PendingDeletesJson { get; set; } = "[]";
+}
+
+/// <summary>A device/browser that can receive pushes: Web Push subscription or Expo push token.</summary>
+public class PushSubscriptionRow
+{
+    public string Id { get; set; } = "";
+    public Guid UserId { get; set; }
+    /// <summary>"webpush" or "expo".</summary>
+    public string Kind { get; set; } = "webpush";
+    /// <summary>Web Push endpoint URL or Expo push token.</summary>
+    public string Endpoint { get; set; } = "";
+    public string? P256dh { get; set; }
+    public string? Auth { get; set; }
+    public string? Label { get; set; }
+    public long CreatedAt { get; set; }
+    public long? LastSentAt { get; set; }
+    public int FailCount { get; set; }
 }

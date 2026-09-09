@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { dict } from '@headboard/core';
 import { useStore, applyThemeClass } from './store/useStore';
 import { startSync, refreshSettings } from './store/sync';
+import { registerServiceWorker } from './lib/push';
 import { Shell } from './components/layout/Shell';
 import { SignIn } from './views/auth/SignIn';
 import { Snackbar } from './components/ui/Snackbar';
@@ -14,7 +15,17 @@ export function App() {
   const user = useStore(s => s.user);
   const theme = useStore(s => s.theme);
   useEffect(() => applyThemeClass(theme), [theme]);
-  useEffect(() => { void startSync(); }, []);
+  useEffect(() => { void startSync(); void registerServiceWorker(); }, []);
+  // Deep link from a notification: ?view=review
+  useEffect(() => {
+    const u = new URL(location.href);
+    const v = u.searchParams.get('view');
+    if (v === 'board' || v === 'review' || v === 'digest' || v === 'calendar' || v === 'archive') {
+      useStore.getState().set({ view: v });
+      u.searchParams.delete('view');
+      history.replaceState(null, '', u.pathname + (u.search || '') + u.hash);
+    }
+  }, []);
   // Return from the Google Calendar consent screen: ?calendar=connected|denied|error
   useEffect(() => {
     const u = new URL(location.href);
