@@ -9,3 +9,4 @@ export * from './tokens';
 export * from './api';
 export * from './sync';
 export * from './projects';
+export * from './stats';

@@ -174,6 +174,7 @@
 <tr><td><code>capture.ts</code></td><td><code>heuristicExtract, guessProject, extractPrompt, parseExtractResponse</code></td><td>Разбор текста в задачи: строки и «; », маркеры списков, <code>urgent / срочно</code> → High, <code>#теги</code> (≤ 2), проект по ключевым словам или по имени; парсинг JSON-ответа модели с клампом приоритета</td></tr>
 <tr><td><code>i18n.ts</code></td><td><code>EN, RU, dict, priorityLabel, statusLabel, phrases</code></td><td>Полные словари прототипа, тест на равенство наборов ключей</td></tr>
 <tr><td><code>tokens.ts</code></td><td><code>LIGHT, DARK, resolveColor</code></td><td>Значения дизайн-токенов, разбор <code>var(--acc)</code> в цветах проектов</td></tr>
+<tr><td><code>stats.ts</code></td><td><code>weeklyActivity, priorityMix, openByProject, idleBuckets, completionStreak, medianDaysToClose, statsSummary</code></td><td>Статистика продуктивности: закрыто и создано по неделям (недели с понедельника), открытые по приоритету, нагрузка по проектам, простой по корзинам 0–1 / 2–6 / 7–13 / 14+, серия дней с закрытиями, медиана времени до закрытия</td></tr>
 <tr><td><code>projects.ts</code></td><td><code>PROJECT_PALETTE, newProject, nextProjectColor</code></td><td>Палитра из 8 цветов проектов (два следуют теме через <code>var(--…)</code>), создание проекта с клиентским id, выбор следующего свободного цвета</td></tr>
 </table></div>
 
@@ -406,6 +407,9 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <tr><td>Иконки и логотип</td><td>Inline SVG-компоненты, знак по спеке Logo</td><td>Те же контуры через react-native-svg</td></tr>
 </table></div>
 
+<h3>Экран статистики</h3>
+<p>Все числа считает ядро (<code>core/stats.ts</code>), клиенты только рисуют. Графики рукописные (SVG в web, react-native-svg в mobile), без библиотек, по правилам dataviz: тонкие столбики со скруглённым верхом, 2px зазоры между соседними метками и сегментами, рецессивная сетка, подписи и легенда текстовыми токенами, тултип при наведении на каждую метку (web), переключатель «График / Таблица» для доступности. Цвета серий: закрыто <code>--acc</code>, создано <code>--mut2</code>; приоритеты повторяют полосы карточек (<code>--hi</code>, <code>--med</code>, <code>--lineStrong</code>) и снабжены прямыми подписями и легендой, потому что как категориальная палитра они не проходят проверку контраста и хромы; цвета проектов это данные пользователя, каждая строка подписана именем.</p>
+
 <h2 id="web">11. Web: структура</h2>
 <pre><code>apps/web/src
 ├─ public/sw.js               service worker: push → уведомление, тап → /?view=review
@@ -417,11 +421,12 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 ├─ components/
 │  ├─ brand/Logo.tsx           Mark + Wordmark, размеры sidebar/auth/title/mobile
 │  ├─ ui/{primitives,Icons,Snackbar}.tsx
-│  ├─ layout/{Shell,Sidebar,NavItem,ProjectList,ProfileMenu,TopBar}.tsx   5 нав-пунктов; ProjectList: шестерёнка → настройки проектов; ProfileMenu: язык, тема, «Напоминания» Вкл/Выкл + тест
+│  ├─ layout/{Shell,Sidebar,NavItem,ProjectList,ProfileMenu,TopBar}.tsx   6 нав-пунктов (+ Statistics, Archive); ProjectList: шестерёнка → настройки проектов; ProfileMenu: язык, тема, «Напоминания» Вкл/Выкл + тест
 │  ├─ task/TaskDrawer.tsx      StatusSelect, PriorityDots, вложения, комментарии, действия;
 │  │                           для архивной задачи бейдж «archived» и кнопки Restore / Delete
 │  ├─ capture/CaptureModal.tsx snooze/SnoozePicker.tsx  files/{FileChip,FilePreviewModal}.tsx
-└─ views/{board,review,digest,calendar,archive,projects,auth}/   archive: строки с датой, Restore, двухшаговый Delete
+└─ views/{board,review,digest,calendar,archive,projects,stats,auth}/
+   stats/{StatsView,charts}.tsx     плитки, grouped bars по неделям, stacked bar приоритетов, HBars простоя и проектов, режим «Таблица»   archive: строки с датой, Restore, двухшаговый Delete
    projects/ProjectsView.tsx       переименование инлайн, палитра из core/projects.ts, счётчик задач → фильтр доски, удаление с подтверждением, форма нового проекта
    calendar/CalendarSyncChip.tsx   живой чип Google Calendar: подключить · synced HH:MM · Sync now · Disconnect</code></pre>
 <p>Drag-and-drop реализован на HTML5 <code>draggable</code>: карточка пишет id в <code>dataTransfer</code>, колонка подсвечивается через <code>dragCol</code> в сторе и на <code>drop</code> вызывает <code>moveTask</code>. Вложения читаются <code>FileReader</code> в data URL, если это картинка меньше 1.5 МБ; иначе хранится только ссылка без превью.</p>
@@ -433,11 +438,12 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 ├─ src/store/{useStore,sync,devSeed}.ts
 ├─ src/lib/{api,auth,push,files,useT,useNow}.ts   push.ts: expo-notifications, токен → /push/subscribe, тап → mView
 ├─ src/components/{Header,TabBar,Sheet,TaskCardM,FileChipM,FilePreviewM,StatusPriority,Logo,Icons,ui,Snack,CalendarSyncCard}.tsx
-├─ src/screens/{SignIn,Board,Review,Digest,Calendar,Archive,Projects}Screen.tsx
+├─ src/screens/{SignIn,Board,Review,Digest,Calendar,Archive,Projects,Stats}Screen.tsx
 └─ src/sheets/{Task,Capture,Snooze,Profile}Sheet.tsx</code></pre>
 <ul>
   <li>Навигации нет: один уровень экранов переключается полем <code>mView</code> в сторе, как в прототипе. Таб-бар с FAB «+» рисуется поверх контента, контент имеет нижний отступ 110. Экран архива открывается из профиль-шторки, в таб-бар не входит.</li>
   <li>Шторки это <code>Modal</code> с анимацией <code>translateY 40 → 0</code>, ручкой 40×4 и учётом safe-area снизу. Смена статуса реализована выпадающим списком в стиле select, потому что в RN нет нативного select.</li>
+  <li>Статистика: строка в профиль-шторке открывает экран с плитками и графиками на react-native-svg (те же функции ядра, что и в web).</li>
   <li>Проекты: строка «Projects · N» в профиль-шторке открывает экран настроек проектов (имя, цвет из палитры, удаление, добавление).</li>
   <li>Архив: строка «Archive · N» в профиль-шторке переключает <code>mView</code> на <code>archive</code>; карточки с датой архивирования, Restore и двухшаговым Delete; шторка тикета показывает бейдж вместо статуса.</li>
   <li>Файлы выбираются <code>expo-document-picker</code>; <code>src</code> хранит локальный uri, картинки показываются <code>Image</code>, движок синхронизации загружает uri как multipart-дескриптор. «Скачать» в предпросмотре открывает системный share sheet (<code>expo-sharing</code>).</li>

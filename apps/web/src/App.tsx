@@ -20,7 +20,7 @@ export function App() {
   useEffect(() => {
     const u = new URL(location.href);
     const v = u.searchParams.get('view');
-    if (v === 'board' || v === 'review' || v === 'digest' || v === 'calendar' || v === 'archive') {
+    if (v === 'board' || v === 'review' || v === 'digest' || v === 'calendar' || v === 'archive' || v === 'stats') {
       useStore.getState().set({ view: v });
       u.searchParams.delete('view');
       history.replaceState(null, '', u.pathname + (u.search || '') + u.hash);

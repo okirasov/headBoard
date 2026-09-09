@@ -70,6 +70,9 @@ export const IcArchive = (p: P) => (
 export const IcRestore = (p: P) => (
   <svg {...base(p)}><path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9" {...S} strokeWidth="1.6" /><path d="M2.5 2.5V6h3.5" {...S} strokeWidth="1.6" /></svg>
 );
+export const IcStats = (p: P) => (
+  <svg {...base(p)}><path d="M2 13.5h12" {...S} strokeWidth="1.5" /><rect x="3" y="8" width="2.6" height="4" rx="0.8" stroke="currentColor" strokeWidth="1.5" /><rect x="6.7" y="4.5" width="2.6" height="7.5" rx="0.8" stroke="currentColor" strokeWidth="1.5" /><rect x="10.4" y="6.5" width="2.6" height="5.5" rx="0.8" stroke="currentColor" strokeWidth="1.5" /></svg>
+);
 export const IcGear = (p: P) => (
   <svg {...base(p)}><circle cx="8" cy="8" r="2.2" stroke="currentColor" strokeWidth="1.5" /><path d="M8 1.8v1.7M8 12.5v1.7M1.8 8h1.7M12.5 8h1.7M3.6 3.6l1.2 1.2M11.2 11.2l1.2 1.2M3.6 12.4l1.2-1.2M11.2 4.8l1.2-1.2" {...S} strokeWidth="1.5" /></svg>
 );
