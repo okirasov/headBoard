@@ -1,14 +1,29 @@
 import { Pressable, Text, View } from 'react-native';
-import { appleOrDevSignIn, useGoogleSignIn } from '../lib/auth';
+import { GOOGLE_CONFIGURED, appleOrDevSignIn, devOrMockSignIn, useGoogleSignIn } from '../lib/auth';
 import { useTheme } from '../theme/ThemeContext';
 import { useT } from '../lib/useT';
 import { kicker, txt } from '../theme/type';
 import { Logo } from '../components/Logo';
 
+function ProviderButton({ label, onPress }: { label: string; onPress: () => void }) {
+  const { t } = useTheme();
+  return (
+    <Pressable onPress={onPress} style={{ height: 52, borderRadius: 14, borderWidth: 1, borderColor: t.lineStrong, backgroundColor: t.card, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={txt(14.5, { w: 600, color: t.ink })}>{label}</Text>
+    </Pressable>
+  );
+}
+
+/** Mounted only when Google client ids exist (the auth-session hook throws otherwise). */
+function GoogleButton() {
+  const { T } = useT();
+  const google = useGoogleSignIn();
+  return <ProviderButton label={T.google} onPress={() => void google.signIn()} />;
+}
+
 export function SignInScreen() {
   const { t } = useTheme();
   const { T } = useT();
-  const google = useGoogleSignIn();
   return (
     <View style={{ flex: 1, backgroundColor: t.bg, paddingTop: 96, paddingHorizontal: 22, paddingBottom: 44 }}>
       <Logo mark={32} word={26} gap={8} surface="bg" />
@@ -16,9 +31,7 @@ export function SignInScreen() {
       <Text style={[txt(20, { color: t.mut, lh: 1.5 }), { marginTop: 26 }]}>{T.authSub}</Text>
       <View style={{ flex: 1 }} />
       <View style={{ gap: 10 }}>
-        <Pressable onPress={() => void google.signIn()} style={{ height: 52, borderRadius: 14, borderWidth: 1, borderColor: t.lineStrong, backgroundColor: t.card, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={txt(14.5, { w: 600, color: t.ink })}>{T.google}</Text>
-        </Pressable>
+        {GOOGLE_CONFIGURED ? <GoogleButton /> : <ProviderButton label={T.google} onPress={() => void devOrMockSignIn('Google')} />}
         <Pressable onPress={() => void appleOrDevSignIn()} style={{ height: 52, borderRadius: 14, backgroundColor: t.ink, alignItems: 'center', justifyContent: 'center' }}>
           <Text style={txt(14.5, { w: 600, color: t.onInk })}>{T.apple}</Text>
         </Pressable>

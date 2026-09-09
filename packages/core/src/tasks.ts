@@ -44,6 +44,11 @@ export function live(tasks: Task[]): Task[] {
   return tasks.filter(t => t.status !== 'archived');
 }
 
+/** Archived tasks, most recently archived first (falls back to `touched`). */
+export function archived(tasks: Task[]): Task[] {
+  return tasks.filter(t => t.status === 'archived').sort((a, b) => (b.archivedAt ?? b.touched) - (a.archivedAt ?? a.touched));
+}
+
 /** Stale first (oldest idle first), then priority, then idle desc. */
 export function sortAutoBump(tasks: Task[], now: number, staleDays = STALE_DAYS_DEFAULT): Task[] {
   return [...tasks].sort((a, b) => {

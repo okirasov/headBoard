@@ -3,7 +3,7 @@ export type Status = 'inbox' | 'focus' | 'waiting' | 'done' | 'archived';
 export type ColumnKey = Exclude<Status, 'archived'>;
 export type Lang = 'en' | 'ru';
 export type Theme = 'light' | 'dark';
-export type View = 'board' | 'review' | 'digest' | 'calendar';
+export type View = 'board' | 'review' | 'digest' | 'calendar' | 'archive';
 export type Provider = 'Google' | 'Apple';
 
 export interface FileRef {
@@ -38,6 +38,8 @@ export interface Task {
   files: FileRef[];
   comments: Comment[];
   doneAt: number | null;
+  /** When the task was archived; null while live. */
+  archivedAt: number | null;
 }
 
 export interface Project {
@@ -87,5 +89,6 @@ export function newTask(partial: Partial<Task> & { title: string }, now: number)
     files: partial.files ?? [],
     comments: partial.comments ?? [],
     doneAt: partial.doneAt ?? null,
+    archivedAt: partial.archivedAt ?? null,
   };
 }

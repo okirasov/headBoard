@@ -5,6 +5,8 @@ import { useT } from '../lib/useT';
 import { kicker, txt } from '../theme/type';
 import { Sheet } from '../components/Sheet';
 import { Segmented } from '../components/ui';
+import { IcArchive, IcChevronRightSm } from '../components/Icons';
+import { archived } from '@headboard/core';
 
 export function ProfileSheet() {
   const { t } = useTheme();
@@ -16,6 +18,7 @@ export function ProfileSheet() {
   const setLang = useStore(s => s.setLang);
   const setTheme = useStore(s => s.setTheme);
   const signOut = useStore(s => s.signOut);
+  const archivedN = useStore(s => archived(s.tasks).length);
   return (
     <Sheet open={open && !!user} onClose={() => set({ mProfOpen: false })} gap={15}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
@@ -35,6 +38,12 @@ export function ProfileSheet() {
         <Text style={[kicker(9.5, t.mut2), { marginBottom: 7 }]}>{T.theme}</Text>
         <Segmented value={theme} onChange={setTheme} options={[{ v: 'light', label: T.light }, { v: 'dark', label: T.dark }]} />
       </View>
+      <Pressable onPress={() => set({ mProfOpen: false, mView: 'archive' })} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 13, paddingHorizontal: 14, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.card }}>
+        <IcArchive size={15} color={t.mut} />
+        <Text style={[txt(13.5, { w: 600, color: t.ink }), { flex: 1 }]}>{T.archiveTitle}</Text>
+        <Text style={txt(10.5, { mono: true, color: t.mut2 })}>{archivedN}</Text>
+        <IcChevronRightSm size={12} color={t.mut2} />
+      </Pressable>
       <Pressable onPress={signOut} style={{ alignItems: 'center', padding: 14, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.card }}>
         <Text style={txt(13.5, { w: 600, color: t.hi })}>{T.signOut}</Text>
       </Pressable>

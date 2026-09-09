@@ -185,7 +185,7 @@ interface Task {
   id: string; title: string; proj: string | null; pr: Priority; status: Status;
   touched: number; created: number; due: number | null; snoozedUntil: number;
   recur: 'weekly' | null; tags: string[]; note: string; chat: string | null;
-  files: FileRef[]; comments: Comment[]; doneAt: number | null;
+  files: FileRef[]; comments: Comment[]; doneAt: number | null; archivedAt: number | null;
 }
 interface FileRef  { id; name; kind: 'img' | 'file'; size?: number; src?: string }
 interface Comment  { id; text; at: number }
@@ -197,7 +197,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <tr><th>Таблица</th><th>Ключ</th><th>Поля</th></tr>
 <tr><td>Users</td><td>Id (Guid)</td><td>Provider, Subject (id у провайдера), Email, Name, Initials, CreatedAt. Уникальность по (Provider, Subject)</td></tr>
 <tr><td>Projects</td><td>Id (string)</td><td>UserId, Name, Color</td></tr>
-<tr><td>Tasks</td><td>Id (string)</td><td>UserId, Title, ProjectId?, Priority, Status, Touched, Created, Due?, SnoozedUntil, Recur?, TagsJson, Note, Chat?, DoneAt?. Индекс по UserId</td></tr>
+<tr><td>Tasks</td><td>Id (string)</td><td>UserId, Title, ProjectId?, Priority, Status, Touched, Created, Due?, SnoozedUntil, Recur?, TagsJson, Note, Chat?, DoneAt?, ArchivedAt?. Индекс по UserId</td></tr>
 <tr><td>Comments</td><td>Id</td><td>TaskId, UserId, Text, At</td></tr>
 <tr><td>Files</td><td>Id</td><td>UserId, TaskId?, ProjectId?, Name, Kind, Size?, StoragePath?, ContentType?</td></tr>
 <tr><td>Settings</td><td>UserId</td><td>Lang, Theme, ShowDone, DigestText?</td></tr>
@@ -358,7 +358,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 ├─ src/screens/{SignIn,Board,Review,Digest,Calendar}Screen.tsx
 └─ src/sheets/{Task,Capture,Snooze,Profile}Sheet.tsx</code></pre>
 <ul>
-  <li>Навигации нет: один уровень экранов переключается полем <code>mView</code> в сторе, как в прототипе. Таб-бар с FAB «+» рисуется поверх контента, контент имеет нижний отступ 110.</li>
+  <li>Навигации нет: один уровень экранов переключается полем <code>mView</code> в сторе, как в прототипе. Таб-бар с FAB «+» рисуется поверх контента, контент имеет нижний отступ 110. Экран архива открывается из профиль-шторки, в таб-бар не входит.</li>
   <li>Шторки это <code>Modal</code> с анимацией <code>translateY 40 → 0</code>, ручкой 40×4 и учётом safe-area снизу. Смена статуса реализована выпадающим списком в стиле select, потому что в RN нет нативного select.</li>
   <li>Файлы выбираются <code>expo-document-picker</code>; <code>src</code> хранит локальный uri, картинки показываются <code>Image</code>, движок синхронизации загружает uri как multipart-дескриптор. «Скачать» в предпросмотре открывает системный share sheet (<code>expo-sharing</code>).</li>
   <li>Android использует тот же код; отличия только в insets и в тени (<code>elevation</code>).</li>
@@ -410,7 +410,6 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
   <li><span class="pill gold">auth</span> Реальные потоки Google/Apple реализованы, но включаются только при наличии client id: Google Cloud (web, iOS, Android клиенты), Apple Developer (App ID с Sign in with Apple, Services ID с https return URL; <code>localhost</code> Apple не принимает). Apple на Android не поддержан.</li>
   <li><span class="pill gold">db</span> Миграции EF сгенерированы для SQLite; PostgreSQL создаёт схему через <code>EnsureCreated()</code>. Перед эволюцией схемы в проде нужны отдельные Postgres-миграции.</li>
   <li><span class="pill">feature</span> Дайджест по расписанию в 8:00 и двусторонняя синхронизация с Google Calendar не реализованы; чип календаря декоративный.</li>
-  <li><span class="pill">feature</span> Экрана архива нет: задачи со статусом <code>archived</code> только скрываются.</li>
   <li><span class="pill">sync</span> Конфликты решаются правилом «сервер побеждает при первой загрузке, затем последний пишущий»; для нескольких устройств с офлайн-правками нужен вектор изменений или op-log.</li>
   <li><span class="pill">files</span> Вложения из сида без содержимого сервер не сохраняет (нет байтов для загрузки). Реальные файлы загружаются и хранятся.</li>
   <li><span class="pill">ui</span> В mobile курсив заголовка месяца не рендерится: у Golos Text нет italic-начертания, браузер его синтезирует, iOS нет.</li>

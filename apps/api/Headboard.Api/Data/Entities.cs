@@ -36,6 +36,7 @@ public class TaskRow
     public string Note { get; set; } = "";
     public string? Chat { get; set; }
     public long? DoneAt { get; set; }
+    public long? ArchivedAt { get; set; }
 }
 
 public class CommentRow

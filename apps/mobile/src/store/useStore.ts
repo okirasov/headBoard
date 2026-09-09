@@ -33,6 +33,8 @@ export interface Actions {
   keep: (id: string) => void;
   snooze: (id: string, until: number) => void;
   archive: (id: string) => void;
+  restore: (id: string) => void;
+  deleteTask: (id: string) => void;
   setPriority: (id: string, pr: Priority) => void;
   addComment: (id: string, text: string) => void;
   attachFiles: (id: string, files: FileRef[]) => void;
@@ -89,7 +91,9 @@ export const useStore = create<Store>()(
         bump: id => { patchTask(id, { touched: Date.now(), snoozedUntil: 0 }); toast(T().tBump); },
         keep: id => { patchTask(id, { touched: Date.now(), snoozedUntil: 0 }); toast(T().tKeep); },
         snooze: (id, until) => { patchTask(id, { snoozedUntil: until }); set({ zTask: null, mSel: null }); toast(T().zUntil + fmtDate(until, get().lang)); },
-        archive: id => { patchTask(id, { status: 'archived' }); set(s => ({ mSel: s.mSel === id ? null : s.mSel })); toast(T().tArch); },
+        archive: id => { patchTask(id, { status: 'archived', archivedAt: Date.now() }); set(s => ({ mSel: s.mSel === id ? null : s.mSel })); toast(T().tArch); },
+        restore: id => { patchTask(id, { status: 'inbox', archivedAt: null, touched: Date.now() }); set(s => ({ mSel: s.mSel === id ? null : s.mSel })); toast(T().tRestored); },
+        deleteTask: id => { set(s => ({ tasks: s.tasks.filter(t => t.id !== id), mSel: s.mSel === id ? null : s.mSel })); toast(T().tDeleted); },
         setPriority: (id, pr) => patchTask(id, { pr }),
         addComment: (id, text) => {
           const txt = text.trim(); if (!txt) return;
@@ -132,5 +136,5 @@ export const useStore = create<Store>()(
 );
 
 export function selectSelectedTask(s: Store): Task | null {
-  return s.mSel ? s.tasks.find(t => t.id === s.mSel && t.status !== 'archived') ?? null : null;
+  return s.mSel ? s.tasks.find(t => t.id === s.mSel) ?? null : null;
 }

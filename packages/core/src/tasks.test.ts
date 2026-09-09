@@ -1,5 +1,5 @@
 import { newTask, DAY_MS } from './model';
-import { idleDays, isStale, dueLabel, sortAutoBump, dueDiff, matchesFilter, sortDone } from './tasks';
+import { idleDays, isStale, dueLabel, sortAutoBump, dueDiff, matchesFilter, sortDone, archived } from './tasks';
 import { sizeHuman, fmtDate, commentTime } from './dates';
 
 // Wednesday 2026-09-09 12:00 local
@@ -61,6 +61,13 @@ describe('sorting & filtering', () => {
   it('done sorted newest first, capped', () => {
     const list = [1, 2, 3].map(i => mk(0, { id: 'd' + i, status: 'done', doneAt: now - i * DAY_MS }));
     expect(sortDone(list, 2).map(t => t.id)).toEqual(['d1', 'd2']);
+  });
+  it('archived list is newest first with touched fallback', () => {
+    const a = mk(3, { id: 'a', status: 'archived', archivedAt: now - 2 * DAY_MS });
+    const b = mk(1, { id: 'b', status: 'archived', archivedAt: now - DAY_MS });
+    const c = mk(0, { id: 'c', status: 'archived' }); // no archivedAt → touched = now
+    const d = mk(0, { id: 'd' });
+    expect(archived([a, b, c, d]).map(t => t.id)).toEqual(['c', 'b', 'a']);
   });
   it('matchesFilter', () => {
     const t = mk(0, { title: 'Compare vector DBs', tags: ['infra'], pr: 0, proj: 'p2' });

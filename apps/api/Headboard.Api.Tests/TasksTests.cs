@@ -91,7 +91,7 @@ public class TasksTests(ApiFactory f) : IClassFixture<ApiFactory>
         var res = await c.PostAsJsonAsync("/tasks", new TaskDto { Title = "Shape" }, J);
         using var doc = JsonDocument.Parse(await res.Content.ReadAsStringAsync());
         var names = doc.RootElement.EnumerateObject().Select(p => p.Name).ToArray();
-        string[] expected = ["id", "title", "proj", "pr", "status", "touched", "created", "due", "snoozedUntil", "recur", "tags", "note", "chat", "files", "comments", "doneAt"];
+        string[] expected = ["id", "title", "proj", "pr", "status", "touched", "created", "due", "snoozedUntil", "recur", "tags", "note", "chat", "files", "comments", "doneAt", "archivedAt"];
         Assert.Equal(expected, names);
         foreach (var nullable in new[] { "proj", "due", "recur", "chat", "doneAt" })
             Assert.Equal(JsonValueKind.Null, doc.RootElement.GetProperty(nullable).ValueKind);
@@ -176,5 +176,33 @@ public class TasksTests(ApiFactory f) : IClassFixture<ApiFactory>
 
         var bad = await c.PutAsJsonAsync("/settings", new { lang = "de", theme = "dark", showDone = true }, J);
         Assert.Equal(HttpStatusCode.BadRequest, bad.StatusCode);
+    }
+}
+
+public class ArchiveTests
+{
+    [Fact]
+    public async Task ArchivedAt_RoundTrips_ThroughCreatePatchAndList()
+    {
+        using var f = new ApiFactory();
+        var (c, _) = await f.LoginAsync("archive@example.com");
+        var create = await c.PostAsJsonAsync("/tasks", new { id = "ar1", title = "Old idea", pr = 1, status = "inbox", touched = 1L, created = 1L, tags = new string[0], note = "", files = new object[0], comments = new object[0] }, ApiFactory.Json);
+        create.EnsureSuccessStatusCode();
+
+        var patch = await c.PatchAsJsonAsync("/tasks/ar1", new { status = "archived", archivedAt = 1_700_000_000_000L }, ApiFactory.Json);
+        patch.EnsureSuccessStatusCode();
+        var t = await patch.Content.ReadFromJsonAsync<Headboard.Api.Tasks.TaskDto>(ApiFactory.Json);
+        Assert.Equal("archived", t!.Status);
+        Assert.Equal(1_700_000_000_000L, t.ArchivedAt);
+
+        var live = await c.GetFromJsonAsync<List<Headboard.Api.Tasks.TaskDto>>("/tasks", ApiFactory.Json);
+        Assert.DoesNotContain(live!, x => x.Id == "ar1");
+        var all = await c.GetFromJsonAsync<List<Headboard.Api.Tasks.TaskDto>>("/tasks?includeArchived=true", ApiFactory.Json);
+        Assert.Contains(all!, x => x.Id == "ar1" && x.ArchivedAt == 1_700_000_000_000L);
+
+        var restore = await c.PatchAsJsonAsync("/tasks/ar1", new { status = "inbox", archivedAt = (long?)null }, ApiFactory.Json);
+        restore.EnsureSuccessStatusCode();
+        var r = await restore.Content.ReadFromJsonAsync<Headboard.Api.Tasks.TaskDto>(ApiFactory.Json);
+        Assert.Null(r!.ArchivedAt);
     }
 }

@@ -1,6 +1,6 @@
 # Headboard
 
-Personal thinking board: paste raw text, get tasks in Inbox / In focus / Waiting on, review forgotten ones, see load per day in a calendar. Web + iOS/Android + API, built from the design handoff in `design_handoff_headboard/`.
+Personal thinking board: paste raw text, get tasks in Inbox / In focus / Waiting on, review forgotten ones, see load per day in a calendar, restore or delete what you archived. Web + iOS/Android + API, built from the design handoff in `design_handoff_headboard/`.
 
 ## Layout
 

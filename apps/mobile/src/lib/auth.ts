@@ -65,7 +65,8 @@ export async function appleSignIn(): Promise<void> {
 
 /**
  * Google sign-in via expo-auth-session (system browser, id-token response).
- * Returns `signIn`; falls back to the dev login when no client id exists for this platform.
+ * Only mount the component that calls this hook when `GOOGLE_CONFIGURED` is true:
+ * expo-auth-session throws at render time when the platform client id is missing.
  */
 export function useGoogleSignIn(): { signIn: () => Promise<void>; configured: boolean } {
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({ iosClientId: GOOGLE_IOS, androidClientId: GOOGLE_ANDROID, webClientId: GOOGLE_WEB });

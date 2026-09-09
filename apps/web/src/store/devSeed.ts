@@ -29,6 +29,8 @@ export function buildSeed(now = Date.now()): { tasks: Task[]; projects: Project[
     T('t12', 'Offline sync spike: CRDT vs op-log', 'p2', 1, 'done', 1, { chat: 'https://claude.ai/', doneAt: now - 1 * d }),
     T('t13', 'Migrate notes out of Apple Notes', 'p4', 2, 'done', 2, { doneAt: now - 2 * d }),
     T('t14', 'Interview notes → summary prompt', 'p1', 0, 'done', 0, { chat: 'https://claude.ai/', doneAt: now - 0.3 * d }),
+    T('t17', 'Try the Obsidian plugin for weekly notes', 'p3', 2, 'archived', 20, { tags: ['tools'], archivedAt: now - 6 * d }),
+    T('t18', 'Read paper on memory consolidation', 'p1', 1, 'archived', 30, { chat: 'https://claude.ai/', archivedAt: now - 14 * d }),
   ];
   const projFiles: Record<string, FileRef[]> = { p2: [{ id: 'pf1', name: 'headboard-moodboard.png', kind: 'img' }, { id: 'pf2', name: 'prd-v1.pdf', kind: 'file', size: 240000 }] };
   return { tasks, projects, projFiles };

@@ -23,6 +23,7 @@ public class TaskDto
     public List<FileRefDto> Files { get; set; } = [];
     public List<CommentDto> Comments { get; set; } = [];
     public long? DoneAt { get; set; }
+    public long? ArchivedAt { get; set; }
 }
 
 public static class Wire

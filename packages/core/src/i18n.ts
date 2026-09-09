@@ -23,6 +23,7 @@ export interface Dict {
   sched: string; schedSel: string; bumpSort: string; prSort: string;
   tDone: string; tBump: string; tSnooze: string; tArch: string; tKeep: string; tMoved: string; tReopen: string; tDoneS: string;
   showDone: string; zTomorrow: string; z3d: string; zWeek: string; zMonth: string;
+  archiveTitle: string; restore: string; deleteForever: string; confirmDelete: string; archiveEmpty: string; archivedOn: string; archivedBadge: string; tRestored: string; tDeleted: string;
   seedDemo: string;
   DOW: string[]; DOWS: string[]; MON: string[]; MONF: string[];
   prShort: [string, string, string]; prFull: [string, string, string];
@@ -59,6 +60,7 @@ export const EN: Dict = {
   tDone: 'Done — moved to Done', tBump: 'Bumped — idle counter reset', tSnooze: 'Snoozed for 7 days', tArch: 'Archived',
   tKeep: 'Kept — bumped to top of its column', tMoved: 'Moved to ', tReopen: 'Reopened into In focus', tDoneS: 'Done ✓',
   showDone: 'Done', zTomorrow: 'Tomorrow', z3d: '+3 days', zWeek: 'Next week', zMonth: 'Next month',
+  archiveTitle: 'Archive', restore: 'Restore to Inbox', deleteForever: 'Delete', confirmDelete: 'Delete for good?', archiveEmpty: 'Archive is empty — nothing dropped yet.', archivedOn: 'archived ', archivedBadge: 'archived', tRestored: 'Restored to Inbox', tDeleted: 'Deleted',
   seedDemo: 'Load sample data',
   DOW: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
   DOWS: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
@@ -98,6 +100,7 @@ export const RU: Dict = {
   tDone: 'Готово — перенесено в «Готово»', tBump: 'Поднято — счётчик сброшен', tSnooze: 'Отложено на 7 дней', tArch: 'В архиве',
   tKeep: 'Оставлено — поднято наверх колонки', tMoved: 'Перемещено: ', tReopen: 'Возвращено в «В фокусе»', tDoneS: 'Готово ✓',
   showDone: 'Готово', zTomorrow: 'Завтра', z3d: '+3 дня', zWeek: 'Через неделю', zMonth: 'Через месяц',
+  archiveTitle: 'Архив', restore: 'Вернуть в Инбокс', deleteForever: 'Удалить', confirmDelete: 'Удалить навсегда?', archiveEmpty: 'Архив пуст — ничего не отпущено.', archivedOn: 'в архиве с ', archivedBadge: 'в архиве', tRestored: 'Возвращено в Инбокс', tDeleted: 'Удалено',
   seedDemo: 'Загрузить пример',
   DOW: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
   DOWS: ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],
@@ -133,5 +136,6 @@ export const phrases = {
   addN(n: number, lang: Lang) { return lang === 'ru' ? 'Добавить (' + n + ')' : 'Add ' + n + (n === 1 ? ' task' : ' tasks'); },
   openTasks(n: number, lang: Lang) { return lang === 'ru' ? 'открытых задач: ' + n : n + ' open tasks'; },
   forgottenN(n: number, lang: Lang) { return lang === 'ru' ? 'забытых: ' + n : n + ' forgotten'; },
+  archivedN(n: number, lang: Lang) { return lang === 'ru' ? 'в архиве: ' + n : n + ' archived'; },
   reviewIntro(n: number, lang: Lang) { return lang === 'ru' ? 'Забытых задач: ' + n + ' — решите: оставить, отложить или в архив.' : n + ' forgotten tasks — give each a verdict: keep, snooze, or drop.'; },
 };

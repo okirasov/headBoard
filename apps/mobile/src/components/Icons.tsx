@@ -24,6 +24,12 @@ export const IcX = ({ size = 16, color }: P) => (
 export const IcPlus = ({ size = 16, color }: P) => (
   <Svg width={size} height={size} viewBox="0 0 16 16" fill="none"><Path d="M8 3v10M3 8h10" stroke={color} strokeWidth="2" {...R} /></Svg>
 );
+export const IcArchive = ({ size = 16, color }: P) => (
+  <Svg width={size} height={size} viewBox="0 0 16 16" fill="none"><Rect x="1.5" y="2.5" width="13" height="3.5" rx="1" stroke={color} strokeWidth="1.5" /><Path d="M2.5 6v6.5A1.5 1.5 0 0 0 4 14h8a1.5 1.5 0 0 0 1.5-1.5V6M6.3 9h3.4" stroke={color} strokeWidth="1.5" {...R} /></Svg>
+);
+export const IcChevronRightSm = ({ size = 16, color }: P) => (
+  <Svg width={size} height={size} viewBox="0 0 16 16" fill="none"><Path d="M6 3.5L10.5 8 6 12.5" stroke={color} strokeWidth="1.8" {...R} /></Svg>
+);
 export const IcChevronDown = ({ size = 16, color }: P) => (
   <Svg width={size} height={size} viewBox="0 0 16 16" fill="none"><Path d="M4 6.5L8 10.5l4-4" stroke={color} strokeWidth="1.8" {...R} /></Svg>
 );

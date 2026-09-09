@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Linking, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import { type ColumnKey, type Task, commentTime, resolveColor } from '@headboard/core';
+import { type ColumnKey, type Task, commentTime, fmtDate, resolveColor } from '@headboard/core';
 import { useStore, selectSelectedTask } from '../store/useStore';
 import { useTheme } from '../theme/ThemeContext';
 import { useT } from '../lib/useT';
@@ -11,7 +12,7 @@ import { Btn, Dot } from '../components/ui';
 import { IdleBadge } from '../components/TaskCardM';
 import { PriorityDots, StatusPicker } from '../components/StatusPriority';
 import { AttachButtonM, FileChipM } from '../components/FileChipM';
-import { IcLink, IcSend } from '../components/Icons';
+import { IcArchive, IcLink, IcSend } from '../components/Icons';
 
 function Body({ task }: { task: Task }) {
   const { t } = useTheme();
@@ -28,6 +29,10 @@ function Body({ task }: { task: Task }) {
   const toggleDone = useStore(s => s.toggleDone);
   const bump = useStore(s => s.bump);
   const openSnooze = useStore(s => s.openSnooze);
+  const restore = useStore(s => s.restore);
+  const deleteTask = useStore(s => s.deleteTask);
+  const [confirmDel, setConfirmDel] = useState(false);
+  const isArchived = task.status === 'archived';
   const p = projects.find(x => x.id === task.proj);
   const close = () => set({ mSel: null });
   return (
@@ -38,14 +43,29 @@ function Body({ task }: { task: Task }) {
       </View>
       <Text style={txt(19, { w: 500, color: t.ink, ls: -0.2, lh: 1.3 })}>{task.title}</Text>
       <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
-        <StatusPicker value={(task.status === 'archived' ? 'inbox' : task.status) as ColumnKey} onChange={v => moveTask(task.id, v)} />
+        {isArchived ? (
+          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: t.card, borderWidth: 1, borderColor: t.goldBd, borderRadius: 10, paddingVertical: 11, paddingHorizontal: 12 }}>
+            <IcArchive size={13} color={t.goldInk} />
+            <Text style={txt(13, { w: 600, color: t.goldInk })}>{T.archivedBadge}</Text>
+            {task.archivedAt ? <Text style={txt(10.5, { mono: true, color: t.mut2 })}>{fmtDate(task.archivedAt, lang)}</Text> : null}
+          </View>
+        ) : (
+          <StatusPicker value={task.status as ColumnKey} onChange={v => moveTask(task.id, v)} />
+        )}
         <View style={{ height: 41, justifyContent: 'center' }}><PriorityDots value={task.pr} onChange={pr => setPriority(task.id, pr)} /></View>
       </View>
-      <View style={{ flexDirection: 'row', gap: 7 }}>
-        <Btn variant="ok" label={task.status === 'done' ? T.reopen : T.markDone} style={{ flex: 1 }} onPress={() => { toggleDone(task.id); close(); }} />
-        <Btn label={T.bump} style={{ flex: 1 }} onPress={() => { bump(task.id); close(); }} />
-        <Btn variant="outline" label={T.snoozeDots} style={{ flex: 1 }} onPress={() => openSnooze(task.id)} />
-      </View>
+      {isArchived ? (
+        <View style={{ flexDirection: 'row', gap: 7 }}>
+          <Btn label={T.restore} style={{ flex: 1 }} onPress={() => restore(task.id)} />
+          <Btn variant="outline" color={confirmDel ? t.hi : t.mut2} label={confirmDel ? T.confirmDelete : T.deleteForever} style={{ flex: 1, borderColor: confirmDel ? t.hi : t.line }} onPress={() => (confirmDel ? deleteTask(task.id) : setConfirmDel(true))} />
+        </View>
+      ) : (
+        <View style={{ flexDirection: 'row', gap: 7 }}>
+          <Btn variant="ok" label={task.status === 'done' ? T.reopen : T.markDone} style={{ flex: 1 }} onPress={() => { toggleDone(task.id); close(); }} />
+          <Btn label={T.bump} style={{ flex: 1 }} onPress={() => { bump(task.id); close(); }} />
+          <Btn variant="outline" label={T.snoozeDots} style={{ flex: 1 }} onPress={() => openSnooze(task.id)} />
+        </View>
+      )}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6, alignItems: 'center', paddingBottom: 2 }}>
         {task.files.map(f => <FileChipM key={f.id} file={f} onRemove={() => removeFile(task.id, f.id)} />)}
         <AttachButtonM onPress={async () => attachFiles(task.id, await pickFiles())} />

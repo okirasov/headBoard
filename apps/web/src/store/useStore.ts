@@ -55,6 +55,8 @@ export interface Actions {
   bump: (id: string) => void;
   snooze: (id: string, until: number) => void;
   archive: (id: string) => void;
+  restore: (id: string) => void;
+  deleteTask: (id: string) => void;
   keep: (id: string) => void;
   setPriority: (id: string, pr: Priority) => void;
   addComment: (id: string, text: string) => void;
@@ -158,9 +160,18 @@ export const useStore = create<Store>()(
           toast(T().zUntil + fmtDate(until, get().lang));
         },
         archive: id => {
-          patchTask(id, { status: 'archived' as Status });
+          patchTask(id, { status: 'archived' as Status, archivedAt: Date.now() });
           set(s => ({ sel: s.sel === id ? null : s.sel }));
           toast(T().tArch);
+        },
+        restore: id => {
+          patchTask(id, { status: 'inbox', archivedAt: null, touched: Date.now() });
+          set(s => ({ sel: s.sel === id ? null : s.sel }));
+          toast(T().tRestored);
+        },
+        deleteTask: id => {
+          set(s => ({ tasks: s.tasks.filter(t => t.id !== id), sel: s.sel === id ? null : s.sel }));
+          toast(T().tDeleted);
         },
         setPriority: (id, pr) => patchTask(id, { pr }),
         addComment: (id, text) => {
@@ -251,7 +262,7 @@ function sizeHumanSafe(b: number): string {
   return b > 9e5 ? (b / 1e6).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1000)) + ' KB';
 }
 
-/** Selected (open) task, if it is still live. */
+/** Selected (open) task; archived tasks open too (read-only status, Restore/Delete actions). */
 export function selectSelectedTask(s: Store): Task | null {
-  return s.sel ? s.tasks.find(t => t.id === s.sel && t.status !== 'archived') ?? null : null;
+  return s.sel ? s.tasks.find(t => t.id === s.sel) ?? null : null;
 }

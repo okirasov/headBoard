@@ -48,6 +48,18 @@ describe('store', () => {
     expect(useStore.getState().tasks.find(t => t.id === 'a')!.status).toBe('archived');
     expect(useStore.getState().sel).toBeNull();
   });
+  it('archive stamps archivedAt, restore clears it, delete removes', () => {
+    useStore.getState().archive('a');
+    let t = useStore.getState().tasks.find(t => t.id === 'a')!;
+    expect(t.archivedAt).toBeGreaterThan(now - 1000);
+    useStore.getState().restore('a');
+    t = useStore.getState().tasks.find(t => t.id === 'a')!;
+    expect(t.status).toBe('inbox');
+    expect(t.archivedAt).toBeNull();
+    useStore.getState().deleteTask('a');
+    expect(useStore.getState().tasks.find(t => t.id === 'a')).toBeUndefined();
+    expect(useStore.getState().snack).toBe('Deleted');
+  });
   it('comments and files', () => {
     useStore.getState().addComment('a', '  hello ');
     useStore.getState().addComment('a', '   ');

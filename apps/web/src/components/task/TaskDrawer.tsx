@@ -1,11 +1,12 @@
 import { type Priority, type Task, type ColumnKey, COLUMN_KEYS, dueLabel, fmtDate, commentTime, priorityLabel, statusLabel, PRIORITY_BAR_TOKEN } from '@headboard/core';
+import { useState } from 'react';
 import { useStore, selectSelectedTask } from '../../store/useStore';
 import { useT } from '../../lib/useT';
 import { useNow } from '../../lib/useNow';
 import { filesToRefs } from '../../lib/files';
 import { cx } from '../../lib/cx';
 import { Button, Dot, IconButton, Kicker, Scrim } from '../ui/primitives';
-import { IcChevronDown, IcLink, IcSend, IcX } from '../ui/Icons';
+import { IcArchive, IcChevronDown, IcLink, IcSend, IcX } from '../ui/Icons';
 import { AttachButton, FileChip } from '../files/FileChip';
 import { IdleBadge } from '../../views/board/TaskCard';
 
@@ -63,6 +64,10 @@ function DrawerBody({ task }: { task: Task }) {
   const toggleDone = useStore(s => s.toggleDone);
   const bump = useStore(s => s.bump);
   const archive = useStore(s => s.archive);
+  const restore = useStore(s => s.restore);
+  const deleteTask = useStore(s => s.deleteTask);
+  const [confirmDel, setConfirmDel] = useState(false);
+  const isArchived = task.status === 'archived';
   const openSnooze = useStore(s => s.openSnooze);
   const close = () => set({ sel: null });
   const p = projects.find(x => x.id === task.proj) ?? null;
@@ -95,7 +100,13 @@ function DrawerBody({ task }: { task: Task }) {
         <div className="flex items-end gap-14">
           <div className="min-w-0 flex-1">
             <Kicker className="mb-7">{T.status}</Kicker>
-            <StatusSelect value={status} onChange={onStatus} />
+            {isArchived ? (
+              <div className="flex h-39 items-center gap-8 rounded-10 border border-goldBd bg-card px-12 text-13 font-semibold leading-normal text-goldInk">
+                <IcArchive size={13} />{T.archivedBadge}{task.archivedAt ? <span className="font-mono text-10.5 font-normal text-mut2">{fmtDate(task.archivedAt, lang)}</span> : null}
+              </div>
+            ) : (
+              <StatusSelect value={status} onChange={onStatus} />
+            )}
           </div>
           <div>
             <Kicker className="mb-7">{T.priority}</Kicker>
@@ -147,14 +158,25 @@ function DrawerBody({ task }: { task: Task }) {
         </div>
       </div>
       <div className="flex flex-col gap-8 pt-4">
-        <div className="flex gap-8">
-          <Button variant="ok" className="flex-1 rounded-10 p-10 text-13" onClick={() => { toggleDone(task.id); close(); }}>{task.status === 'done' ? T.reopen : T.markDone}</Button>
-          <Button className="flex-1 rounded-10 p-10 text-13" onClick={() => { bump(task.id); close(); }}>{T.bumpTop}</Button>
-        </div>
-        <div className="flex gap-8">
-          <Button variant="outline" hoverTone="acc" className="flex-1 rounded-10 p-9 text-12.5" onClick={() => openSnooze(task.id)}>{T.snoozeDots}</Button>
-          <Button variant="outline" tone="mut2" hoverTone="hi" className="flex-1 rounded-10 p-9 text-12.5" onClick={() => archive(task.id)}>{T.archive}</Button>
-        </div>
+        {isArchived ? (
+          <div className="flex gap-8">
+            <Button className="flex-1 rounded-10 p-10 text-13" onClick={() => restore(task.id)}>{T.restore}</Button>
+            <Button variant="outline" tone="mut2" hoverTone="hi" className={cx('flex-1 rounded-10 p-10 text-13', confirmDel && '!border-hi !text-hi')} onClick={() => (confirmDel ? deleteTask(task.id) : setConfirmDel(true))}>
+              {confirmDel ? T.confirmDelete : T.deleteForever}
+            </Button>
+          </div>
+        ) : (
+          <>
+            <div className="flex gap-8">
+              <Button variant="ok" className="flex-1 rounded-10 p-10 text-13" onClick={() => { toggleDone(task.id); close(); }}>{task.status === 'done' ? T.reopen : T.markDone}</Button>
+              <Button className="flex-1 rounded-10 p-10 text-13" onClick={() => { bump(task.id); close(); }}>{T.bumpTop}</Button>
+            </div>
+            <div className="flex gap-8">
+              <Button variant="outline" hoverTone="acc" className="flex-1 rounded-10 p-9 text-12.5" onClick={() => openSnooze(task.id)}>{T.snoozeDots}</Button>
+              <Button variant="outline" tone="mut2" hoverTone="hi" className="flex-1 rounded-10 p-9 text-12.5" onClick={() => archive(task.id)}>{T.archive}</Button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

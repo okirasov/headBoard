@@ -64,6 +64,12 @@ export const IcImage = (p: P) => (
 export const IcFile = (p: P) => (
   <svg {...base(p)}><path d="M9 1.5H4.5A1.5 1.5 0 0 0 3 3v10a1.5 1.5 0 0 0 1.5 1.5h7A1.5 1.5 0 0 0 13 13V5.5z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" /><path d="M9 1.5V5.5H13" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" /></svg>
 );
+export const IcArchive = (p: P) => (
+  <svg {...base(p)}><rect x="1.5" y="2.5" width="13" height="3.5" rx="1" stroke="currentColor" strokeWidth="1.5" /><path d="M2.5 6v6.5A1.5 1.5 0 0 0 4 14h8a1.5 1.5 0 0 0 1.5-1.5V6M6.3 9h3.4" {...S} strokeWidth="1.5" /></svg>
+);
+export const IcRestore = (p: P) => (
+  <svg {...base(p)}><path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9" {...S} strokeWidth="1.6" /><path d="M2.5 2.5V6h3.5" {...S} strokeWidth="1.6" /></svg>
+);
 export const IcPlus = (p: P) => (
   <svg {...base(p)}><path d="M8 3v10M3 8h10" {...S} strokeWidth="2" /></svg>
 );

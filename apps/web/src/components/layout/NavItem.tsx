@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { cx } from '../../lib/cx';
 
-export function NavItem({ active, icon, label, badge, onClick }: { active: boolean; icon: ReactNode; label: string; badge?: number; onClick: () => void }) {
+export function NavItem({ active, icon, label, badge, count, onClick }: { active: boolean; icon: ReactNode; label: string; badge?: number; count?: number; onClick: () => void }) {
   return (
     <button
       type="button"
@@ -10,6 +10,7 @@ export function NavItem({ active, icon, label, badge, onClick }: { active: boole
     >
       {icon}
       <span className="flex-1">{label}</span>
+      {count !== undefined && count > 0 && <span className="font-mono text-10.5 text-mut2">{count}</span>}
       {badge !== undefined && badge > 0 && (
         <span className="rounded-7 bg-heat2b px-7 py-1 font-mono text-10.5 font-semibold text-goldInk">{badge}</span>
       )}
