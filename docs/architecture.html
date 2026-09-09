@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Headboard · Техническая архитектура</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#F4F1EA; --panel:#FAF8F3; --card:#FFFFFF; --inset:#F1EEE7; --sel:#EAE6DD;
+    --ink:#1F1B18; --onInk:#FBF9F4; --mut:#625C54; --mut2:#8B857B; --faint:#ABA59A;
+    --line:#E7E2D9; --lineStrong:#D4CEC2; --acc:#C8552F; --onAcc:#FFF3EC; --med:#E0B85A;
+    --goldInk:#8F6A1A; --goldBd:#E0D6C2; --heat2b:#F3E6CF; --ok:#4F7A5C; --okBg:#E8F0E8; --okBd:#CFDFD0; --wait:#9A7B2D;
+    --blue:#6B7FA3; --violet:#97658C;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#161412; --panel:#1C1A18; --card:#232019; --inset:#2B2824; --sel:#34302B;
+      --ink:#F3EFE9; --onInk:#161412; --mut:#CDC6BC; --mut2:#9E978C; --faint:#736D64;
+      --line:#2E2B27; --lineStrong:#413D37; --acc:#E8724A; --onAcc:#FFF6F0; --med:#D9B25C;
+      --goldInk:#DDB868; --goldBd:#4A4230; --heat2b:#3A3224; --ok:#8FC08F; --okBg:#222A22; --okBd:#354535;
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:'Golos Text',system-ui,sans-serif; font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  a { color:var(--acc); text-decoration:none; } a:hover { text-decoration:underline; }
+  code, .mono { font-family:'IBM Plex Mono',ui-monospace,monospace; }
+  code { font-size:12.5px; background:var(--inset); border-radius:6px; padding:1px 6px; }
+  pre { margin:0; background:var(--inset); border:1px solid var(--line); border-radius:12px; padding:14px 16px; overflow-x:auto; font-size:12.5px; line-height:1.55; }
+  pre code { background:transparent; padding:0; font-size:inherit; }
+  .kicker { font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--mut2); }
+  .wrap { max-width:1080px; margin:0 auto; padding:56px 32px 96px; }
+  header .logo { display:flex; align-items:center; gap:8px; }
+  header .word { font-size:28px; letter-spacing:-.3px; line-height:1; }
+  header .word b { font-weight:400; color:var(--acc); }
+  h1 { font-size:34px; font-weight:500; letter-spacing:-.4px; line-height:1.15; margin:22px 0 8px; }
+  .lead { font-size:17px; line-height:1.55; color:var(--mut); max-width:760px; }
+  h2 { font-size:22px; font-weight:500; letter-spacing:-.2px; margin:56px 0 12px; padding-top:24px; border-top:1px solid var(--line); }
+  h3 { font-size:15px; font-weight:600; margin:24px 0 8px; }
+  p { margin:0 0 12px; }
+  ul { margin:0 0 12px; padding-left:20px; } li { margin:3px 0; }
+  .toc { display:flex; flex-wrap:wrap; gap:6px; margin:22px 0 0; }
+  .toc a { font-family:'IBM Plex Mono',monospace; font-size:10.5px; padding:4px 9px; border-radius:7px; border:1px solid var(--line); background:var(--card); color:var(--mut); }
+  .toc a:hover { border-color:var(--lineStrong); color:var(--ink); text-decoration:none; }
+  table { width:100%; border-collapse:collapse; font-size:13px; background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .tbl { overflow-x:auto; border-radius:12px; margin:0 0 14px; }
+  th, td { text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--mut2); font-weight:500; background:var(--panel); }
+  tr:last-child td { border-bottom:none; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin:0 0 14px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; }
+  .card h4 { margin:0 0 6px; font-size:14px; font-weight:600; }
+  .card p { color:var(--mut); margin:0; font-size:13px; }
+  .note { background:var(--panel); border:1px solid var(--goldBd); border-left:4px solid var(--med); border-radius:12px; padding:12px 16px; color:var(--mut); margin:14px 0; }
+  figure { margin:16px 0 20px; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px; overflow-x:auto; }
+  figcaption { font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--mut2); margin-top:10px; }
+  svg { display:block; max-width:100%; height:auto; font-family:'Golos Text',system-ui,sans-serif; }
+  svg .box { fill:var(--panel); stroke:var(--lineStrong); }
+  svg .box2 { fill:var(--inset); stroke:var(--line); }
+  svg .core { fill:var(--heat2b); stroke:var(--goldBd); }
+  svg .accbox { fill:var(--acc); stroke:none; }
+  svg .t { fill:var(--ink); font-size:13px; font-weight:500; }
+  svg .s { fill:var(--mut); font-size:11px; }
+  svg .k { fill:var(--mut2); font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; }
+  svg .m { fill:var(--mut); font-family:'IBM Plex Mono',monospace; font-size:10.5px; }
+  svg .onacc { fill:var(--onAcc); font-size:12px; font-weight:600; }
+  svg .ln { stroke:var(--lineStrong); stroke-width:1.5; fill:none; }
+  svg .lnacc { stroke:var(--acc); stroke-width:1.5; fill:none; }
+  svg .lnok { stroke:var(--ok); stroke-width:1.5; fill:none; }
+  svg .dash { stroke-dasharray:4 4; }
+  .pill { display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10.5px; padding:2px 7px; border-radius:7px; background:var(--inset); color:var(--mut); }
+  .pill.ok { background:var(--okBg); color:var(--ok); border:1px solid var(--okBd); }
+  .pill.gold { background:var(--heat2b); color:var(--goldInk); }
+  footer { margin-top:64px; padding-top:18px; border-top:1px solid var(--line); color:var(--mut2); font-size:12px; }
+  @media print { .toc { display:none; } h2 { break-before:auto; } figure, table { break-inside:avoid; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo">
+    <svg width="34" height="34" viewBox="0 0 48 48" aria-hidden="true"><circle cx="15" cy="38" r="7.5" fill="var(--ink)"/><circle cx="24" cy="29" r="2.6" fill="var(--ink)"/><rect x="25" y="3" width="19" height="19" rx="7" fill="none" stroke="var(--ink)" stroke-width="5"/><circle cx="40.5" cy="18.5" r="4.4" fill="var(--bg)"/><circle cx="40.5" cy="18.5" r="3.1" fill="var(--acc)"/></svg>
+    <span class="word">b<b>o</b>ard</span>
+  </div>
+  <div class="kicker" style="margin-top:8px">Техническая архитектура · версия от 2026-09-09 · main db9f9f5</div>
+  <h1>Headboard: web, mobile, API и общее ядро</h1>
+  <p class="lead">Персональная канбан-доска «разгрузки головы». Один монорепозиторий, четыре пакета, одна доменная логика. Документ описывает границы слоёв, модель данных, синхронизацию, контракт API, авторизацию, AI-контур, дизайн-систему, тесты и известные ограничения.</p>
+  <nav class="toc">
+    <a href="#overview">Обзор</a><a href="#layers">Слои</a><a href="#core">Ядро</a><a href="#model">Модель данных</a><a href="#state">Состояние</a><a href="#sync">Синхронизация</a><a href="#api">API</a><a href="#auth">Авторизация</a><a href="#ai">AI</a><a href="#design">Дизайн-система</a><a href="#web">Web</a><a href="#mobile">Mobile</a><a href="#testing">Тесты и инструменты</a><a href="#config">Конфигурация</a><a href="#decisions">Решения</a><a href="#limits">Ограничения</a>
+  </nav>
+</header>
+
+<h2 id="overview">1. Обзор</h2>
+<p>Репозиторий устроен как npm workspaces. Всё, что можно вычислить без пользовательского интерфейса, вынесено в <code>packages/core</code> и покрыто тестами; три приложения только рендерят результат и вызывают действия стора.</p>
+<div class="tbl"><table>
+<tr><th>Пакет</th><th>Роль</th><th>Стек</th><th>Проверки</th></tr>
+<tr><td><code>packages/core</code></td><td>Модель, словари EN/RU, значения дизайн-токенов, чистые доменные функции, типизированный API-клиент, движок синхронизации</td><td>TypeScript 5, ESM, vitest 2</td><td>32 теста</td></tr>
+<tr><td><code>apps/web</code></td><td>Десктоп-клиент, референс 1440×900</td><td>React 19.2, Vite 5, Tailwind 3.4, zustand 4</td><td>7 тестов стора, typecheck, production build</td></tr>
+<tr><td><code>apps/mobile</code></td><td>iOS и Android, единый UI, референс 402×874</td><td>Expo SDK 57, React Native 0.86, react-native-svg, AsyncStorage, zustand 5</td><td>typecheck (TypeScript 6), скриншоты симулятора</td></tr>
+<tr><td><code>apps/api</code></td><td>Авторизация, хранение данных, файлы, настройки, AI</td><td>.NET 10 minimal API, EF Core 10, SQLite / PostgreSQL, JwtBearer, Google.Apis.Auth</td><td>38 xunit-тестов через WebApplicationFactory</td></tr>
+<tr><td><code>docs/</code></td><td>Спека решений, планы реализации, этот документ</td><td>Markdown, HTML</td><td></td></tr>
+<tr><td><code>design_handoff_headboard/</code></td><td>Дизайн-референс (прототип, бренд, шрифты). Не часть продукта</td><td>HTML-прототип</td><td></td></tr>
+</table></div>
+
+<h2 id="layers">2. Слои и потоки данных</h2>
+<figure>
+<svg viewBox="0 0 1000 560" role="img" aria-label="Диаграмма слоёв Headboard">
+  <!-- clients -->
+  <rect x="30" y="30" width="430" height="200" rx="14" class="box"/>
+  <text x="50" y="56" class="k">apps/web · React 19 + Tailwind</text>
+  <rect x="50" y="70" width="180" height="60" rx="10" class="box2"/><text x="64" y="94" class="t">Компоненты</text><text x="64" y="112" class="s">Sidebar · Board · Drawer · Views</text>
+  <rect x="250" y="70" width="190" height="60" rx="10" class="box2"/><text x="264" y="94" class="t">zustand store</text><text x="264" y="112" class="s">persist → localStorage</text>
+  <rect x="50" y="150" width="180" height="60" rx="10" class="box2"/><text x="64" y="174" class="t">tokens.css</text><text x="64" y="192" class="s">CSS-переменные ← core/tokens</text>
+  <rect x="250" y="150" width="190" height="60" rx="10" class="box2"/><text x="264" y="174" class="t">store/sync.ts</text><text x="264" y="192" class="s">адаптер движка, data: → Blob</text>
+
+  <rect x="540" y="30" width="430" height="200" rx="14" class="box"/>
+  <text x="560" y="56" class="k">apps/mobile · Expo 57 + React Native</text>
+  <rect x="560" y="70" width="180" height="60" rx="10" class="box2"/><text x="574" y="94" class="t">Screens · Sheets</text><text x="574" y="112" class="s">Board · Review · Digest · Calendar</text>
+  <rect x="760" y="70" width="190" height="60" rx="10" class="box2"/><text x="774" y="94" class="t">zustand store</text><text x="774" y="112" class="s">persist → AsyncStorage</text>
+  <rect x="560" y="150" width="180" height="60" rx="10" class="box2"/><text x="574" y="174" class="t">ThemeContext</text><text x="574" y="192" class="s">LIGHT / DARK из core/tokens</text>
+  <rect x="760" y="150" width="190" height="60" rx="10" class="box2"/><text x="774" y="174" class="t">store/sync.ts</text><text x="774" y="192" class="s">адаптер движка, file:// → part</text>
+
+  <!-- core -->
+  <rect x="30" y="270" width="940" height="120" rx="14" class="core"/>
+  <text x="50" y="296" class="k">packages/core · общая логика (без UI, без побочных эффектов)</text>
+  <g class="t" font-size="12">
+    <rect x="50" y="310" width="130" height="60" rx="10" class="box2"/><text x="62" y="334">model.ts</text><text x="62" y="352" class="s">Task · Project · User</text>
+    <rect x="195" y="310" width="130" height="60" rx="10" class="box2"/><text x="207" y="334">i18n.ts</text><text x="207" y="352" class="s">EN / RU, phrases</text>
+    <rect x="340" y="310" width="150" height="60" rx="10" class="box2"/><text x="352" y="334">tasks · dates · calendar</text><text x="352" y="352" class="s">idle, stale, due, grids</text>
+    <rect x="505" y="310" width="140" height="60" rx="10" class="box2"/><text x="517" y="334">digest · capture</text><text x="517" y="352" class="s">stats, prompts, heuristics</text>
+    <rect x="660" y="310" width="130" height="60" rx="10" class="box2"/><text x="672" y="334">api.ts</text><text x="672" y="352" class="s">createApi(url, token)</text>
+    <rect x="805" y="310" width="145" height="60" rx="10" class="box2"/><text x="817" y="334">sync.ts · tokens.ts</text><text x="817" y="352" class="s">createSyncEngine</text>
+  </g>
+
+  <!-- api -->
+  <rect x="30" y="430" width="940" height="110" rx="14" class="box"/>
+  <text x="50" y="456" class="k">apps/api · .NET 10 minimal API · http://localhost:5080</text>
+  <g>
+    <rect x="50" y="470" width="120" height="52" rx="10" class="box2"/><text x="62" y="492" class="t">Auth</text><text x="62" y="510" class="s">Google · Apple · dev → JWT</text>
+    <rect x="185" y="470" width="150" height="52" rx="10" class="box2"/><text x="197" y="492" class="t">Tasks · Comments</text><text x="197" y="510" class="s">scoped by UserId</text>
+    <rect x="350" y="470" width="120" height="52" rx="10" class="box2"/><text x="362" y="492" class="t">Projects</text><text x="362" y="510" class="s">+ files[]</text>
+    <rect x="485" y="470" width="120" height="52" rx="10" class="box2"/><text x="497" y="492" class="t">Files</text><text x="497" y="510" class="s">LocalStorage on disk</text>
+    <rect x="620" y="470" width="110" height="52" rx="10" class="box2"/><text x="632" y="492" class="t">Settings</text><text x="632" y="510" class="s">lang · theme · digest</text>
+    <rect x="745" y="470" width="205" height="52" rx="10" class="box2"/><text x="757" y="492" class="t">Ai → Anthropic Messages API</text><text x="757" y="510" class="s">extract · digest · 503 без ключа</text>
+  </g>
+
+  <!-- arrows -->
+  <path d="M245 230 V270" class="ln" marker-end="url(#a)"/>
+  <path d="M755 230 V270" class="ln" marker-end="url(#a)"/>
+  <path d="M345 390 V430" class="lnacc" marker-end="url(#b)"/>
+  <path d="M855 390 V430" class="lnacc" marker-end="url(#b)"/>
+  <text x="352" y="415" class="m" fill="var(--acc)">HTTPS · JSON · Bearer JWT</text>
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--lineStrong)"/></marker>
+    <marker id="b" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--acc)"/></marker>
+  </defs>
+</svg>
+<figcaption>Рис. 1. Клиенты зависят от ядра, ядро ни от чего не зависит, API говорит с клиентами через клиент и движок синхронизации из ядра.</figcaption>
+</figure>
+<p>Правило зависимостей: <code>apps/*</code> → <code>packages/core</code> → ничего. Ядро не импортирует React, DOM или React Native, поэтому одинаково исполняется в браузере, в Hermes и в vitest под Node. Единственные побочные эффекты ядра сосредоточены в <code>api.ts</code> (fetch) и <code>sync.ts</code> (таймеры), и оба получают зависимости через параметры.</p>
+
+<h2 id="core">3. Ядро: доменные функции</h2>
+<p>Логика HTML-прототипа перенесена в чистые функции с явным параметром <code>now</code>, поэтому тесты детерминированы, а web и mobile не расходятся в подсчётах.</p>
+<div class="tbl"><table>
+<tr><th>Модуль</th><th>Функции</th><th>Что считает</th></tr>
+<tr><td><code>tasks.ts</code></td><td><code>idleDays, isSnoozed, isStale, dueDiff, dueLabel, dueTone, sortAutoBump, sortByPriority, sortDone, matchesFilter, live</code></td><td>Простой в днях от <code>touched</code>; «забытая» = не done, простой ≥ 7 дней (<code>STALE_DAYS_DEFAULT</code>) и snooze не активен; метки «today / tomorrow / Wed 11 / Sep 20»; сортировка «забытые первыми, затем по приоритету»</td></tr>
+<tr><td><code>dates.ts</code></td><td><code>startOfDay, addDays, addMonths, fmtDate, todayLabel, monthLabel, commentTime, sizeHuman</code></td><td>Локализованные даты (RU: «8 сен», EN: «Sep 8»), время комментария «только что / сегодня / дата», размер файла</td></tr>
+<tr><td><code>calendar.ts</code></td><td><code>buildMonthGrid, buildSnoozeGrid, snoozePresets, snoozePresetLabel, weekdayLabels</code></td><td>Сетки 6×7 с понедельника; счётчик открытых задач на день, флаги today / selected / future / heavy (≥ 3); пресеты snooze: завтра, +3 дня, неделя, месяц</td></tr>
+<tr><td><code>digest.ts</code></td><td><code>digestStats, cannedDigest, digestStatsLine, digestPrompt</code></td><td>Сроки на сегодня, забытые, закрытые за 7 дней, в фокусе, повторяющиеся; три локальных текста дайджеста; промпт для модели</td></tr>
+<tr><td><code>capture.ts</code></td><td><code>heuristicExtract, guessProject, extractPrompt, parseExtractResponse</code></td><td>Разбор текста в задачи: строки и «; », маркеры списков, <code>urgent / срочно</code> → High, <code>#теги</code> (≤ 2), проект по ключевым словам или по имени; парсинг JSON-ответа модели с клампом приоритета</td></tr>
+<tr><td><code>i18n.ts</code></td><td><code>EN, RU, dict, priorityLabel, statusLabel, phrases</code></td><td>Полные словари прототипа, тест на равенство наборов ключей</td></tr>
+<tr><td><code>tokens.ts</code></td><td><code>LIGHT, DARK, resolveColor</code></td><td>Значения дизайн-токенов, разбор <code>var(--acc)</code> в цветах проектов</td></tr>
+</table></div>
+
+<h2 id="model">4. Модель данных</h2>
+<p>Одна и та же форма используется в сторе клиентов, в JSON API и в DTO на сервере. Время везде в миллисекундах эпохи, отсутствие значения передаётся как <code>null</code>, а не пропуском поля.</p>
+<pre><code>type Priority = 0 | 1 | 2                 // High · Medium · Low
+type Status   = 'inbox' | 'focus' | 'waiting' | 'done' | 'archived'
+
+interface Task {
+  id: string; title: string; proj: string | null; pr: Priority; status: Status;
+  touched: number; created: number; due: number | null; snoozedUntil: number;
+  recur: 'weekly' | null; tags: string[]; note: string; chat: string | null;
+  files: FileRef[]; comments: Comment[]; doneAt: number | null;
+}
+interface FileRef  { id; name; kind: 'img' | 'file'; size?: number; src?: string }
+interface Comment  { id; text; at: number }
+interface Project  { id; name; color: string }     // цвет проекта: данные пользователя, не токен
+interface User     { name; email; provider: 'Google' | 'Apple'; initials }
+interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
+<h3>Хранение на сервере (EF Core)</h3>
+<div class="tbl"><table>
+<tr><th>Таблица</th><th>Ключ</th><th>Поля</th></tr>
+<tr><td>Users</td><td>Id (Guid)</td><td>Provider, Subject (id у провайдера), Email, Name, Initials, CreatedAt. Уникальность по (Provider, Subject)</td></tr>
+<tr><td>Projects</td><td>Id (string)</td><td>UserId, Name, Color</td></tr>
+<tr><td>Tasks</td><td>Id (string)</td><td>UserId, Title, ProjectId?, Priority, Status, Touched, Created, Due?, SnoozedUntil, Recur?, TagsJson, Note, Chat?, DoneAt?. Индекс по UserId</td></tr>
+<tr><td>Comments</td><td>Id</td><td>TaskId, UserId, Text, At</td></tr>
+<tr><td>Files</td><td>Id</td><td>UserId, TaskId?, ProjectId?, Name, Kind, Size?, StoragePath?, ContentType?</td></tr>
+<tr><td>Settings</td><td>UserId</td><td>Lang, Theme, ShowDone, DigestText?</td></tr>
+</table></div>
+<p>Идентификаторы задач и проектов создаёт клиент (<code>'n' + now + index</code>), сервер принимает их как есть и отвечает 409 <code>id_exists</code> при коллизии. Это позволяет работать офлайн и синхронизировать позже без переименования ссылок.</p>
+
+<h2 id="state">5. Состояние клиентов</h2>
+<p>В web и mobile один стор zustand, разделённый на персистентную и UI-часть. Действия стора одинаково названы в обоих приложениях, поэтому поведение совпадает.</p>
+<div class="grid">
+  <div class="card"><h4>Персистентная часть</h4><p><code>tasks, projects, projFiles, digestText, user, lang, theme, showDone, token</code>. Ключ <code>headboard-v1</code>: web в <code>localStorage</code>, mobile в AsyncStorage. При загрузке без сохранённой темы берётся системная.</p></div>
+  <div class="card"><h4>UI-часть</h4><p>Открытая задача (<code>sel</code> / <code>mSel</code>), фильтры (поиск, приоритет, проект), capture, snooze-пикер, предпросмотр файла, меню профиля, drag-состояние, тост. Не сохраняется.</p></div>
+  <div class="card"><h4>Действия</h4><p><code>moveTask, markDone, toggleDone, bump, keep, snooze, archive, setPriority, addComment, attachFiles, removeFile, addTasks, setLang, setTheme, signIn, setAuth, signOut, toast</code>. Каждое обновляет <code>touched</code> там, где прототип это делал.</p></div>
+  <div class="card"><h4>Выборки</h4><p>Компоненты фильтруют <code>live()</code> (без архива), затем зовут <code>sortAutoBump</code> или <code>sortDone</code> из ядра с текущим <code>now</code> из хука <code>useNow</code> (обновляется раз в минуту).</p></div>
+</div>
+<p>Различия web и mobile сводятся к именам UI-полей (<code>sel</code> против <code>mSel</code>, <code>capOpen</code> против <code>mCapOpen</code>) и к хранилищу. Выход из аккаунта в API-режиме очищает локальные данные, в локальном режиме оставляет их.</p>
+
+<h2 id="sync">6. Синхронизация</h2>
+<p>Движок <code>createSyncEngine(adapter)</code> в <code>core/sync.ts</code> реализует offline-first модель: клиент всегда работает с локальным стором, движок подписан на изменения и переводит их в вызовы API. Адаптер даёт ему <code>getState / setState / subscribe / fileToPart / onUnauthorized / onError / baseUrl</code>. Web-адаптер занимает 27 строк, mobile 33.</p>
+<figure>
+<svg viewBox="0 0 1000 420" role="img" aria-label="Последовательность синхронизации">
+  <g class="k">
+    <text x="60" y="30">Store (zustand)</text><text x="380" y="30">Sync engine (core)</text><text x="720" y="30">API (.NET)</text>
+  </g>
+  <line x1="110" y1="40" x2="110" y2="400" class="ln dash"/>
+  <line x1="450" y1="40" x2="450" y2="400" class="ln dash"/>
+  <line x1="760" y1="40" x2="760" y2="400" class="ln dash"/>
+
+  <rect x="20" y="60" width="180" height="26" rx="7" class="accbox"/><text x="30" y="78" class="onacc">signInWith → setAuth(token)</text>
+  <path d="M200 73 H440" class="lnacc" marker-end="url(#c)"/><text x="215" y="66" class="m">start()</text>
+  <path d="M460 100 H750" class="lnacc" marker-end="url(#c)"/><text x="475" y="93" class="m">GET /tasks?includeArchived · GET /projects · GET /settings</text>
+  <path d="M750 128 H460" class="ln" marker-end="url(#d)"/><text x="475" y="121" class="m">tasks[] · projects[] · settings</text>
+
+  <rect x="300" y="145" width="300" height="52" rx="10" class="box2"/>
+  <text x="312" y="165" class="t" font-size="12">Есть задачи на сервере? → сервер побеждает</text>
+  <text x="312" y="183" class="s">иначе локальные проекты и задачи выталкиваются (flush)</text>
+  <path d="M300 171 H120" class="ln" marker-end="url(#d)"/><text x="130" y="164" class="m">setState(server)</text>
+
+  <rect x="300" y="215" width="300" height="26" rx="7" class="box2"/><text x="312" y="233" class="s">subscribe(store) → flush() при каждом изменении</text>
+
+  <rect x="20" y="265" width="180" height="26" rx="7" class="box2"/><text x="30" y="283" class="s">moveTask('t1','done')</text>
+  <path d="M200 278 H440" class="ln" marker-end="url(#d)"/><text x="215" y="271" class="m">diff по JSON-снимку</text>
+  <path d="M460 305 H750" class="lnacc" marker-end="url(#c)"/><text x="475" y="298" class="m">PATCH /tasks/t1 (полное тело, включая comments и files)</text>
+  <path d="M460 335 H750" class="lnacc" marker-end="url(#c)"/><text x="475" y="328" class="m">POST /files?taskId=… для локальных вложений, затем ссылка заменяется</text>
+  <path d="M460 365 H750" class="lnacc" marker-end="url(#c)"/><text x="475" y="358" class="m">PUT /settings с дебаунсом 500 мс</text>
+  <rect x="300" y="380" width="300" height="26" rx="7" class="box2"/><text x="312" y="398" class="s">ошибка → снимок забыт → повтор через 3 с</text>
+  <defs>
+    <marker id="c" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--acc)"/></marker>
+    <marker id="d" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--lineStrong)"/></marker>
+  </defs>
+</svg>
+<figcaption>Рис. 2. Первичная загрузка и последующий диф изменений. Порядок: проекты раньше задач, потому что сервер проверяет существование проекта.</figcaption>
+</figure>
+<h3>Правила движка</h3>
+<ul>
+  <li><b>Снимки.</b> Для каждой задачи и проекта хранится JSON последнего успешно отправленного состояния. Новый id → <code>POST</code>, изменённый JSON → <code>PATCH</code> полным телом, исчезновение из стора → <code>DELETE</code>. Архивирование это <code>PATCH status='archived'</code>, а не удаление.</li>
+  <li><b>Очередь.</b> Все запросы идут через одну promise-цепочку, поэтому порядок сохраняется и параллельных гонок нет. <code>start()</code> защищён от повторного входа (React StrictMode вызывает эффекты дважды).</li>
+  <li><b>Файлы.</b> <code>fileToPart</code> решает, что загружать: в web это data URL, превращённый в Blob; в mobile это <code>file://</code> или <code>content://</code>, переданный как RN-дескриптор <code>{uri, name, type}</code>. После загрузки движок подменяет <code>FileRef</code> на серверный с абсолютным <code>src</code>.</li>
+  <li><b>Ошибки.</b> 409 <code>id_exists</code> переводится в <code>PATCH</code>. Любая другая ошибка забывает снимок и ставит повтор через 3 секунды. 401 на старте вызывает <code>onUnauthorized</code>, клиенты делают <code>signOut</code>.</li>
+  <li><b>Настройки.</b> <code>lang, theme, showDone, digestText</code> сравниваются как одна строка и пишутся <code>PUT /settings</code> с дебаунсом.</li>
+</ul>
+
+<h2 id="api">7. Контракт API</h2>
+<p>Minimal API в feature-папках: <code>Auth, Tasks, Comments, Projects, Files, Settings, Ai</code>. Публичны только <code>/health</code> и <code>/auth/*</code>; всё остальное требует <code>Authorization: Bearer &lt;jwt&gt;</code> и фильтруется по <code>sub</code> из токена. Сериализация System.Text.Json в camelCase.</p>
+<div class="tbl"><table>
+<tr><th>Метод и путь</th><th>Тело</th><th>Ответ</th><th>Ошибки</th></tr>
+<tr><td><code>GET /health</code></td><td></td><td><code>{ok:true}</code></td><td></td></tr>
+<tr><td><code>POST /auth/google</code> · <code>POST /auth/apple</code></td><td><code>{idToken}</code></td><td><code>{token, user}</code></td><td>503 пока не задан client id, 401 при неверном токене</td></tr>
+<tr><td><code>POST /auth/dev</code></td><td><code>{email, name?, provider?}</code></td><td><code>{token, user}</code></td><td>404 если <code>Auth:AllowDevLogin=false</code></td></tr>
+<tr><td><code>GET /me</code></td><td></td><td><code>User</code></td><td>401</td></tr>
+<tr><td><code>GET /tasks[?includeArchived=true]</code> · <code>GET /tasks/{id}</code></td><td></td><td><code>Task[]</code> / <code>Task</code></td><td>404</td></tr>
+<tr><td><code>POST /tasks</code></td><td><code>Task</code> (id клиента, вложенные comments и files)</td><td>201 <code>Task</code></td><td>400 <code>invalid_proj</code>, 409 <code>id_exists</code></td></tr>
+<tr><td><code>PATCH /tasks/{id}</code></td><td>частичный <code>Task</code>; <code>comments</code> заменяются множеством, <code>files</code> линкуются по id</td><td><code>Task</code></td><td>400, 404</td></tr>
+<tr><td><code>DELETE /tasks/{id}</code></td><td></td><td>204</td><td>удаляет комментарии и файлы задачи</td></tr>
+<tr><td><code>POST /tasks/{id}/comments</code> · <code>DELETE /tasks/{id}/comments/{cid}</code></td><td><code>{text}</code></td><td><code>Comment</code> / 204</td><td></td></tr>
+<tr><td><code>GET /projects</code> · <code>POST /projects</code> · <code>PATCH /projects/{id}</code> · <code>DELETE /projects/{id}</code></td><td><code>Project</code></td><td>GET включает <code>files[]</code> проекта</td><td>409 <code>id_exists</code></td></tr>
+<tr><td><code>POST /files?taskId=|projectId=</code></td><td>multipart <code>file</code></td><td><code>FileRef</code>, для картинок <code>src=/files/{id}/content</code></td><td>400 без цели</td></tr>
+<tr><td><code>GET /files/{id}/content</code> · <code>DELETE /files/{id}</code></td><td></td><td>поток с content type / 204</td><td>404</td></tr>
+<tr><td><code>GET /settings</code> · <code>PUT /settings</code></td><td><code>{lang, theme, showDone, digestText}</code></td><td><code>Settings</code></td><td></td></tr>
+<tr><td><code>POST /ai/extract</code></td><td><code>{text, projects:[{id,name}]}</code></td><td><code>CaptureItem[]</code></td><td>503 <code>ai_unavailable</code>, 502 <code>ai_failed</code></td></tr>
+<tr><td><code>POST /ai/digest</code></td><td><code>{stats, lang}</code></td><td><code>{text}</code></td><td>503, 502</td></tr>
+<tr><td><code>GET /openapi/v1.json</code></td><td></td><td>OpenAPI 3 (только Development)</td><td></td></tr>
+</table></div>
+<p>Хранение: SQLite (<code>headboard.db</code>) с миграциями EF при старте; при наличии <code>ConnectionStrings:Postgres</code> используется Npgsql и <code>EnsureCreated()</code>. Файлы лежат на диске в <code>{Storage:Root}/{userId}/{fileId}</code>. CORS в Development открыт для <code>localhost:5173</code> (web) и <code>localhost:8081</code> (Expo).</p>
+
+<h2 id="auth">8. Авторизация</h2>
+<figure>
+<svg viewBox="0 0 1000 250" role="img" aria-label="Поток авторизации">
+  <rect x="20" y="40" width="200" height="70" rx="12" class="box"/><text x="34" y="66" class="t">Клиент</text><text x="34" y="86" class="s">web / mobile</text>
+  <rect x="300" y="40" width="200" height="70" rx="12" class="box"/><text x="314" y="66" class="t">Провайдер</text><text x="314" y="86" class="s">Google / Apple → id-token</text>
+  <rect x="580" y="40" width="200" height="70" rx="12" class="box"/><text x="594" y="66" class="t">API · AuthEndpoints</text><text x="594" y="86" class="s">верификация, upsert Users</text>
+  <rect x="580" y="150" width="200" height="70" rx="12" class="box"/><text x="594" y="176" class="t">TokenService</text><text x="594" y="196" class="s">HS256 JWT · 30 дней · sub = UserId</text>
+  <rect x="300" y="150" width="200" height="70" rx="12" class="box2"/><text x="314" y="176" class="t">Dev-логин</text><text x="314" y="196" class="s">POST /auth/dev, только Development</text>
+  <path d="M220 62 H298" class="ln" marker-end="url(#e)"/><text x="228" y="55" class="m">1 sign in</text>
+  <path d="M500 62 H578" class="ln" marker-end="url(#e)"/><text x="506" y="55" class="m">2 idToken</text>
+  <path d="M680 110 V148" class="ln" marker-end="url(#e)"/>
+  <path d="M580 185 H220 V112" class="lnok" marker-end="url(#f)"/><text x="330" y="140" class="m" fill="var(--ok)">3 {token, user} → setAuth → startSync</text>
+  <path d="M220 95 L298 165" class="ln dash" marker-end="url(#e)"/>
+  <path d="M500 185 H578" class="ln dash" marker-end="url(#e)"/>
+  <defs>
+    <marker id="e" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--lineStrong)"/></marker>
+    <marker id="f" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--ok)"/></marker>
+  </defs>
+</svg>
+<figcaption>Рис. 3. Продовый путь через провайдера и dev-путь без верификации (пунктир).</figcaption>
+</figure>
+<ul>
+  <li><b>Google.</b> <code>GoogleVerifier</code> проверяет id-token через Google.Apis.Auth с аудиторией <code>Auth:GoogleClientId</code>.</li>
+  <li><b>Apple.</b> <code>AppleVerifier</code> тянет JWKS Apple через OpenIdConnect-метаданные и проверяет подпись и аудиторию <code>Auth:AppleClientId</code>. Имя приходит в теле запроса, потому что Apple отдаёт его один раз.</li>
+  <li><b>Пользователь.</b> Upsert по (provider, subject); инициалы это первые буквы двух слов имени.</li>
+  <li><b>Клиенты.</b> Токен хранится в персистентной части стора. Функция <code>signInWith(provider)</code> выбирает путь: при заданном <code>VITE_API_URL</code> / <code>EXPO_PUBLIC_API_URL</code> идёт dev-логин и запуск синхронизации, иначе мок-пользователь прототипа. Сбой сервера показывает тост и переводит в локальный режим.</li>
+</ul>
+
+<h2 id="ai">9. AI-контур</h2>
+<p>Прототип вызывал <code>window.claude.complete</code>; в продукте этот вызов заменён серверными эндпоинтами, чтобы ключ не покидал бэкенд. Промпты объявлены дважды и обязаны совпадать: в <code>core/capture.ts</code> и <code>core/digest.ts</code> для документации и локального парсинга, в <code>Ai/Prompts.cs</code> для запросов.</p>
+<div class="grid">
+  <div class="card"><h4>Извлечение задач</h4><p>Текст и список проектов → JSON-массив <code>{title, priority 0|1|2, tags[≤2], project|null}</code>. Сервер вырезает от первой <code>[</code> до последней <code>]</code>, клампит приоритет, обрезает title до 90 символов, сопоставляет имя проекта с id. Пустой результат на клиенте заменяется <code>heuristicExtract</code>.</p></div>
+  <div class="card"><h4>Дайджест</h4><p>Статистика <code>digestStats</code> и язык → 2–3 предложения без markdown. Без ключа сервер отвечает 503, клиент берёт <code>cannedDigest</code> с ротацией по <code>digestSeed</code>. Текст хранится в настройках и синхронизируется.</p></div>
+  <div class="card"><h4>Клиент Anthropic</h4><p><code>POST https://api.anthropic.com/v1/messages</code>, заголовки <code>x-api-key</code> и <code>anthropic-version: 2023-06-01</code>, <code>max_tokens 800</code>, модель из <code>Anthropic:Model</code> (по умолчанию <code>claude-sonnet-5</code>). В тестах подменяется <code>HttpMessageHandler</code>.</p></div>
+</div>
+
+<h2 id="design">10. Дизайн-система</h2>
+<p>Все цвета описаны один раз в <code>core/tokens.ts</code> (таблица README плюс четыре добавленных: <code>wait, okHov, fabShadow, scrimDrawer</code>). Web получает их как CSS-переменные в <code>tokens.css</code>, Tailwind в <code>theme.colors</code> знает только имена токенов (<code>bg-panel</code>, <code>text-mut2</code>, <code>border-goldBd</code>), поэтому литеральный hex в компонентах невозможен. Тест <code>tokens-css.test.ts</code> сверяет CSS с ядром. Mobile читает объекты <code>LIGHT</code> и <code>DARK</code> через <code>ThemeContext</code>.</p>
+<div class="tbl"><table>
+<tr><th>Аспект</th><th>Web</th><th>Mobile</th></tr>
+<tr><td>Шрифты</td><td>Google Fonts: Golos Text 400/500/600, IBM Plex Mono 400/500/600; шкала <code>fontSize</code> с дробными размерами прототипа</td><td><code>@expo-google-fonts</code>, те же начертания; хелперы <code>txt()</code> и <code>kicker()</code></td></tr>
+<tr><td>Радиусы</td><td>Шкала 2…22 px; чипы 7, карточки 12, кнопки 9–12, модалки 16–20</td><td>Карточки 14, шторки 22, чипы 7, кнопки 9–10</td></tr>
+<tr><td>Отступы</td><td>Пиксельная шкала Tailwind: <code>p-12</code> = 12 px, <code>w-234</code> = 234 px</td><td>Явные числа в стилях</td></tr>
+<tr><td>Тема</td><td>Класс <code>dark</code> на <code>&lt;html&gt;</code>, ставится до первого кадра инлайн-скриптом из <code>headboard-v1</code> или <code>prefers-color-scheme</code></td><td><code>Appearance.getColorScheme()</code> при отсутствии сохранённой темы</td></tr>
+<tr><td>Анимации</td><td><code>fadeUp .2s, slideIn .22s, sheetUp .24s, pulse 2.4s</code> в keyframes Tailwind</td><td><code>Animated</code>: sheetUp 240 мс, пульс 2 × 1200 мс</td></tr>
+<tr><td>Иконки и логотип</td><td>Inline SVG-компоненты, знак по спеке Logo</td><td>Те же контуры через react-native-svg</td></tr>
+</table></div>
+
+<h2 id="web">11. Web: структура</h2>
+<pre><code>apps/web/src
+├─ App.tsx                    гейт входа, оверлеи, применение темы, startSync
+├─ store/useStore.ts          zustand + persist (partialize, merge с системной темой)
+├─ store/sync.ts              адаптер движка синхронизации
+├─ store/devSeed.ts           демо-данные, только dev (динамический import)
+├─ lib/{api,auth,files,useT,useNow,cx}.ts
+├─ components/
+│  ├─ brand/Logo.tsx           Mark + Wordmark, размеры sidebar/auth/title/mobile
+│  ├─ ui/{primitives,Icons,Snackbar}.tsx
+│  ├─ layout/{Shell,Sidebar,NavItem,ProjectList,ProfileMenu,TopBar}.tsx
+│  ├─ task/TaskDrawer.tsx      StatusSelect, PriorityDots, вложения, комментарии, действия
+│  ├─ capture/CaptureModal.tsx snooze/SnoozePicker.tsx  files/{FileChip,FilePreviewModal}.tsx
+└─ views/{board,review,digest,calendar,auth}/</code></pre>
+<p>Drag-and-drop реализован на HTML5 <code>draggable</code>: карточка пишет id в <code>dataTransfer</code>, колонка подсвечивается через <code>dragCol</code> в сторе и на <code>drop</code> вызывает <code>moveTask</code>. Вложения читаются <code>FileReader</code> в data URL, если это картинка меньше 1.5 МБ; иначе хранится только ссылка без превью.</p>
+
+<h2 id="mobile">12. Mobile: структура</h2>
+<pre><code>apps/mobile
+├─ App.tsx                    шрифты, splash, ThemeProvider, Root (Header + ScrollView + TabBar + шторки)
+├─ src/theme/{tokens via core, ThemeContext, type.ts}
+├─ src/store/{useStore,sync,devSeed}.ts
+├─ src/lib/{api,auth,files,useT,useNow}.ts
+├─ src/components/{Header,TabBar,Sheet,TaskCardM,FileChipM,FilePreviewM,StatusPriority,Logo,Icons,ui,Snack}.tsx
+├─ src/screens/{SignIn,Board,Review,Digest,Calendar}Screen.tsx
+└─ src/sheets/{Task,Capture,Snooze,Profile}Sheet.tsx</code></pre>
+<ul>
+  <li>Навигации нет: один уровень экранов переключается полем <code>mView</code> в сторе, как в прототипе. Таб-бар с FAB «+» рисуется поверх контента, контент имеет нижний отступ 110.</li>
+  <li>Шторки это <code>Modal</code> с анимацией <code>translateY 40 → 0</code>, ручкой 40×4 и учётом safe-area снизу. Смена статуса реализована выпадающим списком в стиле select, потому что в RN нет нативного select.</li>
+  <li>Файлы выбираются <code>expo-document-picker</code>; <code>src</code> хранит локальный uri, картинки показываются <code>Image</code>, движок синхронизации загружает uri как multipart-дескриптор. «Скачать» в предпросмотре открывает системный share sheet (<code>expo-sharing</code>).</li>
+  <li>Android использует тот же код; отличия только в insets и в тени (<code>elevation</code>).</li>
+  <li>Dev-флаги для проверки без тапов: <code>EXPO_PUBLIC_DEV_AUTOLOGIN, DEV_RESET, DEV_VIEW, DEV_THEME, DEV_LANG, DEV_SHEET</code>.</li>
+</ul>
+
+<h2 id="testing">13. Тесты, сборка, инструменты</h2>
+<div class="tbl"><table>
+<tr><th>Уровень</th><th>Что проверяется</th><th>Команда</th></tr>
+<tr><td>core · vitest</td><td>Словари (равенство ключей), даты и метки, простой и «забытость», сортировки, сетки календаря и пресеты snooze, статистика дайджеста, эвристика захвата и парсинг ответа модели, API-клиент (заголовки, ошибки, 204), движок синхронизации (сервер побеждает, порядок пуша, диф, загрузка файлов, 401), совпадение web-CSS с токенами</td><td><code>npm test -w @headboard/core</code></td></tr>
+<tr><td>web · vitest + jsdom</td><td>Действия стора: moveTask, bump, toggleDone, addTasks, archive, комментарии и файлы, вход и выход</td><td><code>npm test -w @headboard/web</code></td></tr>
+<tr><td>api · xunit</td><td>Dev-логин и <code>/me</code>, CRUD задач и изоляция пользователей, комментарии, загрузка файла и content type, 503 без ключа и разбор ответа модели через фейковый handler. Каждый factory использует свою SQLite и каталог хранения во временной папке</td><td><code>dotnet test</code> в <code>apps/api</code></td></tr>
+<tr><td>Типы</td><td>tsc для core, web, mobile (TypeScript 6 в mobile)</td><td><code>npm run typecheck</code>, <code>npx tsc --noEmit</code></td></tr>
+<tr><td>Сборка</td><td>Vite production build, <code>dotnet build</code> без предупреждений</td><td><code>npm run build</code></td></tr>
+<tr><td>Визуальная сверка</td><td>Web в браузере на 1440×900, обе темы и языка; mobile скриншотами симулятора <code>xcrun simctl io booted screenshot</code> через dev-флаги</td><td>вручную / по скриптам</td></tr>
+</table></div>
+<p>Инструменты: Node 26, npm 11 workspaces, .NET SDK 10.0.103, Xcode 26 с iOS 26.5 симулятором, Expo Go. Запуск: <code>npm run dev</code> (web, 5173), <code>npm run api</code> (5080), <code>npm run mobile</code> (Metro 8081). Конфиг предпросмотра для Claude Code лежит в <code>.claude/launch.json</code>.</p>
+
+<h2 id="config">14. Конфигурация</h2>
+<div class="tbl"><table>
+<tr><th>Где</th><th>Ключ</th><th>Назначение</th></tr>
+<tr><td>web <code>.env</code></td><td><code>VITE_API_URL</code></td><td>Адрес API. Пусто → локальный режим на localStorage</td></tr>
+<tr><td>mobile env</td><td><code>EXPO_PUBLIC_API_URL</code></td><td>Адрес API; на устройстве нужен LAN-адрес машины</td></tr>
+<tr><td rowspan="9">api <code>appsettings*.json</code>, env <code>Section__Key</code>, user secrets</td><td><code>Jwt:Secret</code></td><td>Обязателен, ≥ 32 байта; без него старт падает</td></tr>
+<tr><td><code>Jwt:Issuer</code></td><td>Issuer и audience токена, по умолчанию <code>headboard</code></td></tr>
+<tr><td><code>Auth:GoogleClientId</code>, <code>Auth:AppleClientId</code></td><td>Аудитории id-token; до настройки эндпоинты отвечают 503</td></tr>
+<tr><td><code>Auth:AllowDevLogin</code></td><td><code>true</code> в Development, <code>false</code> в остальных окружениях</td></tr>
+<tr><td><code>Anthropic:ApiKey</code>, <code>Anthropic:Model</code></td><td>Ключ и модель; без ключа <code>/ai/*</code> → 503</td></tr>
+<tr><td><code>ConnectionStrings:Sqlite</code></td><td><code>Data Source=headboard.db</code></td></tr>
+<tr><td><code>ConnectionStrings:Postgres</code></td><td>При наличии включает Npgsql</td></tr>
+<tr><td><code>Storage:Root</code></td><td>Каталог вложений, по умолчанию <code>./storage</code></td></tr>
+<tr><td><code>Urls</code></td><td><code>http://localhost:5080</code>; переопределяется <code>--urls</code></td></tr>
+</table></div>
+
+<h2 id="decisions">15. Ключевые решения</h2>
+<ul>
+  <li><b>Прототип побеждает README</b> при расхождениях: Golos Text вместо упомянутой Literata, четыре пункта навигации с Digest, чипы приоритетов в шапке Board, без точки у активного пункта меню. Зафиксировано в <code>docs/superpowers/specs/2026-09-08-headboard-implementation-design.md</code>.</li>
+  <li><b>Логика в ядре, а не в компонентах</b>, чтобы web и mobile считали одно и то же и тесты не требовали рендера.</li>
+  <li><b>Offline-first с клиентскими id</b>: работа без сети и последующая синхронизация без переписывания ссылок; сервер только проверяет коллизии.</li>
+  <li><b>Полный PATCH вместо гранулярных эндпоинтов</b> для комментариев и файлов в потоке синхронизации: проще диф, меньше состояний; гранулярные эндпоинты сохранены для будущих клиентов.</li>
+  <li><b>AI только через сервер</b>, ключ не попадает в клиентские бандлы; локальные эвристики остаются как фолбэк.</li>
+  <li><b>Демо-данные не в продукте</b>: сид загружается динамическим импортом только в dev-сборках.</li>
+  <li><b>Четыре дополнительных токена</b> для цветов прототипа вне таблицы вместо литералов, чтобы правило «только токены» проверялось автоматически.</li>
+</ul>
+
+<h2 id="limits">16. Ограничения и следующие шаги</h2>
+<div class="note">Это состояние main на 2026-09-09. Пункты ниже требуют решений или внешних учётных данных.</div>
+<ul>
+  <li><span class="pill gold">auth</span> Вход Google/Apple в клиентах пока dev-логин. Нужны client id в конфиге API, для web библиотека Google Identity Services и Sign in with Apple JS, для mobile <code>expo-apple-authentication</code> и Google Sign-In.</li>
+  <li><span class="pill gold">db</span> Миграции EF сгенерированы для SQLite; PostgreSQL создаёт схему через <code>EnsureCreated()</code>. Перед эволюцией схемы в проде нужны отдельные Postgres-миграции.</li>
+  <li><span class="pill">feature</span> Дайджест по расписанию в 8:00 и двусторонняя синхронизация с Google Calendar не реализованы; чип календаря декоративный.</li>
+  <li><span class="pill">feature</span> Экрана архива нет: задачи со статусом <code>archived</code> только скрываются.</li>
+  <li><span class="pill">sync</span> Конфликты решаются правилом «сервер побеждает при первой загрузке, затем последний пишущий»; для нескольких устройств с офлайн-правками нужен вектор изменений или op-log.</li>
+  <li><span class="pill">files</span> Вложения из сида без содержимого сервер не сохраняет (нет байтов для загрузки). Реальные файлы загружаются и хранятся.</li>
+  <li><span class="pill">ui</span> В mobile курсив заголовка месяца не рендерится: у Golos Text нет italic-начертания, браузер его синтезирует, iOS нет.</li>
+  <li><span class="pill">env</span> На машине разработки порт 5080 занят сторонним процессом, API запускается с <code>--urls http://localhost:5081</code>.</li>
+</ul>
+
+<footer>Headboard · docs/architecture.html · источники: <code>README.md</code>, <code>apps/api/README.md</code>, <code>docs/superpowers/specs</code>, <code>docs/superpowers/plans</code>.</footer>
+</div>
+</body>
+</html>
