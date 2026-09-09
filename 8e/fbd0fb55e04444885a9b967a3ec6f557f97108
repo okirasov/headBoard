@@ -1,0 +1,51 @@
+README.md
+  s_2372cb08d633fa::t_185f3339526712 3
+apps/mobile/App.tsx
+  s_2372cb08d633fa::t_6f33f60498c182 27,54,81-82,98
+apps/mobile/src/components/Icons.tsx
+  s_2372cb08d633fa::t_3ad61548e8db67 30-32
+apps/mobile/src/screens/StatsScreen.tsx
+  s_2372cb08d633fa::t_3430d62ba3f233 1-123
+apps/mobile/src/sheets/ProfileSheet.tsx
+  s_2372cb08d633fa::t_1a3f43d20f2825 11,67-71
+apps/web/src/App.tsx
+  s_2372cb08d633fa::t_a76a8fa26e2b5c 23
+apps/web/src/components/layout/Shell.tsx
+  s_2372cb08d633fa::t_440273674287ce 10,25
+apps/web/src/components/layout/Sidebar.tsx
+  s_2372cb08d633fa::t_14f643d6abef01 7,31
+apps/web/src/components/ui/Icons.tsx
+  s_2372cb08d633fa::t_a46a655af3c3e6 73-75
+apps/web/src/views/stats/StatsView.tsx
+  s_2372cb08d633fa::t_4125617ebc33b5 1-96
+apps/web/src/views/stats/charts.tsx
+  s_2372cb08d633fa::t_02adda7cd71410 1-154
+docs/architecture.html
+  s_2372cb08d633fa::t_4ba7ad2648f870 177,410-412,424,428-429,441,446
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_31c743a68cda88 27-28,70-71,116-117
+packages/core/src/index.ts
+  s_2372cb08d633fa::t_43ee1584e68f36 12
+packages/core/src/model.ts
+  s_2372cb08d633fa::t_8a3b7ceaa7ef8b 6
+packages/core/src/stats.test.ts
+  s_2372cb08d633fa::t_1cbea78df4d9e6 1-57
+packages/core/src/stats.ts
+  s_2372cb08d633fa::t_b1a985c652a27f 1-108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "8efbd0fb55e04444885a9b967a3ec6f557f97108",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
