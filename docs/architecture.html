@@ -86,7 +86,7 @@
     <svg width="34" height="34" viewBox="0 0 48 48" aria-hidden="true"><circle cx="15" cy="38" r="7.5" fill="var(--ink)"/><circle cx="24" cy="29" r="2.6" fill="var(--ink)"/><rect x="25" y="3" width="19" height="19" rx="7" fill="none" stroke="var(--ink)" stroke-width="5"/><circle cx="40.5" cy="18.5" r="4.4" fill="var(--bg)"/><circle cx="40.5" cy="18.5" r="3.1" fill="var(--acc)"/></svg>
     <span class="word">b<b>o</b>ard</span>
   </div>
-  <div class="kicker" style="margin-top:8px">Техническая архитектура · версия от 2026-09-09 · main db9f9f5</div>
+  <div class="kicker" style="margin-top:8px">Техническая архитектура · версия от 2026-09-09 · main</div>
   <h1>Headboard: web, mobile, API и общее ядро</h1>
   <p class="lead">Персональная канбан-доска «разгрузки головы». Один монорепозиторий, четыре пакета, одна доменная логика. Документ описывает границы слоёв, модель данных, синхронизацию, контракт API, авторизацию, AI-контур, дизайн-систему, тесты и известные ограничения.</p>
   <nav class="toc">
@@ -304,10 +304,12 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <figcaption>Рис. 3. Продовый путь через провайдера и dev-путь без верификации (пунктир).</figcaption>
 </figure>
 <ul>
-  <li><b>Google.</b> <code>GoogleVerifier</code> проверяет id-token через Google.Apis.Auth с аудиторией <code>Auth:GoogleClientId</code>.</li>
-  <li><b>Apple.</b> <code>AppleVerifier</code> тянет JWKS Apple через OpenIdConnect-метаданные и проверяет подпись и аудиторию <code>Auth:AppleClientId</code>. Имя приходит в теле запроса, потому что Apple отдаёт его один раз.</li>
+  <li><b>Google.</b> <code>GoogleVerifier</code> проверяет id-token через Google.Apis.Auth по списку аудиторий <code>Auth:GoogleClientIds</code> (у web, iOS и Android свои client id). Web присылает не токен, а authorization code из popup Google Identity Services: сервер обменивает его на <code>oauth2.googleapis.com/token</code> с <code>Auth:GoogleWebClientId</code> и <code>Auth:GoogleClientSecret</code>, затем проверяет полученный id-token. Секрет не покидает бэкенд.</li>
+  <li><b>Apple.</b> <code>AppleVerifier</code> тянет JWKS Apple через OpenIdConnect-метаданные и проверяет подпись и аудиторию из <code>Auth:AppleClientIds</code> (Services ID для web, bundle id для iOS). Имя приходит в теле запроса, потому что Apple отдаёт его один раз.</li>
   <li><b>Пользователь.</b> Upsert по (provider, subject); инициалы это первые буквы двух слов имени.</li>
-  <li><b>Клиенты.</b> Токен хранится в персистентной части стора. Функция <code>signInWith(provider)</code> выбирает путь: при заданном <code>VITE_API_URL</code> / <code>EXPO_PUBLIC_API_URL</code> идёт dev-логин и запуск синхронизации, иначе мок-пользователь прототипа. Сбой сервера показывает тост и переводит в локальный режим.</li>
+  <li><b>Web.</b> <code>lib/providers.ts</code> подгружает скрипты GIS и Apple JS по клику. Google: <code>initCodeClient</code> с <code>ux_mode: popup</code> → code → <code>POST /auth/google</code>. Apple: <code>AppleID.auth.init</code> с <code>usePopup</code> → id_token и имя → <code>POST /auth/apple</code>. Кнопки остаются собственными, без логотипов провайдеров.</li>
+  <li><b>Mobile.</b> Apple на iOS через <code>expo-apple-authentication</code> (нативный лист, identityToken с аудиторией bundle id). Google через <code>expo-auth-session</code> <code>useIdTokenAuthRequest</code> в системном браузере со схемой <code>headboard://</code>; требует development build, не Expo Go. Apple на Android недоступен, кнопка ведёт на dev-логин.</li>
+  <li><b>Фолбэк.</b> При отсутствии client id провайдера клиент вызывает <code>POST /auth/dev</code> (только Development); без API используется мок-пользователь прототипа. Отмена popup и сбой показываются тостом.</li>
 </ul>
 
 <h2 id="ai">9. AI-контур</h2>
@@ -405,7 +407,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <h2 id="limits">16. Ограничения и следующие шаги</h2>
 <div class="note">Это состояние main на 2026-09-09. Пункты ниже требуют решений или внешних учётных данных.</div>
 <ul>
-  <li><span class="pill gold">auth</span> Вход Google/Apple в клиентах пока dev-логин. Нужны client id в конфиге API, для web библиотека Google Identity Services и Sign in with Apple JS, для mobile <code>expo-apple-authentication</code> и Google Sign-In.</li>
+  <li><span class="pill gold">auth</span> Реальные потоки Google/Apple реализованы, но включаются только при наличии client id: Google Cloud (web, iOS, Android клиенты), Apple Developer (App ID с Sign in with Apple, Services ID с https return URL; <code>localhost</code> Apple не принимает). Apple на Android не поддержан.</li>
   <li><span class="pill gold">db</span> Миграции EF сгенерированы для SQLite; PostgreSQL создаёт схему через <code>EnsureCreated()</code>. Перед эволюцией схемы в проде нужны отдельные Postgres-миграции.</li>
   <li><span class="pill">feature</span> Дайджест по расписанию в 8:00 и двусторонняя синхронизация с Google Calendar не реализованы; чип календаря декоративный.</li>
   <li><span class="pill">feature</span> Экрана архива нет: задачи со статусом <code>archived</code> только скрываются.</li>

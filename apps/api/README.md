@@ -22,6 +22,15 @@ Development uses SQLite (`apps/api/Headboard.Api/headboard.db`, created and migr
 startup). OpenAPI document: `GET http://localhost:5080/openapi/v1.json` (Development only).
 CORS allows `http://localhost:5173` (web) and `http://localhost:8081` (Expo) in Development.
 
+## Sign-in flows
+
+- `POST /auth/google {idToken}` — native apps (expo-auth-session id-token response). The token audience must be one of `Auth:GoogleClientIds`.
+- `POST /auth/google {code, redirectUri:"postmessage"}` — web. Google Identity Services code-flow popup returns an authorization code; the API exchanges it at `https://oauth2.googleapis.com/token` with `Auth:GoogleWebClientId` + `Auth:GoogleClientSecret`, then verifies the returned id-token.
+- `POST /auth/apple {idToken, name?}` — web (Sign in with Apple JS, popup) and iOS (`expo-apple-authentication`). Apple sends the user's name only once, outside the token, so clients pass it along.
+- `POST /auth/dev {email, name?, provider?}` — Development only.
+
+Google Cloud console: create one OAuth client per platform (Web application with `http://localhost:5173` as authorized origin; iOS with bundle id `com.headboard.app`; Android with package `com.headboard.app` and the signing certificate SHA-1). Apple Developer portal: enable Sign in with Apple on the App ID, create a Services ID for the web with an https return URL (Apple does not accept `localhost`).
+
 ## Tests
 
 ```bash
@@ -42,8 +51,10 @@ Keys can be set in `appsettings*.json`, environment variables (`Jwt__Secret`, ..
 | --- | --- | --- |
 | `Jwt:Secret` | dev value in `appsettings.Development.json` | **Required**; ≥ 32 bytes. Startup fails without it. |
 | `Jwt:Issuer` | `headboard` | Also used as audience. Tokens live 30 days. |
-| `Auth:GoogleClientId` | — | Audience for Google id-tokens. `/auth/google` returns 503 until set. |
-| `Auth:AppleClientId` | — | Audience (Services ID / bundle id) for Apple id-tokens. `/auth/apple` returns 503 until set. |
+| `Auth:GoogleClientIds` | `[]` | Accepted audiences for Google id-tokens: web, iOS and Android OAuth client ids (each app type has its own). Legacy single `Auth:GoogleClientId` is still honoured. |
+| `Auth:GoogleWebClientId` | — | The "Web application" client id; also accepted as an audience. |
+| `Auth:GoogleClientSecret` | — | Secret of the web client. Needed only for the browser code-flow (`POST /auth/google {code}`); without it that path returns 503 `code_exchange_unavailable`. |
+| `Auth:AppleClientIds` | `[]` | Accepted audiences for Apple id-tokens: the Services ID (web) and the iOS bundle id (`com.headboard.app`). Legacy `Auth:AppleClientId` is still honoured. |
 | `Auth:AllowDevLogin` | `true` in Development, else `false` | Enables `POST /auth/dev`. |
 | `Anthropic:ApiKey` | — | Without it `/ai/*` return `503 {"error":"ai_unavailable"}` and clients fall back locally. |
 | `Anthropic:Model` | `claude-sonnet-5` | Model id sent to `POST https://api.anthropic.com/v1/messages`. |

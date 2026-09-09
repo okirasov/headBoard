@@ -14,7 +14,18 @@ public class AppleVerifier(IConfiguration cfg)
         new OpenIdConnectConfigurationRetriever(),
         new HttpDocumentRetriever());
 
-    public bool IsConfigured => !string.IsNullOrWhiteSpace(cfg["Auth:AppleClientId"]);
+    /// <summary>Accepted audiences: <c>Auth:AppleClientIds</c> (Services ID for web, bundle id for iOS) plus legacy <c>Auth:AppleClientId</c>.</summary>
+    public string[] ClientIds
+    {
+        get
+        {
+            var list = cfg.GetSection("Auth:AppleClientIds").Get<string[]>()?.Where(s => !string.IsNullOrWhiteSpace(s)) ?? [];
+            if (cfg["Auth:AppleClientId"] is { Length: > 0 } a) list = list.Append(a);
+            return list.Distinct().ToArray();
+        }
+    }
+
+    public bool IsConfigured => ClientIds.Length > 0;
 
     /// <param name="name">Optional display name sent by the client (Apple only provides it on the first sign-in, outside the token).</param>
     public async Task<ExternalIdentity?> VerifyAsync(string idToken, string? name, CancellationToken ct)
@@ -23,7 +34,7 @@ public class AppleVerifier(IConfiguration cfg)
         var result = await new JsonWebTokenHandler().ValidateTokenAsync(idToken, new TokenValidationParameters
         {
             ValidIssuer = AppleIssuer,
-            ValidAudience = cfg["Auth:AppleClientId"],
+            ValidAudiences = ClientIds,
             IssuerSigningKeys = conf.SigningKeys,
             ValidateLifetime = true,
         });

@@ -32,8 +32,10 @@ export function createApi(baseUrl: string, getToken: () => string | null) {
 
   return {
     auth: {
-      google: (idToken: string) => req<AuthResponse>('POST', '/auth/google', { idToken }),
-      apple: (idToken: string) => req<AuthResponse>('POST', '/auth/apple', { idToken }),
+      /** Native apps send the id-token; the web code-flow popup sends the authorization code (redirectUri `postmessage`). */
+      google: (body: { idToken?: string; code?: string; redirectUri?: string }) => req<AuthResponse>('POST', '/auth/google', body),
+      /** `name` is only available on the first Apple sign-in and is passed alongside the token. */
+      apple: (idToken: string, name?: string) => req<AuthResponse>('POST', '/auth/apple', { idToken, name }),
       dev: (email: string, name: string, provider: 'Google' | 'Apple') => req<AuthResponse>('POST', '/auth/dev', { email, name, provider }),
       me: () => req<User>('GET', '/me'),
     },

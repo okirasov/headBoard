@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Headboard.Api.Tests;
 
@@ -19,6 +20,10 @@ public class ApiFactory : WebApplicationFactory<Program>
     /// <summary>When set, the Anthropic HttpClient uses this handler instead of the network.</summary>
     public HttpMessageHandler? AnthropicHandler { get; init; }
     public string AnthropicApiKey { get; init; } = "";
+    /// <summary>When set, the Google OAuth HttpClient (code exchange) uses this handler instead of the network.</summary>
+    public HttpMessageHandler? GoogleHandler { get; init; }
+    public string GoogleWebClientId { get; init; } = "";
+    public string GoogleClientSecret { get; init; } = "";
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -33,9 +38,13 @@ public class ApiFactory : WebApplicationFactory<Program>
             ["Jwt:Issuer"] = "headboard-tests",
             ["Auth:AllowDevLogin"] = "true",
             ["Anthropic:ApiKey"] = AnthropicApiKey,
+            ["Auth:GoogleWebClientId"] = GoogleWebClientId,
+            ["Auth:GoogleClientSecret"] = GoogleClientSecret,
         }));
         if (AnthropicHandler is not null)
             builder.ConfigureTestServices(s => TestAnthropic.Register(s, AnthropicHandler));
+        if (GoogleHandler is not null)
+            builder.ConfigureTestServices(s => s.AddHttpClient(GoogleVerifier.HttpClientName).ConfigurePrimaryHttpMessageHandler(() => GoogleHandler));
     }
 
     /// <summary>Dev-logs in and returns an HttpClient carrying the bearer token.</summary>

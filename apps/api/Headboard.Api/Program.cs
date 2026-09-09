@@ -55,6 +55,7 @@ builder.Services.AddSingleton<GoogleVerifier>();
 builder.Services.AddSingleton<AppleVerifier>();
 builder.Services.AddSingleton<LocalStorage>();
 builder.Services.AddHttpClient<AnthropicClient>(AnthropicClient.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(60));
+builder.Services.AddHttpClient(GoogleVerifier.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(15));
 
 if (builder.Environment.IsDevelopment())
 {

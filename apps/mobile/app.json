@@ -8,7 +8,8 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.headboard.app"
+      "bundleIdentifier": "com.headboard.app",
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
@@ -26,7 +27,10 @@
     "plugins": [
       "expo-font",
       "expo-splash-screen",
-      "expo-sharing"
-    ]
+      "expo-sharing",
+      "expo-web-browser",
+      "expo-apple-authentication"
+    ],
+    "scheme": "headboard"
   }
 }

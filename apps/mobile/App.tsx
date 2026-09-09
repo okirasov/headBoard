@@ -8,7 +8,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { digestStats, phrases, todayLabel } from '@headboard/core';
 import { useStore } from './src/store/useStore';
 import { startSync } from './src/store/sync';
-import { signInWith } from './src/lib/auth';
+import { devOrMockSignIn } from './src/lib/auth';
 import { ThemeProvider, useTheme } from './src/theme/ThemeContext';
 import { useT } from './src/lib/useT';
 import { useNow } from './src/lib/useNow';
@@ -44,7 +44,7 @@ function useDevAutologin() {
       return;
     }
     const st = useStore.getState();
-    if (!user) { void signInWith('Google'); return; }
+    if (!user) { void devOrMockSignIn('Google'); return; }
     if (tasks.length === 0 && !st.token) import('./src/store/devSeed').then(({ buildSeed }) => { const s = buildSeed(); st.loadSeed(s.tasks, s.projects, s.projFiles); });
     // Optional screen/theme/lang presets for screenshot verification.
     const v = process.env.EXPO_PUBLIC_DEV_VIEW; if (v === 'board' || v === 'review' || v === 'digest' || v === 'calendar') st.set({ mView: v });

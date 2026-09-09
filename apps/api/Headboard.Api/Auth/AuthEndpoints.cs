@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Headboard.Api.Auth;
 
 public record IdTokenRequest(string IdToken, string? Name);
+/// <summary>Google sign-in: either an id-token (native apps) or an authorization code from the web code-flow popup.</summary>
+public record GoogleLoginRequest(string? IdToken, string? Code, string? RedirectUri);
 public record DevLoginRequest(string Email, string? Name, string? Provider);
 public record UserDto(string Name, string Email, string Provider, string Initials);
 public record AuthResponse(string Token, UserDto User);
@@ -16,11 +18,18 @@ public static class AuthEndpoints
     {
         var g = app.MapGroup("/auth");
 
-        g.MapPost("/google", async (IdTokenRequest req, GoogleVerifier verifier, AppDb db, TokenService tokens) =>
+        g.MapPost("/google", async (GoogleLoginRequest req, GoogleVerifier verifier, AppDb db, TokenService tokens, CancellationToken ct) =>
         {
             if (!verifier.IsConfigured) return Results.Json(new { error = "auth_unavailable" }, statusCode: 503);
-            if (string.IsNullOrWhiteSpace(req.IdToken)) return Results.BadRequest(new { error = "id_token_required" });
-            var id = await verifier.VerifyAsync(req.IdToken);
+            var idToken = req.IdToken;
+            if (string.IsNullOrWhiteSpace(idToken) && !string.IsNullOrWhiteSpace(req.Code))
+            {
+                if (!verifier.CanExchangeCode) return Results.Json(new { error = "code_exchange_unavailable" }, statusCode: 503);
+                idToken = await verifier.ExchangeCodeAsync(req.Code, req.RedirectUri ?? "postmessage", ct);
+                if (idToken is null) return Results.Unauthorized();
+            }
+            if (string.IsNullOrWhiteSpace(idToken)) return Results.BadRequest(new { error = "id_token_or_code_required" });
+            var id = await verifier.VerifyAsync(idToken);
             if (id is null) return Results.Unauthorized();
             return Results.Ok(await Login(db, tokens, "Google", id));
         });
