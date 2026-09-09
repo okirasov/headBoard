@@ -1,0 +1,53 @@
+README.md
+  s_2372cb08d633fa::t_cc76702157cd5b 3
+apps/mobile/App.tsx
+  s_2372cb08d633fa::t_daa7637e669aa1 26,53,80-81,96
+apps/mobile/src/components/Icons.tsx
+  s_2372cb08d633fa::t_5a7aae8ed7a11c 30-35
+apps/mobile/src/screens/ProjectsScreen.tsx
+  s_2372cb08d633fa::t_2da58bd4473d34 1-76
+apps/mobile/src/sheets/ProfileSheet.tsx
+  s_2372cb08d633fa::t_3ba08e991557d6 11,25,67-72
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_31300ad658d666 7,43-45,114-128
+apps/web/src/components/layout/ProjectList.tsx
+  s_2372cb08d633fa::t_14613d62a0ad8f 5,14,19-23
+apps/web/src/components/layout/Shell.tsx
+  s_2372cb08d633fa::t_2fee4485a850b2 9,23
+apps/web/src/components/ui/Icons.tsx
+  s_2372cb08d633fa::t_3bc1923b4af758 73-75
+apps/web/src/store/useStore.test.ts
+  s_2372cb08d633fa::t_ee90948839cae8 63-77
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_7885fb42e82dbb 5,72-74,209-228
+apps/web/src/views/projects/ProjectsView.tsx
+  s_2372cb08d633fa::t_59f9ccb7e90d4a 1-109
+docs/architecture.html
+  s_2372cb08d633fa::t_23aa35987c6420 177,215,420,424-425,436,441
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_c7e54a826e68f7 27,68,112,151-152
+packages/core/src/index.ts
+  s_2372cb08d633fa::t_50c41299ed9370 11
+packages/core/src/model.ts
+  s_2372cb08d633fa::t_395dffe6dc4f56 6
+packages/core/src/projects.test.ts
+  s_2372cb08d633fa::t_e8e23dc3d18f39 1-16
+packages/core/src/projects.ts
+  s_2372cb08d633fa::t_545c70af1856bc 1-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "60a0439a9eff63884440f23f24f8d933f07d5dfa",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
