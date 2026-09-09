@@ -216,7 +216,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <p>Различия web и mobile сводятся к именам UI-полей (<code>sel</code> против <code>mSel</code>, <code>capOpen</code> против <code>mCapOpen</code>) и к хранилищу. Выход из аккаунта в API-режиме очищает локальные данные, в локальном режиме оставляет их.</p>
 
 <h2 id="sync">6. Синхронизация</h2>
-<p>Движок <code>createSyncEngine(adapter)</code> в <code>core/sync.ts</code> реализует offline-first модель: клиент всегда работает с локальным стором, движок подписан на изменения и переводит их в вызовы API. Адаптер даёт ему <code>getState / setState / subscribe / fileToPart / onUnauthorized / onError / baseUrl / timeZone</code>; движок отдаёт <code>start / flush / refreshSettings / stop</code>. Web-адаптер занимает 27 строк, mobile 33.</p>
+<p>Движок <code>createSyncEngine(adapter)</code> в <code>core/sync.ts</code> реализует offline-first модель: клиент всегда работает с локальным стором, движок подписан на изменения и переводит их в вызовы API. Адаптер даёт ему <code>getState / setState / subscribe / fileToPart / onUnauthorized / onError / baseUrl / timeZone</code>; движок отдаёт <code>start / flush / refreshSettings / refreshTasks / stop</code>. Web-адаптер занимает 27 строк, mobile 33.</p>
 <figure>
 <svg viewBox="0 0 1000 420" role="img" aria-label="Последовательность синхронизации">
   <g class="k">
@@ -259,6 +259,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
   <li><b>Ошибки.</b> 409 <code>id_exists</code> переводится в <code>PATCH</code>. Любая другая ошибка забывает снимок и ставит повтор через 3 секунды. 401 на старте вызывает <code>onUnauthorized</code>, клиенты делают <code>signOut</code>.</li>
   <li><b>Настройки.</b> <code>lang, theme, showDone, digestText</code> плюс зона клиента <code>timeZone</code> сравниваются как одна строка и пишутся <code>PUT /settings</code> с дебаунсом. Дайджестом владеет сервер: <code>null</code> в теле означает «без изменений», а если ответ на PUT несёт более новый <code>digestAt</code>, движок принимает серверный текст.</li>
   <li><b>refreshSettings().</b> Повторное чтение <code>GET /settings</code> с принятием более нового дайджеста; web вызывает при возврате вкладки в фокус и раз в 15 минут, mobile при выходе на передний план.</li>
+  <li><b>refreshTasks().</b> Перечитывает <code>GET /tasks?includeArchived=true</code> и сливает серверные изменения: неизвестные локально задачи добавляются, известные заменяются, если серверный <code>touched</code> не старше локального; локальные правки, ещё не отправленные, побеждают и уйдут обычным <code>flush</code>. Так на клиент попадают переносы дат из Google Calendar и события, ставшие задачами.</li>
 </ul>
 
 <h2 id="api">7. Контракт API</h2>
@@ -326,7 +327,36 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <h3>Утренний дайджест по расписанию</h3>
 <p><code>DigestScheduler</code> (hosted service в API) просыпается каждые <code>Digest:CheckIntervalSeconds</code> (60 с) и для каждого пользователя проверяет чистое правило <code>DigestSchedule.IsDue</code>: локальное время в его зоне (<code>Settings.TimeZone</code>, IANA-идентификатор, клиенты присылают его в <code>PUT /settings</code>; без него UTC) прошло <code>Digest:Hour</code> (8), и за сегодня дайджеста ещё не было. Тогда <code>DigestService</code> считает статистику по тем же правилам, что <code>core/digestStats</code> (границы дня в зоне пользователя), запрашивает текст у Anthropic общим промптом или берёт канонический вариант (<code>cannedDigest</code>, порт из ядра, вариант по номеру дня) и сохраняет <code>DigestText</code> и <code>DigestAt</code>. Ручное «Обновить» на клиенте тоже ставит <code>DigestAt</code> через <code>PUT /settings</code>, поэтому планировщик не перетирает его в тот же день. Клиенты подхватывают новый текст через <code>refreshSettings()</code> движка синхронизации: web при возврате вкладки в фокус и раз в 15 минут, mobile при выходе приложения на передний план; в карточке дайджеста показывается «обновлено 08:00».</p>
 
-<h3>Двусторонняя синхронизация с Google Calendar</h3>
+<h3 id="gcal">Двусторонняя синхронизация с Google Calendar</h3>
+<figure>
+<svg viewBox="0 0 1000 300" role="img" aria-label="Схема синхронизации с Google Calendar">
+  <rect x="20" y="30" width="230" height="240" rx="14" class="box"/><text x="36" y="56" class="k">Headboard · Tasks</text>
+  <rect x="36" y="72" width="198" height="46" rx="10" class="box2"/><text x="48" y="92" class="t" font-size="12">due ≠ null, не done/archived</text><text x="48" y="108" class="s">→ зеркалится</text>
+  <rect x="36" y="128" width="198" height="46" rx="10" class="box2"/><text x="48" y="148" class="t" font-size="12">EventId · Hash на задаче</text><text x="48" y="164" class="s">отпечаток: title · дата · note</text>
+  <rect x="36" y="184" width="198" height="46" rx="10" class="box2"/><text x="48" y="204" class="t" font-size="12">CalendarLinks</text><text x="48" y="220" class="s">refresh token · syncToken · pending</text>
+
+  <rect x="385" y="30" width="230" height="240" rx="14" class="core"/><text x="401" y="56" class="k">CalendarSyncService</text>
+  <rect x="401" y="72" width="198" height="40" rx="10" class="box2"/><text x="413" y="97" class="t" font-size="12">1 · pending deletes</text>
+  <rect x="401" y="120" width="198" height="40" rx="10" class="box2"/><text x="413" y="145" class="t" font-size="12">2 · inbound (syncToken)</text>
+  <rect x="401" y="168" width="198" height="40" rx="10" class="box2"/><text x="413" y="193" class="t" font-size="12">3 · outbound (hash ≠)</text>
+  <text x="401" y="240" class="m">каждые 300 с · nudge после правок · «Sync now»</text>
+
+  <rect x="750" y="30" width="230" height="240" rx="14" class="box"/><text x="766" y="56" class="k">Google Calendar · «Headboard»</text>
+  <rect x="766" y="72" width="198" height="46" rx="10" class="box2"/><text x="778" y="92" class="t" font-size="12">all-day event</text><text x="778" y="108" class="s">extendedProperties.headboardTaskId</text>
+  <rect x="766" y="128" width="198" height="46" rx="10" class="box2"/><text x="778" y="148" class="t" font-size="12">перенос · переименование</text><text x="778" y="164" class="s">→ задача, если updated ≥ touched</text>
+  <rect x="766" y="184" width="198" height="46" rx="10" class="box2"/><text x="778" y="204" class="t" font-size="12">отмена · новое событие</text><text x="778" y="220" class="s">→ due = null · задача в Inbox</text>
+
+  <path d="M250 150 H383" class="lnacc" marker-end="url(#g)"/><text x="262" y="143" class="m">tasks / link</text>
+  <path d="M615 100 H748" class="lnacc" marker-end="url(#g)"/><text x="640" y="93" class="m">push</text>
+  <path d="M748 200 H617" class="lnok" marker-end="url(#h)"/><text x="640" y="222" class="m" fill="var(--ok)">list Δ</text>
+  <path d="M383 200 H252" class="lnok" marker-end="url(#h)"/><text x="290" y="222" class="m" fill="var(--ok)">apply</text>
+  <defs>
+    <marker id="g" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--acc)"/></marker>
+    <marker id="h" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--ok)"/></marker>
+  </defs>
+</svg>
+<figcaption>Рис. 4. Сверка задач с календарём «Headboard»: три шага одного прохода и правила в обе стороны.</figcaption>
+</figure>
 <p>Подключение отдельное от входа: <code>POST /calendar/connect</code> отдаёт consent-URL с scope <code>calendar</code> и <code>access_type=offline</code>, <code>state</code> подписан HMAC на <code>Jwt:Secret</code> (uid, returnUrl, срок). Callback <code>GET /calendar/oauth/callback</code> меняет code на refresh-token (тот же web-клиент Google) и сохраняет его в <code>CalendarLinks</code>, затем редиректит на <code>returnUrl?calendar=connected|denied|error</code> (web: адрес приложения, mobile: <code>headboard://calendar</code> через <code>openAuthSessionAsync</code>). Refresh-token живёт только на сервере.</p>
 <p><code>CalendarSyncScheduler</code> (hosted service) делает полный проход по подключённым пользователям раз в <code>Calendar:PollIntervalSeconds</code> (300 с) и немедленные проходы по «толчкам» от мутаций задач и кнопки «Синхронизировать». <code>CalendarSyncService.ReconcileUserAsync</code>: при первом проходе создаёт календарь «Headboard»; удаляет события задач, стёртых с прошлого прохода (<code>PendingDeletesJson</code>); читает входящие изменения инкрементально по <code>syncToken</code> (410 → полная перечитка); выталкивает исходящие. Правила: задача зеркалится, пока у неё есть срок и она не done/archived, как событие на весь день с <code>extendedProperties.private.headboardTaskId</code>; отпечаток <code>CalendarHash</code> (title, дата, note) избавляет от лишних запросов и позволяет отличить эхо собственного push от правки пользователя; входящее применяется по правилу «последний пишущий» (<code>event.updated</code> против <code>task.touched</code>); отменённое событие снимает срок с задачи; событие, созданное в календаре «Headboard» руками, становится задачей в Inbox и помечается обратно. Клиенты подтягивают серверные изменения задач через <code>refreshTasks()</code> движка синхронизации (слияние по <code>touched</code>) при возврате в фокус и после «Синхронизировать».</p>
 
@@ -356,7 +386,8 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 │  ├─ task/TaskDrawer.tsx      StatusSelect, PriorityDots, вложения, комментарии, действия;
 │  │                           для архивной задачи бейдж «archived» и кнопки Restore / Delete
 │  ├─ capture/CaptureModal.tsx snooze/SnoozePicker.tsx  files/{FileChip,FilePreviewModal}.tsx
-└─ views/{board,review,digest,calendar,archive,auth}/   archive: строки с датой, Restore, двухшаговый Delete</code></pre>
+└─ views/{board,review,digest,calendar,archive,auth}/   archive: строки с датой, Restore, двухшаговый Delete
+   calendar/CalendarSyncChip.tsx   живой чип Google Calendar: подключить · synced HH:MM · Sync now · Disconnect</code></pre>
 <p>Drag-and-drop реализован на HTML5 <code>draggable</code>: карточка пишет id в <code>dataTransfer</code>, колонка подсвечивается через <code>dragCol</code> в сторе и на <code>drop</code> вызывает <code>moveTask</code>. Вложения читаются <code>FileReader</code> в data URL, если это картинка меньше 1.5 МБ; иначе хранится только ссылка без превью.</p>
 
 <h2 id="mobile">12. Mobile: структура</h2>
@@ -365,7 +396,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 ├─ src/theme/{tokens via core, ThemeContext, type.ts}
 ├─ src/store/{useStore,sync,devSeed}.ts
 ├─ src/lib/{api,auth,files,useT,useNow}.ts
-├─ src/components/{Header,TabBar,Sheet,TaskCardM,FileChipM,FilePreviewM,StatusPriority,Logo,Icons,ui,Snack}.tsx
+├─ src/components/{Header,TabBar,Sheet,TaskCardM,FileChipM,FilePreviewM,StatusPriority,Logo,Icons,ui,Snack,CalendarSyncCard}.tsx
 ├─ src/screens/{SignIn,Board,Review,Digest,Calendar,Archive}Screen.tsx
 └─ src/sheets/{Task,Capture,Snooze,Profile}Sheet.tsx</code></pre>
 <ul>
