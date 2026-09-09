@@ -167,7 +167,7 @@
 <p>Логика HTML-прототипа перенесена в чистые функции с явным параметром <code>now</code>, поэтому тесты детерминированы, а web и mobile не расходятся в подсчётах.</p>
 <div class="tbl"><table>
 <tr><th>Модуль</th><th>Функции</th><th>Что считает</th></tr>
-<tr><td><code>tasks.ts</code></td><td><code>idleDays, isSnoozed, isStale, dueDiff, dueLabel, dueTone, sortAutoBump, sortByPriority, sortDone, matchesFilter, live</code></td><td>Простой в днях от <code>touched</code>; «забытая» = не done, простой ≥ 7 дней (<code>STALE_DAYS_DEFAULT</code>) и snooze не активен; метки «today / tomorrow / Wed 11 / Sep 20»; сортировка «забытые первыми, затем по приоритету»</td></tr>
+<tr><td><code>tasks.ts</code></td><td><code>idleDays, isSnoozed, isStale, dueDiff, dueLabel, dueTone, sortAutoBump, sortByPriority, sortDone, matchesFilter, live, archived</code></td><td>Простой в днях от <code>touched</code>; «забытая» = не done, простой ≥ 7 дней (<code>STALE_DAYS_DEFAULT</code>) и snooze не активен; метки «today / tomorrow / Wed 11 / Sep 20»; сортировка «забытые первыми, затем по приоритету»; <code>archived()</code> отдаёт архив по <code>archivedAt</code>, новые сверху</td></tr>
 <tr><td><code>dates.ts</code></td><td><code>startOfDay, addDays, addMonths, fmtDate, todayLabel, monthLabel, commentTime, sizeHuman</code></td><td>Локализованные даты (RU: «8 сен», EN: «Sep 8»), время комментария «только что / сегодня / дата», размер файла</td></tr>
 <tr><td><code>calendar.ts</code></td><td><code>buildMonthGrid, buildSnoozeGrid, snoozePresets, snoozePresetLabel, weekdayLabels</code></td><td>Сетки 6×7 с понедельника; счётчик открытых задач на день, флаги today / selected / future / heavy (≥ 3); пресеты snooze: завтра, +3 дня, неделя, месяц</td></tr>
 <tr><td><code>digest.ts</code></td><td><code>digestStats, cannedDigest, digestStatsLine, digestPrompt</code></td><td>Сроки на сегодня, забытые, закрытые за 7 дней, в фокусе, повторяющиеся; три локальных текста дайджеста; промпт для модели</td></tr>
@@ -209,7 +209,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <div class="grid">
   <div class="card"><h4>Персистентная часть</h4><p><code>tasks, projects, projFiles, digestText, user, lang, theme, showDone, token</code>. Ключ <code>headboard-v1</code>: web в <code>localStorage</code>, mobile в AsyncStorage. При загрузке без сохранённой темы берётся системная.</p></div>
   <div class="card"><h4>UI-часть</h4><p>Открытая задача (<code>sel</code> / <code>mSel</code>), фильтры (поиск, приоритет, проект), capture, snooze-пикер, предпросмотр файла, меню профиля, drag-состояние, тост. Не сохраняется.</p></div>
-  <div class="card"><h4>Действия</h4><p><code>moveTask, markDone, toggleDone, bump, keep, snooze, archive, setPriority, addComment, attachFiles, removeFile, addTasks, setLang, setTheme, signIn, setAuth, signOut, toast</code>. Каждое обновляет <code>touched</code> там, где прототип это делал.</p></div>
+  <div class="card"><h4>Действия</h4><p><code>moveTask, markDone, toggleDone, bump, keep, snooze, archive, restore, deleteTask, setPriority, addComment, attachFiles, removeFile, addTasks, setLang, setTheme, signIn, setAuth, signOut, toast</code>. Каждое обновляет <code>touched</code> там, где прототип это делал. <code>archive</code> ставит <code>archivedAt</code>, <code>restore</code> возвращает в Inbox и сбрасывает его, <code>deleteTask</code> удаляет запись насовсем.</p></div>
   <div class="card"><h4>Выборки</h4><p>Компоненты фильтруют <code>live()</code> (без архива), затем зовут <code>sortAutoBump</code> или <code>sortDone</code> из ядра с текущим <code>now</code> из хука <code>useNow</code> (обновляется раз в минуту).</p></div>
 </div>
 <p>Различия web и mobile сводятся к именам UI-полей (<code>sel</code> против <code>mSel</code>, <code>capOpen</code> против <code>mCapOpen</code>) и к хранилищу. Выход из аккаунта в API-режиме очищает локальные данные, в локальном режиме оставляет их.</p>
@@ -252,7 +252,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 </figure>
 <h3>Правила движка</h3>
 <ul>
-  <li><b>Снимки.</b> Для каждой задачи и проекта хранится JSON последнего успешно отправленного состояния. Новый id → <code>POST</code>, изменённый JSON → <code>PATCH</code> полным телом, исчезновение из стора → <code>DELETE</code>. Архивирование это <code>PATCH status='archived'</code>, а не удаление.</li>
+  <li><b>Снимки.</b> Для каждой задачи и проекта хранится JSON последнего успешно отправленного состояния. Новый id → <code>POST</code>, изменённый JSON → <code>PATCH</code> полным телом, исчезновение из стора → <code>DELETE</code>. Архивирование это <code>PATCH status='archived'</code> с <code>archivedAt</code>; настоящий <code>DELETE</code> уходит только из экрана архива после подтверждения.</li>
   <li><b>Очередь.</b> Все запросы идут через одну promise-цепочку, поэтому порядок сохраняется и параллельных гонок нет. <code>start()</code> защищён от повторного входа (React StrictMode вызывает эффекты дважды).</li>
   <li><b>Файлы.</b> <code>fileToPart</code> решает, что загружать: в web это data URL, превращённый в Blob; в mobile это <code>file://</code> или <code>content://</code>, переданный как RN-дескриптор <code>{uri, name, type}</code>. После загрузки движок подменяет <code>FileRef</code> на серверный с абсолютным <code>src</code>.</li>
   <li><b>Ошибки.</b> 409 <code>id_exists</code> переводится в <code>PATCH</code>. Любая другая ошибка забывает снимок и ставит повтор через 3 секунды. 401 на старте вызывает <code>onUnauthorized</code>, клиенты делают <code>signOut</code>.</li>
@@ -270,7 +270,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <tr><td><code>GET /tasks[?includeArchived=true]</code> · <code>GET /tasks/{id}</code></td><td></td><td><code>Task[]</code> / <code>Task</code></td><td>404</td></tr>
 <tr><td><code>POST /tasks</code></td><td><code>Task</code> (id клиента, вложенные comments и files)</td><td>201 <code>Task</code></td><td>400 <code>invalid_proj</code>, 409 <code>id_exists</code></td></tr>
 <tr><td><code>PATCH /tasks/{id}</code></td><td>частичный <code>Task</code>; <code>comments</code> заменяются множеством, <code>files</code> линкуются по id</td><td><code>Task</code></td><td>400, 404</td></tr>
-<tr><td><code>DELETE /tasks/{id}</code></td><td></td><td>204</td><td>удаляет комментарии и файлы задачи</td></tr>
+<tr><td><code>DELETE /tasks/{id}</code></td><td></td><td>204</td><td>удаляет комментарии и файлы задачи; вызывается клиентом только из архива</td></tr>
 <tr><td><code>POST /tasks/{id}/comments</code> · <code>DELETE /tasks/{id}/comments/{cid}</code></td><td><code>{text}</code></td><td><code>Comment</code> / 204</td><td></td></tr>
 <tr><td><code>GET /projects</code> · <code>POST /projects</code> · <code>PATCH /projects/{id}</code> · <code>DELETE /projects/{id}</code></td><td><code>Project</code></td><td>GET включает <code>files[]</code> проекта</td><td>409 <code>id_exists</code></td></tr>
 <tr><td><code>POST /files?taskId=|projectId=</code></td><td>multipart <code>file</code></td><td><code>FileRef</code>, для картинок <code>src=/files/{id}/content</code></td><td>400 без цели</td></tr>
@@ -342,10 +342,11 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 ├─ components/
 │  ├─ brand/Logo.tsx           Mark + Wordmark, размеры sidebar/auth/title/mobile
 │  ├─ ui/{primitives,Icons,Snackbar}.tsx
-│  ├─ layout/{Shell,Sidebar,NavItem,ProjectList,ProfileMenu,TopBar}.tsx
-│  ├─ task/TaskDrawer.tsx      StatusSelect, PriorityDots, вложения, комментарии, действия
+│  ├─ layout/{Shell,Sidebar,NavItem,ProjectList,ProfileMenu,TopBar}.tsx   5 нав-пунктов: Board · Review · Digest · Calendar · Archive
+│  ├─ task/TaskDrawer.tsx      StatusSelect, PriorityDots, вложения, комментарии, действия;
+│  │                           для архивной задачи бейдж «archived» и кнопки Restore / Delete
 │  ├─ capture/CaptureModal.tsx snooze/SnoozePicker.tsx  files/{FileChip,FilePreviewModal}.tsx
-└─ views/{board,review,digest,calendar,auth}/</code></pre>
+└─ views/{board,review,digest,calendar,archive,auth}/   archive: строки с датой, Restore, двухшаговый Delete</code></pre>
 <p>Drag-and-drop реализован на HTML5 <code>draggable</code>: карточка пишет id в <code>dataTransfer</code>, колонка подсвечивается через <code>dragCol</code> в сторе и на <code>drop</code> вызывает <code>moveTask</code>. Вложения читаются <code>FileReader</code> в data URL, если это картинка меньше 1.5 МБ; иначе хранится только ссылка без превью.</p>
 
 <h2 id="mobile">12. Mobile: структура</h2>
@@ -355,11 +356,12 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 ├─ src/store/{useStore,sync,devSeed}.ts
 ├─ src/lib/{api,auth,files,useT,useNow}.ts
 ├─ src/components/{Header,TabBar,Sheet,TaskCardM,FileChipM,FilePreviewM,StatusPriority,Logo,Icons,ui,Snack}.tsx
-├─ src/screens/{SignIn,Board,Review,Digest,Calendar}Screen.tsx
+├─ src/screens/{SignIn,Board,Review,Digest,Calendar,Archive}Screen.tsx
 └─ src/sheets/{Task,Capture,Snooze,Profile}Sheet.tsx</code></pre>
 <ul>
   <li>Навигации нет: один уровень экранов переключается полем <code>mView</code> в сторе, как в прототипе. Таб-бар с FAB «+» рисуется поверх контента, контент имеет нижний отступ 110. Экран архива открывается из профиль-шторки, в таб-бар не входит.</li>
   <li>Шторки это <code>Modal</code> с анимацией <code>translateY 40 → 0</code>, ручкой 40×4 и учётом safe-area снизу. Смена статуса реализована выпадающим списком в стиле select, потому что в RN нет нативного select.</li>
+  <li>Архив: строка «Archive · N» в профиль-шторке переключает <code>mView</code> на <code>archive</code>; карточки с датой архивирования, Restore и двухшаговым Delete; шторка тикета показывает бейдж вместо статуса.</li>
   <li>Файлы выбираются <code>expo-document-picker</code>; <code>src</code> хранит локальный uri, картинки показываются <code>Image</code>, движок синхронизации загружает uri как multipart-дескриптор. «Скачать» в предпросмотре открывает системный share sheet (<code>expo-sharing</code>).</li>
   <li>Android использует тот же код; отличия только в insets и в тени (<code>elevation</code>).</li>
   <li>Dev-флаги для проверки без тапов: <code>EXPO_PUBLIC_DEV_AUTOLOGIN, DEV_RESET, DEV_VIEW, DEV_THEME, DEV_LANG, DEV_SHEET</code>.</li>
@@ -401,6 +403,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
   <li><b>Полный PATCH вместо гранулярных эндпоинтов</b> для комментариев и файлов в потоке синхронизации: проще диф, меньше состояний; гранулярные эндпоинты сохранены для будущих клиентов.</li>
   <li><b>AI только через сервер</b>, ключ не попадает в клиентские бандлы; локальные эвристики остаются как фолбэк.</li>
   <li><b>Демо-данные не в продукте</b>: сид загружается динамическим импортом только в dev-сборках.</li>
+  <li><b>Архив как статус, а не корзина.</b> Архивирование остаётся обратимым <code>PATCH</code>, удаление явное и двухшаговое; экран архива в web получил пятый нав-пункт, в mobile живёт в профиль-шторке, чтобы не ломать таб-бар из четырёх вкладок с FAB.</li>
   <li><b>Четыре дополнительных токена</b> для цветов прототипа вне таблицы вместо литералов, чтобы правило «только токены» проверялось автоматически.</li>
 </ul>
 
