@@ -1,0 +1,77 @@
+README.md
+  s_2372cb08d633fa::t_79d8e705925657 25
+apps/api/Headboard.Api.Tests/ApiFactory.cs
+  s_2372cb08d633fa::t_b37af981b3c233 25-26,46,50-51
+apps/api/Headboard.Api.Tests/CalendarTests.cs
+  s_2372cb08d633fa::t_fb4980349217fa 1-222
+apps/api/Headboard.Api/Calendar/CalendarEndpoints.cs
+  s_2372cb08d633fa::t_c619e85686de25 1-85
+apps/api/Headboard.Api/Calendar/CalendarState.cs
+  s_2372cb08d633fa::t_808ee6d21dffc7 1-41
+apps/api/Headboard.Api/Calendar/CalendarSyncScheduler.cs
+  s_2372cb08d633fa::t_a1206f2ebbbe41 1-68
+apps/api/Headboard.Api/Calendar/CalendarSyncService.cs
+  s_2372cb08d633fa::t_3d0cd10b57775e 1-179
+apps/api/Headboard.Api/Calendar/EventMapper.cs
+  s_2372cb08d633fa::t_4b7424d8420533 1-75
+apps/api/Headboard.Api/Calendar/GoogleCalendarClient.cs
+  s_2372cb08d633fa::t_bbfe90db934d3d 1-116
+apps/api/Headboard.Api/Data/AppDb.cs
+  s_2372cb08d633fa::t_b1aba8d0ddff9a 13,17
+apps/api/Headboard.Api/Data/Entities.cs
+  s_2372cb08d633fa::t_8a997960a3cb20 40-42,79-94
+apps/api/Headboard.Api/Data/Migrations/20260909181005_GoogleCalendar.Designer.cs
+  s_2372cb08d633fa::t_3460700267f359 1-295
+apps/api/Headboard.Api/Data/Migrations/20260909181005_GoogleCalendar.cs
+  s_2372cb08d633fa::t_12c4432ff33cc6 1-62
+apps/api/Headboard.Api/Data/Migrations/AppDbModelSnapshot.cs
+  s_2372cb08d633fa::t_35f1b994c319bf 20-59,192-197
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_15a0fea94df4a9 5,61-66,104
+apps/api/Headboard.Api/Tasks/TaskEndpoints.cs
+  s_2372cb08d633fa::t_47f9a0268b223f 5,37,59,63,92,96,105-111,114
+apps/api/Headboard.Api/appsettings.json
+  s_2372cb08d633fa::t_a10d0c607adc10 35-40
+apps/api/README.md
+  s_2372cb08d633fa::t_75f54fedca1992 38-46,80-83
+apps/mobile/src/components/CalendarSyncCard.tsx
+  s_2372cb08d633fa::t_6cc22931a04028 1-70
+apps/mobile/src/screens/CalendarScreen.tsx
+  s_2372cb08d633fa::t_63d8c6c2824713 8,40
+apps/mobile/src/store/sync.ts
+  s_2372cb08d633fa::t_3dad7851d17a7c 36,38-44
+apps/web/src/App.tsx
+  s_2372cb08d633fa::t_9a6b10b92ff9d6 2,18-29
+apps/web/src/store/sync.ts
+  s_2372cb08d633fa::t_038ea32768dda2 30,32-38
+apps/web/src/views/calendar/CalendarSyncChip.tsx
+  s_2372cb08d633fa::t_6b1be0cded57fd 1-87
+apps/web/src/views/calendar/CalendarView.tsx
+  s_2372cb08d633fa::t_4736d7266c63b6 6,43
+docs/architecture.html
+  s_2372cb08d633fa::t_7e058a36d8fc75 145,200,204,281,329-332,397,407,418,429
+packages/core/src/api.ts
+  s_2372cb08d633fa::t_56ad85178983d9 13,74-80
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_4c6269310da743 27,66,108
+packages/core/src/sync.test.ts
+  s_2372cb08d633fa::t_7687165977a437 99-119
+packages/core/src/sync.ts
+  s_2372cb08d633fa::t_1ebc924ba0afd1 42-43,185-205,210
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "8d3c0f3a78feb40acb1587aa008b6245d7750107",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
