@@ -1,0 +1,23 @@
+@import './tokens.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  html, body, #root { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Golos Text', system-ui, sans-serif; font-size: 13px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  a { color: var(--acc); }
+  a:hover { color: var(--accHov); }
+  input, textarea, select, button { font: inherit; color: inherit; }
+  input:focus, textarea:focus, select:focus { outline: none; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: var(--lineStrong); border-radius: 7px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+}
+
+@layer utilities {
+  .text-pretty { text-wrap: pretty; }
+  .kicker { font-family: 'IBM Plex Mono', ui-monospace, monospace; text-transform: uppercase; letter-spacing: .08em; }
+  .ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}

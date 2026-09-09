@@ -1,0 +1,17 @@
+{
+  "name": "headboard",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/web",
+    "apps/mobile"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "dev": "npm run dev -w @headboard/web",
+    "mobile": "npm run start -w @headboard/mobile",
+    "api": "dotnet run --project apps/api/Headboard.Api"
+  }
+}

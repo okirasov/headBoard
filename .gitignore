@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+.DS_Store
+*.log
+.vite/
+apps/api/**/bin/
+apps/api/**/obj/
+apps/api/*.db
+apps/api/**/*.db
+apps/api/**/storage/
+apps/mobile/.expo/
+.env
