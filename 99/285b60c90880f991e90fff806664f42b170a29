@@ -1,0 +1,75 @@
+README.md
+  s_2372cb08d633fa::t_d75c06c9518518 25
+apps/api/Headboard.Api.Tests/ApiFactory.cs
+  s_2372cb08d633fa::t_73c778a71fba20 43
+apps/api/Headboard.Api.Tests/DigestScheduleTests.cs
+  s_2372cb08d633fa::t_e81fe6e9d00854 1-108
+apps/api/Headboard.Api.Tests/TasksTests.cs
+  s_2372cb08d633fa::t_12c72d0bf0f60d 170,175-176
+apps/api/Headboard.Api/Data/Entities.cs
+  s_2372cb08d633fa::t_b50bc9e4548e3f 71-74
+apps/api/Headboard.Api/Data/Migrations/20260909175553_DigestSchedule.Designer.cs
+  s_2372cb08d633fa::t_7abd2acb5f462a 1-249
+apps/api/Headboard.Api/Data/Migrations/20260909175553_DigestSchedule.cs
+  s_2372cb08d633fa::t_bd579927072dc3 1-38
+apps/api/Headboard.Api/Data/Migrations/AppDbModelSnapshot.cs
+  s_2372cb08d633fa::t_4efc567a912c7e 119-121,136-138
+apps/api/Headboard.Api/Digest/DigestSchedule.cs
+  s_2372cb08d633fa::t_114441fc0457e5 1-46
+apps/api/Headboard.Api/Digest/DigestScheduler.cs
+  s_2372cb08d633fa::t_bc2c4e09a67d1d 1-47
+apps/api/Headboard.Api/Digest/DigestService.cs
+  s_2372cb08d633fa::t_cbae5c5db87d19 1-74
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_140ba05b430cb9 59-61
+apps/api/Headboard.Api/Settings/SettingsEndpoints.cs
+  s_2372cb08d633fa::t_db7a2e28999649 7-8,10-11,31,37-39
+apps/api/Headboard.Api/appsettings.json
+  s_2372cb08d633fa::t_38d8dd8e935612 30-34
+apps/api/README.md
+  s_2372cb08d633fa::t_a682ec77cba12e 34-37,68-70
+apps/mobile/App.tsx
+  s_2372cb08d633fa::t_b9ea8ad1d7c652 2,10,65-68
+apps/mobile/src/screens/DigestScreen.tsx
+  s_2372cb08d633fa::t_8694a4991cff8a 2,30,41,48-51
+apps/mobile/src/store/sync.ts
+  s_2372cb08d633fa::t_b9c07a3b735629 19,35-39
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_5c025e3cfe02c5 16,56,118,129
+apps/web/src/App.tsx
+  s_2372cb08d633fa::t_804b3cbc73a768 3,17-22
+apps/web/src/store/sync.ts
+  s_2372cb08d633fa::t_c7feeb0ff1e406 14,29-33
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_766316d9bc815c 18-19,85,222,235
+apps/web/src/views/digest/DigestView.tsx
+  s_2372cb08d633fa::t_c2a6fa166faff6 1,14,27,46
+docs/architecture.html
+  s_2372cb08d633fa::t_959f1072b857f9 203,278,319,323-325,390,399,419
+packages/core/src/api.ts
+  s_2372cb08d633fa::t_81ea4536e62701 5-11
+packages/core/src/dates.ts
+  s_2372cb08d633fa::t_a881a66d019dbd 43-53
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_cc7cae19a10112 26,64,105
+packages/core/src/sync.test.ts
+  s_2372cb08d633fa::t_6545a71d6713c7 7,15,26,45-67
+packages/core/src/sync.ts
+  s_2372cb08d633fa::t_e0638228304d78 14-15,31-32,40-41,45-46,127,131-141,157-158,170-182,186
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "99285b60c90880f991e90fff806664f42b170a29",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
