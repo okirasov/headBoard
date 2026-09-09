@@ -1,0 +1,61 @@
+README.md
+  s_2372cb08d633fa::t_908cbc18f908d1 25
+apps/api/Headboard.Api.Tests/ApiFactory.cs
+  s_2372cb08d633fa::t_234507f4c0d6fb 9,23-26,41-42,46-47
+apps/api/Headboard.Api.Tests/GoogleAuthTests.cs
+  s_2372cb08d633fa::t_c6a2a0ce7451df 1-66
+apps/api/Headboard.Api/Auth/AppleVerifier.cs
+  s_2372cb08d633fa::t_5de2018d7a164e 17-28,37
+apps/api/Headboard.Api/Auth/AuthEndpoints.cs
+  s_2372cb08d633fa::t_e451572eb10d86 7-8,21,24-32
+apps/api/Headboard.Api/Auth/GoogleVerifier.cs
+  s_2372cb08d633fa::t_3825bbfb38b698 1-2,10-14,16-36,42,52-72
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_dfdf0640a798d2 58
+apps/api/Headboard.Api/appsettings.json
+  s_2372cb08d633fa::t_e9ed6eadb32263 18-21
+apps/api/README.md
+  s_2372cb08d633fa::t_53edcaf4965cd0 25-33,54-57
+apps/mobile/.env.example
+  s_2372cb08d633fa::t_cac335ff6bd5a3 1-6
+apps/mobile/App.tsx
+  s_2372cb08d633fa::t_3e02ea31595279 11,47
+apps/mobile/app.json
+  s_2372cb08d633fa::t_dc8ef11b767f27 11-12,30-34
+apps/mobile/package.json
+  s_2372cb08d633fa::t_9e1a6dc0839813 11-13,21
+apps/mobile/src/lib/auth.ts
+  s_2372cb08d633fa::t_d0a71705c514c8 1-5,11-33,38,40,44-102
+apps/mobile/src/screens/SignInScreen.tsx
+  s_2372cb08d633fa::t_cc2b2d14a56032 2,11,19,22
+apps/web/.env.example
+  s_2372cb08d633fa::t_4b9d6ca8b6226e 3-9
+apps/web/src/lib/auth.ts
+  s_2372cb08d633fa::t_fc70432e917c93 5-16,19-22,26,28-42,49
+apps/web/src/lib/providers.ts
+  s_2372cb08d633fa::t_193f94b071f031 1-54
+apps/web/src/types/providers.d.ts
+  s_2372cb08d633fa::t_e938585b68f80a 1-17
+docs/architecture.html
+  s_2372cb08d633fa::t_e49f65b3e1bdf5 89,307-308,310-312,410
+package-lock.json
+  s_2372cb08d633fa::t_e35f0c7fb4818c 23-25,33,210-269,324-350,401-410
+packages/core/src/api.ts
+  s_2372cb08d633fa::t_05ea0553ea6b65 35-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "09fde2c243a8f8bb2b01aa5bed8022b2e9345e2f",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
