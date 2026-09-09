@@ -1,0 +1,79 @@
+README.md
+  s_2372cb08d633fa::t_17616746416faa 3
+apps/api/Headboard.Api.Tests/TasksTests.cs
+  s_2372cb08d633fa::t_36f4ee85d79f9f 94,181-208
+apps/api/Headboard.Api/Data/Entities.cs
+  s_2372cb08d633fa::t_6417f81bdf54e3 39
+apps/api/Headboard.Api/Data/Migrations/20260909173924_ArchivedAt.Designer.cs
+  s_2372cb08d633fa::t_caad96ef279f39 1-243
+apps/api/Headboard.Api/Data/Migrations/20260909173924_ArchivedAt.cs
+  s_2372cb08d633fa::t_1faa75efdd633b 1-28
+apps/api/Headboard.Api/Data/Migrations/AppDbModelSnapshot.cs
+  s_2372cb08d633fa::t_60fd99868a0df8 143-145
+apps/api/Headboard.Api/Tasks/TaskDto.cs
+  s_2372cb08d633fa::t_d90b068c8ee950 26
+apps/api/Headboard.Api/Tasks/TaskMapper.cs
+  s_2372cb08d633fa::t_e66a6803fe1994 27,68,141-145
+apps/mobile/App.tsx
+  s_2372cb08d633fa::t_d02e558a3cacbe 24,51,73-74,88
+apps/mobile/src/components/Icons.tsx
+  s_2372cb08d633fa::t_34abd0ac1391ef 27-32
+apps/mobile/src/lib/auth.ts
+  s_2372cb08d633fa::t_983a7797fc5b1c 68-69
+apps/mobile/src/screens/ArchiveScreen.tsx
+  s_2372cb08d633fa::t_d8e04fe4b72ca9 1-54
+apps/mobile/src/screens/SignInScreen.tsx
+  s_2372cb08d633fa::t_0761d8af1cca89 2,8,10-18,21-26,34
+apps/mobile/src/sheets/ProfileSheet.tsx
+  s_2372cb08d633fa::t_3f96070f68e2b9 8-9,21,41-46
+apps/mobile/src/sheets/TaskSheet.tsx
+  s_2372cb08d633fa::t_7969e7e8898bd7 1,3,15,32-35,46-54,57-68
+apps/mobile/src/store/devSeed.ts
+  s_2372cb08d633fa::t_4f42f8aeffccf6 32-33
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_ec8a6b33eca9b7 36-37,94-96,139
+apps/web/src/components/layout/NavItem.tsx
+  s_2372cb08d633fa::t_6de9109b4dcd7b 4,13
+apps/web/src/components/layout/Shell.tsx
+  s_2372cb08d633fa::t_9326233840166c 8,21
+apps/web/src/components/layout/Sidebar.tsx
+  s_2372cb08d633fa::t_a3e05d137293fc 4,7,19,31
+apps/web/src/components/task/TaskDrawer.tsx
+  s_2372cb08d633fa::t_5009614e27be4b 2,9,67-70,103-109,161-179
+apps/web/src/components/ui/Icons.tsx
+  s_2372cb08d633fa::t_55a7f635b602e9 67-72
+apps/web/src/store/devSeed.ts
+  s_2372cb08d633fa::t_eb5186daf06dec 32-33
+apps/web/src/store/useStore.test.ts
+  s_2372cb08d633fa::t_4bc8e518061326 51-62
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_040809ed62ed62 58-59,163,167-175,265,267
+apps/web/src/views/archive/ArchiveView.tsx
+  s_2372cb08d633fa::t_8618f9d0a35507 1-58
+docs/architecture.html
+  s_2372cb08d633fa::t_e14e71598a5e62 188,200,361
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_05685555161b95 26,63,103,139
+packages/core/src/model.ts
+  s_2372cb08d633fa::t_ae02eb0a6f02b8 6,41-42,92
+packages/core/src/tasks.test.ts
+  s_2372cb08d633fa::t_893074220ae07c 2,65-71
+packages/core/src/tasks.ts
+  s_2372cb08d633fa::t_0fa4a917de5ac5 47-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "c632b1cbfd5a9b1326ce0ac6faec7824ca6a07e6",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
