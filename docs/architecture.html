@@ -200,7 +200,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <tr><td>Tasks</td><td>Id (string)</td><td>UserId, Title, ProjectId?, Priority, Status, Touched, Created, Due?, SnoozedUntil, Recur?, TagsJson, Note, Chat?, DoneAt?, ArchivedAt?. Индекс по UserId</td></tr>
 <tr><td>Comments</td><td>Id</td><td>TaskId, UserId, Text, At</td></tr>
 <tr><td>Files</td><td>Id</td><td>UserId, TaskId?, ProjectId?, Name, Kind, Size?, StoragePath?, ContentType?</td></tr>
-<tr><td>Settings</td><td>UserId</td><td>Lang, Theme, ShowDone, DigestText?</td></tr>
+<tr><td>Settings</td><td>UserId</td><td>Lang, Theme, ShowDone, DigestText?, DigestAt?, TimeZone?</td></tr>
 </table></div>
 <p>Идентификаторы задач и проектов создаёт клиент (<code>'n' + now + index</code>), сервер принимает их как есть и отвечает 409 <code>id_exists</code> при коллизии. Это позволяет работать офлайн и синхронизировать позже без переименования ссылок.</p>
 
@@ -275,7 +275,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <tr><td><code>GET /projects</code> · <code>POST /projects</code> · <code>PATCH /projects/{id}</code> · <code>DELETE /projects/{id}</code></td><td><code>Project</code></td><td>GET включает <code>files[]</code> проекта</td><td>409 <code>id_exists</code></td></tr>
 <tr><td><code>POST /files?taskId=|projectId=</code></td><td>multipart <code>file</code></td><td><code>FileRef</code>, для картинок <code>src=/files/{id}/content</code></td><td>400 без цели</td></tr>
 <tr><td><code>GET /files/{id}/content</code> · <code>DELETE /files/{id}</code></td><td></td><td>поток с content type / 204</td><td>404</td></tr>
-<tr><td><code>GET /settings</code> · <code>PUT /settings</code></td><td><code>{lang, theme, showDone, digestText}</code></td><td><code>Settings</code></td><td></td></tr>
+<tr><td><code>GET /settings</code> · <code>PUT /settings</code></td><td><code>{lang, theme, showDone, digestText, timeZone}</code></td><td><code>Settings</code> с серверным <code>digestAt</code></td><td>400 <code>invalid_timeZone</code></td></tr>
 <tr><td><code>POST /ai/extract</code></td><td><code>{text, projects:[{id,name}]}</code></td><td><code>CaptureItem[]</code></td><td>503 <code>ai_unavailable</code>, 502 <code>ai_failed</code></td></tr>
 <tr><td><code>POST /ai/digest</code></td><td><code>{stats, lang}</code></td><td><code>{text}</code></td><td>503, 502</td></tr>
 <tr><td><code>GET /openapi/v1.json</code></td><td></td><td>OpenAPI 3 (только Development)</td><td></td></tr>
@@ -316,9 +316,12 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <p>Прототип вызывал <code>window.claude.complete</code>; в продукте этот вызов заменён серверными эндпоинтами, чтобы ключ не покидал бэкенд. Промпты объявлены дважды и обязаны совпадать: в <code>core/capture.ts</code> и <code>core/digest.ts</code> для документации и локального парсинга, в <code>Ai/Prompts.cs</code> для запросов.</p>
 <div class="grid">
   <div class="card"><h4>Извлечение задач</h4><p>Текст и список проектов → JSON-массив <code>{title, priority 0|1|2, tags[≤2], project|null}</code>. Сервер вырезает от первой <code>[</code> до последней <code>]</code>, клампит приоритет, обрезает title до 90 символов, сопоставляет имя проекта с id. Пустой результат на клиенте заменяется <code>heuristicExtract</code>.</p></div>
-  <div class="card"><h4>Дайджест</h4><p>Статистика <code>digestStats</code> и язык → 2–3 предложения без markdown. Без ключа сервер отвечает 503, клиент берёт <code>cannedDigest</code> с ротацией по <code>digestSeed</code>. Текст хранится в настройках и синхронизируется.</p></div>
+  <div class="card"><h4>Дайджест</h4><p>Статистика <code>digestStats</code> и язык → 2–3 предложения без markdown. Без ключа сервер отвечает 503, клиент берёт <code>cannedDigest</code> с ротацией по <code>digestSeed</code>. Текст и время обновления хранятся в настройках и синхронизируются; утренний выпуск генерирует планировщик на сервере (см. раздел 6).</p></div>
   <div class="card"><h4>Клиент Anthropic</h4><p><code>POST https://api.anthropic.com/v1/messages</code>, заголовки <code>x-api-key</code> и <code>anthropic-version: 2023-06-01</code>, <code>max_tokens 800</code>, модель из <code>Anthropic:Model</code> (по умолчанию <code>claude-sonnet-5</code>). В тестах подменяется <code>HttpMessageHandler</code>.</p></div>
 </div>
+
+<h3>Утренний дайджест по расписанию</h3>
+<p><code>DigestScheduler</code> (hosted service в API) просыпается каждые <code>Digest:CheckIntervalSeconds</code> (60 с) и для каждого пользователя проверяет чистое правило <code>DigestSchedule.IsDue</code>: локальное время в его зоне (<code>Settings.TimeZone</code>, IANA-идентификатор, клиенты присылают его в <code>PUT /settings</code>; без него UTC) прошло <code>Digest:Hour</code> (8), и за сегодня дайджеста ещё не было. Тогда <code>DigestService</code> считает статистику по тем же правилам, что <code>core/digestStats</code> (границы дня в зоне пользователя), запрашивает текст у Anthropic общим промптом или берёт канонический вариант (<code>cannedDigest</code>, порт из ядра, вариант по номеру дня) и сохраняет <code>DigestText</code> и <code>DigestAt</code>. Ручное «Обновить» на клиенте тоже ставит <code>DigestAt</code> через <code>PUT /settings</code>, поэтому планировщик не перетирает его в тот же день. Клиенты подхватывают новый текст через <code>refreshSettings()</code> движка синхронизации: web при возврате вкладки в фокус и раз в 15 минут, mobile при выходе приложения на передний план; в карточке дайджеста показывается «обновлено 08:00».</p>
 
 <h2 id="design">10. Дизайн-система</h2>
 <p>Все цвета описаны один раз в <code>core/tokens.ts</code> (таблица README плюс четыре добавленных: <code>wait, okHov, fabShadow, scrimDrawer</code>). Web получает их как CSS-переменные в <code>tokens.css</code>, Tailwind в <code>theme.colors</code> знает только имена токенов (<code>bg-panel</code>, <code>text-mut2</code>, <code>border-goldBd</code>), поэтому литеральный hex в компонентах невозможен. Тест <code>tokens-css.test.ts</code> сверяет CSS с ядром. Mobile читает объекты <code>LIGHT</code> и <code>DARK</code> через <code>ThemeContext</code>.</p>
@@ -384,7 +387,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <tr><th>Где</th><th>Ключ</th><th>Назначение</th></tr>
 <tr><td>web <code>.env</code></td><td><code>VITE_API_URL</code></td><td>Адрес API. Пусто → локальный режим на localStorage</td></tr>
 <tr><td>mobile env</td><td><code>EXPO_PUBLIC_API_URL</code></td><td>Адрес API; на устройстве нужен LAN-адрес машины</td></tr>
-<tr><td rowspan="9">api <code>appsettings*.json</code>, env <code>Section__Key</code>, user secrets</td><td><code>Jwt:Secret</code></td><td>Обязателен, ≥ 32 байта; без него старт падает</td></tr>
+<tr><td rowspan="10">api <code>appsettings*.json</code>, env <code>Section__Key</code>, user secrets</td><td><code>Jwt:Secret</code></td><td>Обязателен, ≥ 32 байта; без него старт падает</td></tr>
 <tr><td><code>Jwt:Issuer</code></td><td>Issuer и audience токена, по умолчанию <code>headboard</code></td></tr>
 <tr><td><code>Auth:GoogleClientId</code>, <code>Auth:AppleClientId</code></td><td>Аудитории id-token; до настройки эндпоинты отвечают 503</td></tr>
 <tr><td><code>Auth:AllowDevLogin</code></td><td><code>true</code> в Development, <code>false</code> в остальных окружениях</td></tr>
@@ -393,6 +396,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <tr><td><code>ConnectionStrings:Postgres</code></td><td>При наличии включает Npgsql</td></tr>
 <tr><td><code>Storage:Root</code></td><td>Каталог вложений, по умолчанию <code>./storage</code></td></tr>
 <tr><td><code>Urls</code></td><td><code>http://localhost:5080</code>; переопределяется <code>--urls</code></td></tr>
+<tr><td><code>Digest:Enabled</code>, <code>Digest:Hour</code>, <code>Digest:CheckIntervalSeconds</code></td><td>Планировщик утреннего дайджеста: включён, час 8, проверка раз в 60 с</td></tr>
 </table></div>
 
 <h2 id="decisions">15. Ключевые решения</h2>
@@ -412,7 +416,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <ul>
   <li><span class="pill gold">auth</span> Реальные потоки Google/Apple реализованы, но включаются только при наличии client id: Google Cloud (web, iOS, Android клиенты), Apple Developer (App ID с Sign in with Apple, Services ID с https return URL; <code>localhost</code> Apple не принимает). Apple на Android не поддержан.</li>
   <li><span class="pill gold">db</span> Миграции EF сгенерированы для SQLite; PostgreSQL создаёт схему через <code>EnsureCreated()</code>. Перед эволюцией схемы в проде нужны отдельные Postgres-миграции.</li>
-  <li><span class="pill">feature</span> Дайджест по расписанию в 8:00 и двусторонняя синхронизация с Google Calendar не реализованы; чип календаря декоративный.</li>
+  <li><span class="pill">feature</span> Двусторонняя синхронизация с Google Calendar не реализована; чип календаря декоративный.</li>
   <li><span class="pill">sync</span> Конфликты решаются правилом «сервер побеждает при первой загрузке, затем последний пишущий»; для нескольких устройств с офлайн-правками нужен вектор изменений или op-log.</li>
   <li><span class="pill">files</span> Вложения из сида без содержимого сервер не сохраняет (нет байтов для загрузки). Реальные файлы загружаются и хранятся.</li>
   <li><span class="pill">ui</span> В mobile курсив заголовка месяца не рендерится: у Golos Text нет italic-начертания, браузер его синтезирует, iOS нет.</li>

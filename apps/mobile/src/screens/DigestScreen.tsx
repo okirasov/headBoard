@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
-import { type Task, cannedDigest, digestStats, digestStatsLine, dueDiff, idleDays, resolveColor } from '@headboard/core';
+import { type Task, cannedDigest, digestStats, digestStatsLine, dueDiff, fmtDateTimeShort, idleDays, resolveColor } from '@headboard/core';
 import { useStore } from '../store/useStore';
 import { useTheme } from '../theme/ThemeContext';
 import { useT } from '../lib/useT';
@@ -27,6 +27,7 @@ export function DigestScreen({ now }: { now: number }) {
   const { T, lang } = useT();
   const tasks = useStore(s => s.tasks);
   const digestText = useStore(s => s.digestText);
+  const digestAt = useStore(s => s.digestAt);
   const digestBusy = useStore(s => s.digestBusy);
   const digestSeed = useStore(s => s.digestSeed);
   const set = useStore(s => s.set);
@@ -37,14 +38,17 @@ export function DigestScreen({ now }: { now: number }) {
     let text: string | null = null;
     if (api) { try { text = (await api.ai.digest(stats, lang)).text.trim() || null; } catch { text = null; } }
     if (!text) text = cannedDigest(digestSeed + 1, stats, lang);
-    set({ digestText: text, digestSeed: digestSeed + 1, digestBusy: false });
+    set({ digestText: text, digestAt: Date.now(), digestSeed: digestSeed + 1, digestBusy: false });
   };
   return (
     <View style={{ gap: 10 }}>
       <Card pad={16}>
         <Text style={[txt(9.5, { mono: true, upper: true, ls: 0.8, color: t.mut2 }), { marginBottom: 9 }]}>{digestStatsLine(stats, lang)}</Text>
         <Text style={txt(16, { color: t.ink, lh: 1.55 })}>{digestText ?? cannedDigest(0, stats, lang)}</Text>
-        <Btn variant="outline" color={t.acc} label={digestBusy ? T.thinking : T.regen} size={12} pad={8} radius={9} style={{ alignSelf: 'flex-start', marginTop: 12, paddingHorizontal: 13 }} icon={<IcSpark size={11} color={t.acc} />} onPress={() => void regen()} />
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 12 }}>
+          <Btn variant="outline" color={t.acc} label={digestBusy ? T.thinking : T.regen} size={12} pad={8} radius={9} style={{ paddingHorizontal: 13 }} icon={<IcSpark size={11} color={t.acc} />} onPress={() => void regen()} />
+          {digestAt ? <Text style={txt(9.5, { mono: true, color: t.mut2 })}>{T.digestUpdated + fmtDateTimeShort(digestAt, lang, now)}</Text> : null}
+        </View>
       </Card>
       <Card style={{ paddingVertical: 14, paddingHorizontal: 16 }}>
         <SectionTitle>{T.dueToday}</SectionTitle>

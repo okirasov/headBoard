@@ -1,4 +1,4 @@
-import { cannedDigest, digestStats, digestStatsLine, dueDiff, idleDays, live, todayLabel } from '@headboard/core';
+import { cannedDigest, digestStats, digestStatsLine, dueDiff, fmtDateTimeShort, idleDays, live, todayLabel } from '@headboard/core';
 import { useStore } from '../../store/useStore';
 import { useT } from '../../lib/useT';
 import { useNow } from '../../lib/useNow';
@@ -11,6 +11,7 @@ export function DigestView() {
   const { T, lang } = useT();
   const tasks = useStore(s => s.tasks);
   const digestText = useStore(s => s.digestText);
+  const digestAt = useStore(s => s.digestAt);
   const digestBusy = useStore(s => s.digestBusy);
   const digestSeed = useStore(s => s.digestSeed);
   const set = useStore(s => s.set);
@@ -23,7 +24,7 @@ export function DigestView() {
     let text: string | null = null;
     if (api) { try { text = (await api.ai.digest(stats, lang)).text.trim() || null; } catch { text = null; } }
     if (!text) text = cannedDigest(digestSeed + 1, stats, lang);
-    set({ digestText: text, digestSeed: digestSeed + 1, digestBusy: false });
+    set({ digestText: text, digestAt: Date.now(), digestSeed: digestSeed + 1, digestBusy: false });
   };
 
   const dueRows = stats.due.map(t => ({ task: t, chip: (dueDiff(t, now) as number) < 0 ? T.overdue : T.today, chipClass: 'text-10.5 ' + ((dueDiff(t, now) as number) < 0 ? 'text-hi' : 'text-acc') }));
@@ -42,7 +43,7 @@ export function DigestView() {
           <div className="text-pretty font-sans text-19 leading-[1.55]">{digestText ?? cannedDigest(0, stats, lang)}</div>
           <div className="mt-auto flex items-center gap-10">
             <Button variant="outline" className="rounded-9 px-13 py-7 text-12.5 !text-acc hover:border-acc" onClick={() => void regen()}><IcSpark size={11} />{digestBusy ? T.thinking : T.regen}</Button>
-            <div className="font-mono text-10 text-mut2">{T.digNote}</div>
+            <div className="font-mono text-10 text-mut2">{T.digNote}{digestAt ? ' · ' + T.digestUpdated + fmtDateTimeShort(digestAt, lang, now) : ''}</div>
           </div>
         </div>
         <div className="flex flex-col gap-12">

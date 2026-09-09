@@ -16,6 +16,7 @@ function getEngine(): SyncEngine | null {
     engine = createSyncEngine({
       api,
       baseUrl: API_URL,
+      timeZone: (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch { return undefined; } })(),
       getState: () => useStore.getState(),
       setState: patch => useStore.setState(patch),
       subscribe: fn => useStore.subscribe(fn),
@@ -30,4 +31,9 @@ function getEngine(): SyncEngine | null {
 
 export async function startSync(): Promise<void> {
   await getEngine()?.start();
+}
+
+/** Pull a newer scheduled digest; called when the app returns to the foreground. */
+export async function refreshSettings(): Promise<void> {
+  await getEngine()?.refreshSettings();
 }

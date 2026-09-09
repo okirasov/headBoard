@@ -15,6 +15,8 @@ export interface PersistedSlice {
   projects: Project[];
   projFiles: Record<string, FileRef[]>;
   digestText: string | null;
+  /** Server-owned time of the last digest change (08:00 scheduler or manual regenerate). */
+  digestAt: number | null;
   user: User | null;
   lang: Lang;
   theme: Theme;
@@ -80,7 +82,7 @@ export interface Actions {
 export type Store = PersistedSlice & UiSlice & Actions;
 
 const initialPersisted: PersistedSlice = {
-  tasks: [], projects: [], projFiles: {}, digestText: null, user: null, lang: 'en', theme: 'light', showDone: true, token: null,
+  tasks: [], projects: [], projFiles: {}, digestText: null, digestAt: null, user: null, lang: 'en', theme: 'light', showDone: true, token: null,
 };
 
 const initialUi: UiSlice = {
@@ -217,7 +219,7 @@ export const useStore = create<Store>()(
           });
         },
         setAuth: (token, user) => set({ token, user, profOpen: false }),
-        signOut: () => set(s => ({ user: null, profOpen: false, sel: null, token: null, ...(s.token ? { tasks: [], projects: [], projFiles: {}, digestText: null } : {}) })),
+        signOut: () => set(s => ({ user: null, profOpen: false, sel: null, token: null, ...(s.token ? { tasks: [], projects: [], projFiles: {}, digestText: null, digestAt: null } : {}) })),
         toast,
         openSnooze: id => set({ zTask: id, zMonth: 0 }),
         closeSnooze: () => set({ zTask: null }),
@@ -230,7 +232,7 @@ export const useStore = create<Store>()(
       storage: createJSONStorage(() => safeStorage()),
       partialize: s => ({
         tasks: s.tasks, projects: s.projects, projFiles: s.projFiles, digestText: s.digestText,
-        user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token,
+        digestAt: s.digestAt, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token,
       }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<PersistedSlice>;

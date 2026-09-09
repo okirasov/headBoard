@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ScrollView, View } from 'react-native';
+import { AppState, ScrollView, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts, GolosText_400Regular, GolosText_500Medium, GolosText_600SemiBold } from '@expo-google-fonts/golos-text';
@@ -7,7 +7,7 @@ import { IBMPlexMono_400Regular, IBMPlexMono_500Medium, IBMPlexMono_600SemiBold 
 import * as SplashScreen from 'expo-splash-screen';
 import { digestStats, phrases, todayLabel } from '@headboard/core';
 import { useStore } from './src/store/useStore';
-import { startSync } from './src/store/sync';
+import { startSync, refreshSettings } from './src/store/sync';
 import { devOrMockSignIn } from './src/lib/auth';
 import { ThemeProvider, useTheme } from './src/theme/ThemeContext';
 import { useT } from './src/lib/useT';
@@ -62,6 +62,10 @@ function useDevAutologin() {
 function Root() {
   useDevAutologin();
   useEffect(() => { void startSync(); }, []);
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', st => { if (st === 'active') void refreshSettings(); });
+    return () => sub.remove();
+  }, []);
   const { t, theme } = useTheme();
   const { T, lang } = useT();
   const now = useNow();

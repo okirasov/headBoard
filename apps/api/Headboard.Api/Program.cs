@@ -56,6 +56,9 @@ builder.Services.AddSingleton<AppleVerifier>();
 builder.Services.AddSingleton<LocalStorage>();
 builder.Services.AddHttpClient<AnthropicClient>(AnthropicClient.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(60));
 builder.Services.AddHttpClient(GoogleVerifier.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(15));
+builder.Services.AddScoped<Headboard.Api.Digest.DigestService>();
+builder.Services.AddSingleton<Headboard.Api.Digest.DigestScheduler>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<Headboard.Api.Digest.DigestScheduler>());
 
 if (builder.Environment.IsDevelopment())
 {

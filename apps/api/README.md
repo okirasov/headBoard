@@ -31,6 +31,10 @@ CORS allows `http://localhost:5173` (web) and `http://localhost:8081` (Expo) in 
 
 Google Cloud console: create one OAuth client per platform (Web application with `http://localhost:5173` as authorized origin; iOS with bundle id `com.headboard.app`; Android with package `com.headboard.app` and the signing certificate SHA-1). Apple Developer portal: enable Sign in with Apple on the App ID, create a Services ID for the web with an https return URL (Apple does not accept `localhost`).
 
+## Morning digest
+
+`DigestScheduler` wakes every `Digest:CheckIntervalSeconds`, and for each user whose local clock (IANA `timeZone` from `PUT /settings`, UTC when unknown) has passed `Digest:Hour` without a digest that day, `DigestService` computes the same statistics as core `digestStats` (due today, forgotten ≥ 7 idle days, closed this week, in focus, recurring), asks Anthropic with the shared prompt, or falls back to the canned texts (`cannedDigest` port), and stores the result in `Settings.DigestText` with `Settings.DigestAt`. A manual regeneration from a client also updates `DigestAt`, so the scheduler does not overwrite it the same day. Clients pick the new text up with `GET /settings` when they come to the foreground.
+
 ## Tests
 
 ```bash
@@ -61,6 +65,9 @@ Keys can be set in `appsettings*.json`, environment variables (`Jwt__Secret`, ..
 | `ConnectionStrings:Sqlite` | `Data Source=headboard.db` | Used when no Postgres connection string is set. |
 | `ConnectionStrings:Postgres` | — | When present the app uses Npgsql instead of SQLite. |
 | `Storage:Root` | `./storage` | Uploaded files land in `{Storage:Root}/{userId}/{fileId}`. |
+| `Digest:Enabled` | `true` | Runs the morning digest scheduler (`DigestScheduler`, a hosted service). |
+| `Digest:Hour` | `8` | Local hour (per user's `timeZone`) after which today's digest is generated. |
+| `Digest:CheckIntervalSeconds` | `60` | How often the scheduler looks for due users. |
 
 ### Database schema
 

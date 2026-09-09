@@ -4,7 +4,7 @@ import type { Api } from './api';
 
 const now = Date.now();
 function fakeStore(init: Partial<SyncState>) {
-  let state: SyncState = { token: 'tok', tasks: [], projects: [], projFiles: {}, lang: 'en', theme: 'light', showDone: true, digestText: null, ...init };
+  let state: SyncState = { token: 'tok', tasks: [], projects: [], projFiles: {}, lang: 'en', theme: 'light', showDone: true, digestText: null, digestAt: null, ...init };
   const subs = new Set<(s: SyncState) => void>();
   return {
     getState: () => state,
@@ -12,7 +12,7 @@ function fakeStore(init: Partial<SyncState>) {
     subscribe: (f: (s: SyncState) => void) => { subs.add(f); return () => subs.delete(f); },
   };
 }
-function fakeApi(server: { tasks: any[]; projects: any[] }) {
+function fakeApi(server: { tasks: any[]; projects: any[]; settings?: any }) {
   const calls: string[] = [];
   const api = {
     tasks: {
@@ -23,7 +23,7 @@ function fakeApi(server: { tasks: any[]; projects: any[] }) {
       list: async () => server.projects, create: async (p: any) => { calls.push('POST project ' + p.id); return p; },
       patch: async (id: string) => { calls.push('PATCH project ' + id); return {}; }, remove: async () => undefined,
     },
-    settings: { get: async () => ({ lang: 'ru', theme: 'dark', showDone: false, digestText: 'd' }), put: async (s: any) => { calls.push('PUT settings ' + s.lang); return s; } },
+    settings: { get: async () => server.settings ?? ({ lang: 'ru', theme: 'dark', showDone: false, digestText: 'd', digestAt: 100 }), put: async (s: any) => { calls.push('PUT settings ' + s.lang + (s.timeZone ? ' ' + s.timeZone : '')); return server.settings ? { ...server.settings, ...s, digestText: server.settings.digestText, digestAt: server.settings.digestAt } : s; } },
     files: { upload: async () => ({ id: 'srv1', name: 'a.png', kind: 'img', src: '/files/srv1/content' }) },
   } as unknown as Api;
   return { api, calls };
@@ -42,6 +42,29 @@ describe('sync engine', () => {
     expect(s.projFiles.p[0].src).toBe('http://api/files/f/content');
     expect(s.lang).toBe('ru');
     expect(s.theme).toBe('dark');
+    expect(s.digestAt).toBe(100);
+  });
+
+  it('sends the time zone with settings and adopts a newer scheduled digest on refresh', async () => {
+    const st = fakeStore({ digestText: 'old', digestAt: 100 });
+    const server = { tasks: [], projects: [], settings: { lang: 'en', theme: 'light', showDone: true, digestText: 'old', digestAt: 100 } as any };
+    const { api, calls } = fakeApi(server);
+    const eng = createSyncEngine({ api, ...st, fileToPart: async () => null, onUnauthorized: () => undefined, onError: () => undefined, baseUrl: '', timeZone: 'Europe/Belgrade' });
+    await eng.start();
+    st.setState({ showDone: false });
+    await new Promise(r => setTimeout(r, 600));
+    expect(calls).toContain('PUT settings en Europe/Belgrade');
+    // server already holds a newer scheduled digest: the PUT response brings it back
+    server.settings = { ...server.settings, digestText: 'scheduled', digestAt: 150 };
+    st.setState({ lang: 'ru' });
+    await new Promise(r => setTimeout(r, 600));
+    expect(st.getState().digestText).toBe('scheduled');
+    expect(st.getState().digestAt).toBe(150);
+    server.settings = { ...server.settings, digestText: 'fresh morning digest', digestAt: 200 };
+    await eng.refreshSettings();
+    expect(st.getState().digestText).toBe('fresh morning digest');
+    expect(st.getState().digestAt).toBe(200);
+    eng.stop();
   });
 
   it('pushes local projects then tasks when the server is empty, and diffs later changes', async () => {

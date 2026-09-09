@@ -40,6 +40,7 @@ public class ApiFactory : WebApplicationFactory<Program>
             ["Anthropic:ApiKey"] = AnthropicApiKey,
             ["Auth:GoogleWebClientId"] = GoogleWebClientId,
             ["Auth:GoogleClientSecret"] = GoogleClientSecret,
+            ["Digest:Enabled"] = "false",
         }));
         if (AnthropicHandler is not null)
             builder.ConfigureTestServices(s => TestAnthropic.Register(s, AnthropicHandler));

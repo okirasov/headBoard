@@ -11,6 +11,8 @@ export interface SyncState {
   theme: Theme;
   showDone: boolean;
   digestText: string | null;
+  /** Server-owned timestamp of the last digest change. */
+  digestAt: number | null;
 }
 
 export interface SyncAdapter {
@@ -26,6 +28,8 @@ export interface SyncAdapter {
   onError: (message: string) => void;
   /** Absolute base URL for relative `src` values returned by the API. */
   baseUrl: string;
+  /** IANA time zone reported to the server so the 08:00 digest lands in the user's morning. */
+  timeZone?: string;
 }
 
 export interface SyncEngine {
@@ -33,11 +37,13 @@ export interface SyncEngine {
   start: () => Promise<void>;
   /** Push any local changes now (normally driven by `subscribe`). */
   flush: () => Promise<void>;
+  /** Re-read settings from the server and adopt a newer digest (call on focus / app foreground). */
+  refreshSettings: () => Promise<void>;
   stop: () => void;
 }
 
-function settingsOf(s: SyncState) {
-  return { lang: s.lang, theme: s.theme, showDone: s.showDone, digestText: s.digestText };
+function settingsOf(s: SyncState, timeZone?: string) {
+  return { lang: s.lang, theme: s.theme, showDone: s.showDone, digestText: s.digestText, timeZone: timeZone ?? null };
 }
 
 /**
@@ -118,11 +124,21 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
     }
     for (const id of Array.from(taskSnap.keys())) if (!seen.has(id)) { taskSnap.delete(id); await enqueue(() => api.tasks.remove(id).catch(() => undefined)); }
 
-    const sk = JSON.stringify(settingsOf(s));
+    const sk = JSON.stringify(settingsOf(s, a.timeZone));
     if (sk !== settingsKey) {
       settingsKey = sk;
       clearTimeout(settingsTimer);
-      settingsTimer = setTimeout(() => enqueue(() => api.settings.put(settingsOf(a.getState())).catch(() => { settingsKey = ''; scheduleRetry(); })), 500);
+      settingsTimer = setTimeout(() => enqueue(async () => {
+        try {
+          const saved = await api.settings.put(settingsOf(a.getState(), a.timeZone));
+          // The server owns the digest: adopt its text and timestamp when they differ (e.g. the 08:00 scheduler ran).
+          const cur = a.getState();
+          if (saved.digestAt !== undefined && saved.digestAt !== cur.digestAt) {
+            a.setState({ digestAt: saved.digestAt ?? null, digestText: saved.digestText ?? cur.digestText });
+            settingsKey = JSON.stringify(settingsOf(a.getState(), a.timeZone));
+          }
+        } catch { settingsKey = ''; scheduleRetry(); }
+      }), 500);
     }
   }
 
@@ -138,8 +154,8 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
         taskSnap = new Map(fixed.map(t => [t.id, JSON.stringify(t)]));
         const projFiles: Record<string, FileRef[]> = {};
         for (const p of projects) if (p.files?.length) projFiles[p.id] = p.files.map(f => ({ ...f, src: f.src ? absolute(f.src) : undefined }));
-        a.setState({ tasks: fixed, projects: plain, projFiles, lang: settings.lang, theme: settings.theme, showDone: settings.showDone, digestText: settings.digestText });
-        settingsKey = JSON.stringify(settingsOf(a.getState()));
+        a.setState({ tasks: fixed, projects: plain, projFiles, lang: settings.lang, theme: settings.theme, showDone: settings.showDone, digestText: settings.digestText, digestAt: settings.digestAt ?? null });
+        settingsKey = JSON.stringify(settingsOf(a.getState(), a.timeZone));
       } else {
         taskSnap = new Map();
         await flush();
@@ -151,9 +167,23 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
     if (!unsub) unsub = a.subscribe(() => { void flush(); });
   }
 
+  async function refreshSettings(): Promise<void> {
+    const s = a.getState();
+    if (!s.token) return;
+    try {
+      const srv = await api.settings.get();
+      const at = srv.digestAt ?? null;
+      if (at !== null && at !== s.digestAt) {
+        a.setState({ digestText: srv.digestText, digestAt: at });
+        settingsKey = JSON.stringify(settingsOf(a.getState(), a.timeZone));
+      }
+    } catch { /* offline: keep local */ }
+  }
+
   return {
     start: () => { if (!inflight) inflight = doStart().finally(() => { inflight = null; }); return inflight; },
     flush,
+    refreshSettings,
     stop: () => { unsub?.(); unsub = null; clearTimeout(retryTimer); clearTimeout(settingsTimer); },
   };
 }

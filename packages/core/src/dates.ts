@@ -40,6 +40,17 @@ export function monthLabel(now: number, offset: number, lang: Lang): string {
   return T.MONF[m.getMonth()] + ' ' + m.getFullYear();
 }
 
+/** "08:00" in the local zone. */
+export function fmtTime(ts: number): string {
+  const d = new Date(ts);
+  return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+}
+
+/** Digest freshness: "08:00" if today, otherwise "Sep 8, 08:00" / "8 сен, 08:00". */
+export function fmtDateTimeShort(ts: number, lang: Lang, now: number): string {
+  return startOfDay(ts) === startOfDay(now) ? fmtTime(ts) : fmtDate(ts, lang) + ', ' + fmtTime(ts);
+}
+
 export function daysBetween(a: number, b: number): number {
   return Math.round((startOfDay(b) - startOfDay(a)) / DAY_MS);
 }

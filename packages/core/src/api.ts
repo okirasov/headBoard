@@ -2,7 +2,13 @@ import type { CaptureItem, Comment, FileRef, Lang, Project, Task, Theme, User } 
 import type { DigestStats } from './digest';
 
 export interface AuthResponse { token: string; user: User }
-export interface Settings { lang: Lang; theme: Theme; showDone: boolean; digestText: string | null }
+export interface Settings {
+  lang: Lang; theme: Theme; showDone: boolean; digestText: string | null;
+  /** When the digest text last changed (server-owned; the 08:00 scheduler and manual regeneration both set it). */
+  digestAt?: number | null;
+  /** IANA time zone the scheduler uses for this user's 08:00. */
+  timeZone?: string | null;
+}
 export interface ProjectWithFiles extends Project { files?: FileRef[] }
 
 export class ApiError extends Error {

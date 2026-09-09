@@ -68,4 +68,8 @@ public class SettingsRow
     public string Theme { get; set; } = "light";
     public bool ShowDone { get; set; } = true;
     public string? DigestText { get; set; }
+    /// <summary>Epoch ms when DigestText last changed (scheduler or client).</summary>
+    public long? DigestAt { get; set; }
+    /// <summary>IANA time zone for the 08:00 digest.</summary>
+    public string? TimeZone { get; set; }
 }

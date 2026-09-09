@@ -4,10 +4,11 @@ using Headboard.Api.Tasks;
 
 namespace Headboard.Api.Settings;
 
-public record SettingsDto(string Lang, string Theme, bool ShowDone, string? DigestText)
+/// <summary>Wire shape of core <c>Settings</c>. <c>DigestAt</c> is server-owned; <c>TimeZone</c> is an IANA id.</summary>
+public record SettingsDto(string Lang, string Theme, bool ShowDone, string? DigestText, long? DigestAt, string? TimeZone)
 {
-    public static SettingsDto Defaults => new("en", "light", true, null);
-    public static SettingsDto From(SettingsRow r) => new(r.Lang, r.Theme, r.ShowDone, r.DigestText);
+    public static SettingsDto Defaults => new("en", "light", true, null, null, null);
+    public static SettingsDto From(SettingsRow r) => new(r.Lang, r.Theme, r.ShowDone, r.DigestText, r.DigestAt, r.TimeZone);
 }
 
 public static class SettingsEndpoints
@@ -27,12 +28,15 @@ public static class SettingsEndpoints
             var uid = CurrentUser.Id(ctx);
             if (!Wire.Langs.Contains(body.Lang)) return Results.BadRequest(new { error = "invalid_lang" });
             if (!Wire.Themes.Contains(body.Theme)) return Results.BadRequest(new { error = "invalid_theme" });
+            if (body.TimeZone is { Length: > 0 } tz && !Digest.DigestSchedule.IsValidTimeZone(tz)) return Results.BadRequest(new { error = "invalid_timeZone" });
             var row = await db.Settings.FindAsync(uid);
             if (row is null) { row = new SettingsRow { UserId = uid }; db.Settings.Add(row); }
             row.Lang = body.Lang;
             row.Theme = body.Theme;
             row.ShowDone = body.ShowDone;
-            row.DigestText = body.DigestText;
+            // null means "no change": a client that never had a digest must not erase the scheduled one.
+            if (body.DigestText is not null && body.DigestText != row.DigestText) { row.DigestText = body.DigestText; row.DigestAt = Wire.Now(); }
+            if (!string.IsNullOrWhiteSpace(body.TimeZone)) row.TimeZone = body.TimeZone;
             await db.SaveChangesAsync();
             return Results.Ok(SettingsDto.From(row));
         });
