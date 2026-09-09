@@ -60,6 +60,21 @@ describe('store', () => {
     expect(useStore.getState().tasks.find(t => t.id === 'a')).toBeUndefined();
     expect(useStore.getState().snack).toBe('Deleted');
   });
+  it('projects: add, rename, delete detaches tasks', () => {
+    const p = useStore.getState().addProject('  Writing ', '#6B7FA3')!;
+    expect(p.name).toBe('Writing');
+    useStore.getState().updateProject(p.id, { name: 'Essays', color: 'var(--acc)' });
+    expect(useStore.getState().projects[0]).toMatchObject({ name: 'Essays', color: 'var(--acc)' });
+    useStore.getState().patchTask('a', { proj: p.id });
+    useStore.setState({ fProj: p.id, projFiles: { [p.id]: [{ id: 'f', name: 'x', kind: 'file' }] } });
+    useStore.getState().deleteProject(p.id);
+    const s = useStore.getState();
+    expect(s.projects).toEqual([]);
+    expect(s.tasks.find(t => t.id === 'a')!.proj).toBeNull();
+    expect(s.fProj).toBeNull();
+    expect(s.projFiles[p.id]).toBeUndefined();
+    expect(useStore.getState().addProject('   ', '#000')).toBeNull();
+  });
   it('comments and files', () => {
     useStore.getState().addComment('a', '  hello ');
     useStore.getState().addComment('a', '   ');

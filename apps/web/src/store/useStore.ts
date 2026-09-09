@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import {
   type CaptureItem, type FileRef, type Lang, type Priority, type Project, type Provider, type Status, type Task, type Theme,
-  type User, type View, type ColumnKey, newTask, dict, statusLabel, phrases, fmtDate,
+  type User, type View, type ColumnKey, newTask, newProject, dict, statusLabel, phrases, fmtDate,
 } from '@headboard/core';
 
 export const STORAGE_KEY = 'headboard-v1';
@@ -69,6 +69,9 @@ export interface Actions {
   attachProjFiles: (projId: string, files: FileRef[]) => void;
   removeProjFile: (projId: string, fileId: string) => void;
   addTasks: (items: CaptureItem[]) => void;
+  addProject: (name: string, color: string) => Project | null;
+  updateProject: (id: string, patch: Partial<Pick<Project, 'name' | 'color'>>) => void;
+  deleteProject: (id: string) => void;
   setLang: (lang: Lang) => void;
   setTheme: (theme: Theme) => void;
   signIn: (provider: Provider, user?: Partial<User>) => void;
@@ -202,6 +205,26 @@ export const useStore = create<Store>()(
           const fresh = items.map((x, i) => newTask({ id: 'n' + now + i, title: x.title, proj: x.proj, pr: x.pr, tags: x.tags }, now));
           set(s => ({ tasks: [...fresh, ...s.tasks], capOpen: false, capText: '', capItems: null }));
           toast(phrases.addedToInbox(fresh.length, get().lang));
+        },
+        addProject: (name, color) => {
+          if (!name.trim()) return null;
+          const p = newProject(name, color);
+          set(s => ({ projects: [...s.projects, p] }));
+          toast(T().tProjectAdded);
+          return p;
+        },
+        updateProject: (id, patch) => set(s => ({ projects: s.projects.map(p => (p.id === id ? { ...p, ...patch, name: (patch.name ?? p.name).trim() || p.name } : p)) })),
+        deleteProject: id => {
+          set(s => {
+            const { [id]: _dropped, ...projFiles } = s.projFiles;
+            return {
+              projects: s.projects.filter(p => p.id !== id),
+              tasks: s.tasks.map(t => (t.proj === id ? { ...t, proj: null } : t)),
+              projFiles,
+              fProj: s.fProj === id ? null : s.fProj,
+            };
+          });
+          toast(T().tProjectDeleted);
         },
         setLang: lang => set({ lang }),
         setTheme: theme => {

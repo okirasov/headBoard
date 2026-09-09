@@ -24,6 +24,7 @@ export interface Dict {
   tDone: string; tBump: string; tSnooze: string; tArch: string; tKeep: string; tMoved: string; tReopen: string; tDoneS: string;
   showDone: string; zTomorrow: string; z3d: string; zWeek: string; zMonth: string;
   digestUpdated: string;
+  projectsTitle: string; manageProjects: string; newProject: string; projectNamePh: string; addProject: string; deleteProject: string; confirmDeleteProject: string; projectsHint: string; noProjects: string; tProjectAdded: string; tProjectDeleted: string; colorLabel: string;
   notifications: string; notifyOn: string; notifyOff: string; notifyDenied: string; notifyUnavailable: string; notifyTest: string; notifyTestSent: string; notifyHint: string;
   gcalConnect: string; gcalConnected: string; gcalSyncing: string; gcalSyncNow: string; gcalDisconnect: string; gcalError: string; gcalReauth: string; gcalUnavailable: string; gcalDenied: string; gcalHint: string; gcalSynced: string;
   archiveTitle: string; restore: string; deleteForever: string; confirmDelete: string; archiveEmpty: string; archivedOn: string; archivedBadge: string; tRestored: string; tDeleted: string;
@@ -64,6 +65,7 @@ export const EN: Dict = {
   tKeep: 'Kept — bumped to top of its column', tMoved: 'Moved to ', tReopen: 'Reopened into In focus', tDoneS: 'Done ✓',
   showDone: 'Done', zTomorrow: 'Tomorrow', z3d: '+3 days', zWeek: 'Next week', zMonth: 'Next month',
   digestUpdated: 'updated ',
+  projectsTitle: 'Projects', manageProjects: 'Manage projects', newProject: 'New project', projectNamePh: 'Project name', addProject: 'Add project', deleteProject: 'Delete', confirmDeleteProject: 'Delete? Tasks stay, without a project', projectsHint: 'Projects colour the dots on cards and filter the board. Deleting one keeps its tasks.', noProjects: 'No projects yet — add the first one below.', tProjectAdded: 'Project added', tProjectDeleted: 'Project deleted — tasks kept', colorLabel: 'Colour',
   notifications: 'Reminders', notifyOn: 'On', notifyOff: 'Off', notifyDenied: 'Notifications are blocked in the browser settings', notifyUnavailable: 'Push is not available here', notifyTest: 'Send test', notifyTestSent: 'Test notification sent', notifyHint: 'Once a day at 9:00: forgotten tasks, if any.',
   gcalConnect: 'Connect Google Calendar', gcalConnected: 'Google Calendar · two-way sync', gcalSyncing: 'syncing…', gcalSyncNow: 'Sync now', gcalDisconnect: 'Disconnect', gcalError: 'Google Calendar · sync error', gcalReauth: 'Google Calendar · reconnect needed', gcalUnavailable: 'Google Calendar · not configured', gcalDenied: 'Calendar access was not granted', gcalHint: 'Tasks with a due date appear as all-day events in a “Headboard” calendar. Moves, renames and new events sync back.', gcalSynced: 'synced ',
   archiveTitle: 'Archive', restore: 'Restore to Inbox', deleteForever: 'Delete', confirmDelete: 'Delete for good?', archiveEmpty: 'Archive is empty — nothing dropped yet.', archivedOn: 'archived ', archivedBadge: 'archived', tRestored: 'Restored to Inbox', tDeleted: 'Deleted',
@@ -107,6 +109,7 @@ export const RU: Dict = {
   tKeep: 'Оставлено — поднято наверх колонки', tMoved: 'Перемещено: ', tReopen: 'Возвращено в «В фокусе»', tDoneS: 'Готово ✓',
   showDone: 'Готово', zTomorrow: 'Завтра', z3d: '+3 дня', zWeek: 'Через неделю', zMonth: 'Через месяц',
   digestUpdated: 'обновлено ',
+  projectsTitle: 'Проекты', manageProjects: 'Настроить проекты', newProject: 'Новый проект', projectNamePh: 'Название проекта', addProject: 'Добавить проект', deleteProject: 'Удалить', confirmDeleteProject: 'Удалить? Задачи останутся без проекта', projectsHint: 'Проекты задают цвет точек на карточках и фильтр доски. Удаление проекта не трогает задачи.', noProjects: 'Проектов пока нет — добавьте первый ниже.', tProjectAdded: 'Проект добавлен', tProjectDeleted: 'Проект удалён — задачи сохранены', colorLabel: 'Цвет',
   notifications: 'Напоминания', notifyOn: 'Вкл', notifyOff: 'Выкл', notifyDenied: 'Уведомления запрещены в настройках браузера', notifyUnavailable: 'Push здесь недоступен', notifyTest: 'Тест', notifyTestSent: 'Тестовое уведомление отправлено', notifyHint: 'Раз в день в 9:00: забытые задачи, если они есть.',
   gcalConnect: 'Подключить Google Calendar', gcalConnected: 'Google Calendar · двусторонняя синхронизация', gcalSyncing: 'синхронизация…', gcalSyncNow: 'Синхронизировать', gcalDisconnect: 'Отключить', gcalError: 'Google Calendar · ошибка синхронизации', gcalReauth: 'Google Calendar · нужно переподключить', gcalUnavailable: 'Google Calendar · не настроен', gcalDenied: 'Доступ к календарю не выдан', gcalHint: 'Задачи со сроком появляются событиями на весь день в календаре «Headboard». Переносы, переименования и новые события возвращаются на доску.', gcalSynced: 'синхронизировано ',
   archiveTitle: 'Архив', restore: 'Вернуть в Инбокс', deleteForever: 'Удалить', confirmDelete: 'Удалить навсегда?', archiveEmpty: 'Архив пуст — ничего не отпущено.', archivedOn: 'в архиве с ', archivedBadge: 'в архиве', tRestored: 'Возвращено в Инбокс', tDeleted: 'Удалено',
@@ -145,6 +148,8 @@ export const phrases = {
   addN(n: number, lang: Lang) { return lang === 'ru' ? 'Добавить (' + n + ')' : 'Add ' + n + (n === 1 ? ' task' : ' tasks'); },
   openTasks(n: number, lang: Lang) { return lang === 'ru' ? 'открытых задач: ' + n : n + ' open tasks'; },
   forgottenN(n: number, lang: Lang) { return lang === 'ru' ? 'забытых: ' + n : n + ' forgotten'; },
+  projectsN(n: number, lang: Lang) { return lang === 'ru' ? 'проектов: ' + n : n + (n === 1 ? ' project' : ' projects'); },
+  tasksN(n: number, lang: Lang) { return lang === 'ru' ? 'задач: ' + n : n + (n === 1 ? ' task' : ' tasks'); },
   archivedN(n: number, lang: Lang) { return lang === 'ru' ? 'в архиве: ' + n : n + ' archived'; },
   reviewIntro(n: number, lang: Lang) { return lang === 'ru' ? 'Забытых задач: ' + n + ' — решите: оставить, отложить или в архив.' : n + ' forgotten tasks — give each a verdict: keep, snooze, or drop.'; },
 };

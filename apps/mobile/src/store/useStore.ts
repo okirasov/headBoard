@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Appearance } from 'react-native';
 import {
   type CaptureItem, type ColumnKey, type FileRef, type Lang, type Priority, type Project, type Provider, type Task, type Theme,
-  type User, type View, newTask, dict, statusLabel, phrases, fmtDate, sizeHuman,
+  type User, type View, newTask, newProject, dict, statusLabel, phrases, fmtDate, sizeHuman,
 } from '@headboard/core';
 
 export const STORAGE_KEY = 'headboard-v1';
@@ -40,6 +40,9 @@ export interface Actions {
   attachFiles: (id: string, files: FileRef[]) => void;
   removeFile: (id: string, fileId: string) => void;
   addTasks: (items: CaptureItem[]) => void;
+  addProject: (name: string, color: string) => Project | null;
+  updateProject: (id: string, patch: Partial<Pick<Project, 'name' | 'color'>>) => void;
+  deleteProject: (id: string) => void;
   setLang: (lang: Lang) => void;
   setTheme: (theme: Theme) => void;
   signIn: (provider: Provider, user?: Partial<User>) => void;
@@ -107,6 +110,21 @@ export const useStore = create<Store>()(
           const fresh = items.map((x, i) => newTask({ id: 'n' + now + i, title: x.title, proj: x.proj, pr: x.pr, tags: x.tags }, now));
           set(s => ({ tasks: [...fresh, ...s.tasks], mCapOpen: false, capText: '', capItems: null }));
           toast(phrases.addedToInbox(fresh.length, get().lang));
+        },
+        addProject: (name, color) => {
+          if (!name.trim()) return null;
+          const p = newProject(name, color);
+          set(s => ({ projects: [...s.projects, p] }));
+          toast(T().tProjectAdded);
+          return p;
+        },
+        updateProject: (id, patch) => set(s => ({ projects: s.projects.map(p => (p.id === id ? { ...p, ...patch, name: (patch.name ?? p.name).trim() || p.name } : p)) })),
+        deleteProject: id => {
+          set(s => {
+            const { [id]: _dropped, ...projFiles } = s.projFiles;
+            return { projects: s.projects.filter(p => p.id !== id), tasks: s.tasks.map(t => (t.proj === id ? { ...t, proj: null } : t)), projFiles };
+          });
+          toast(T().tProjectDeleted);
         },
         setLang: lang => set({ lang }),
         setTheme: theme => set({ theme }),

@@ -8,7 +8,7 @@ import { useT } from '../lib/useT';
 import { kicker, txt } from '../theme/type';
 import { Sheet } from '../components/Sheet';
 import { Segmented } from '../components/ui';
-import { IcArchive, IcChevronRightSm } from '../components/Icons';
+import { IcArchive, IcChevronRightSm, IcFolder } from '../components/Icons';
 import { archived } from '@headboard/core';
 
 export function ProfileSheet() {
@@ -22,6 +22,7 @@ export function ProfileSheet() {
   const setTheme = useStore(s => s.setTheme);
   const signOut = useStore(s => s.signOut);
   const archivedN = useStore(s => archived(s.tasks).length);
+  const projectsN = useStore(s => s.projects.length);
   const notifyStale = useStore(s => s.notifyStale);
   const toast = useStore(s => s.toast);
   const [push, setPush] = useState<PushState>('off');
@@ -63,6 +64,12 @@ export function ProfileSheet() {
           <Text style={[txt(9.5, { mono: true, color: t.mut2 }), { marginTop: 5 }]}>{T.notifyHint}</Text>
         </View>
       )}
+      <Pressable onPress={() => set({ mProfOpen: false, mView: 'projects' })} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 13, paddingHorizontal: 14, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.card }}>
+        <IcFolder size={15} color={t.mut} />
+        <Text style={[txt(13.5, { w: 600, color: t.ink }), { flex: 1 }]}>{T.projectsTitle}</Text>
+        <Text style={txt(10.5, { mono: true, color: t.mut2 })}>{projectsN}</Text>
+        <IcChevronRightSm size={12} color={t.mut2} />
+      </Pressable>
       <Pressable onPress={() => set({ mProfOpen: false, mView: 'archive' })} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 13, paddingHorizontal: 14, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.card }}>
         <IcArchive size={15} color={t.mut} />
         <Text style={[txt(13.5, { w: 600, color: t.ink }), { flex: 1 }]}>{T.archiveTitle}</Text>
