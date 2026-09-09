@@ -1,0 +1,89 @@
+README.md
+  s_2372cb08d633fa::t_0fd5cd807813f6 25
+apps/api/Headboard.Api.Tests/ApiFactory.cs
+  s_2372cb08d633fa::t_e89815781380ce 10,28-30,51-53,57-63,87-94
+apps/api/Headboard.Api.Tests/PushTests.cs
+  s_2372cb08d633fa::t_10ee31167fa32e 1-118
+apps/api/Headboard.Api.Tests/TasksTests.cs
+  s_2372cb08d633fa::t_89f7385efc9c14 170
+apps/api/Headboard.Api/Data/AppDb.cs
+  s_2372cb08d633fa::t_8862dd5677a0e7 14,19
+apps/api/Headboard.Api/Data/Entities.cs
+  s_2372cb08d633fa::t_32c9148568bd27 78-80,98-114
+apps/api/Headboard.Api/Data/Migrations/20260909192557_PushSubscriptions.Designer.cs
+  s_2372cb08d633fa::t_88ecf6cf906f0b 1-345
+apps/api/Headboard.Api/Data/Migrations/20260909192557_PushSubscriptions.cs
+  s_2372cb08d633fa::t_1c021e9303b3e7 1-74
+apps/api/Headboard.Api/Data/Migrations/AppDbModelSnapshot.cs
+  s_2372cb08d633fa::t_eaf713cc69f4ef 153-196,213-218
+apps/api/Headboard.Api/Headboard.Api.csproj
+  s_2372cb08d633fa::t_b33be9b29373ca 20
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_f844cfaf2a9c96 6,68-74,113
+apps/api/Headboard.Api/Push/PushEndpoints.cs
+  s_2372cb08d633fa::t_79c938a1ff76f8 1-75
+apps/api/Headboard.Api/Push/PushSender.cs
+  s_2372cb08d633fa::t_020b83a19c3394 1-80
+apps/api/Headboard.Api/Push/StaleMessage.cs
+  s_2372cb08d633fa::t_2a9f68bb40c95e 1-21
+apps/api/Headboard.Api/Push/StaleNotifier.cs
+  s_2372cb08d633fa::t_474a6a52522298 1-77
+apps/api/Headboard.Api/Settings/SettingsEndpoints.cs
+  s_2372cb08d633fa::t_87d7a01a91a28c 8,10-11,40
+apps/api/Headboard.Api/appsettings.json
+  s_2372cb08d633fa::t_6fb41e209d5c1f 41-50
+apps/api/README.md
+  s_2372cb08d633fa::t_1d1f40d43c3f2e 47-50,88-92
+apps/mobile/App.tsx
+  s_2372cb08d633fa::t_b7ec30cb1828bb 12,70
+apps/mobile/app.json
+  s_2372cb08d633fa::t_00cd495bec0be4 32-39,41-46
+apps/mobile/package.json
+  s_2372cb08d633fa::t_77609e4e2df488 13,15,20
+apps/mobile/src/lib/push.ts
+  s_2372cb08d633fa::t_535964db9ada28 1-59
+apps/mobile/src/sheets/ProfileSheet.tsx
+  s_2372cb08d633fa::t_29b83b817c47ca 1,3-4,25-36,56-65
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_06a510c6881575 16,56,129
+apps/web/public/icon-192.svg
+  s_2372cb08d633fa::t_03e1290e4cd7d0 1
+apps/web/public/sw.js
+  s_2372cb08d633fa::t_855c799207645c 1-24
+apps/web/src/App.tsx
+  s_2372cb08d633fa::t_f0e243975ef810 5,18-28
+apps/web/src/components/layout/ProfileMenu.tsx
+  s_2372cb08d633fa::t_66fd7172f9c9d2 1,3-4,27-44,63-69
+apps/web/src/lib/push.ts
+  s_2372cb08d633fa::t_a341614a5c8a35 1-49
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_833512664cbb66 20-21,87,237
+docs/architecture.html
+  s_2372cb08d633fa::t_754ca1418a226c 203-204,282,284,365-367,433,443,466
+package-lock.json
+  s_2372cb08d633fa::t_7182ce6fbd9203 25,27,32,224-232,251,273-284,353-356,362-365,367-373,375-376,4428-4433,9398-9423
+packages/core/src/api.ts
+  s_2372cb08d633fa::t_220ee1dfe262ab 11-12,14-15,78-85
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_294be72b4da45e 27,67,110
+packages/core/src/sync.test.ts
+  s_2372cb08d633fa::t_8d97d1603cbd05 7
+packages/core/src/sync.ts
+  s_2372cb08d633fa::t_a5e2335e792a2e 16-17,50,161
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "0b5f87273c5ad14dd55064e711b4d41570ff0252",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
