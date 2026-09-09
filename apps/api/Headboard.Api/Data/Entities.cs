@@ -37,6 +37,9 @@ public class TaskRow
     public string? Chat { get; set; }
     public long? DoneAt { get; set; }
     public long? ArchivedAt { get; set; }
+    /// <summary>Google Calendar event id when the task is mirrored, and the hash of what was last pushed.</summary>
+    public string? CalendarEventId { get; set; }
+    public string? CalendarHash { get; set; }
 }
 
 public class CommentRow
@@ -72,4 +75,20 @@ public class SettingsRow
     public long? DigestAt { get; set; }
     /// <summary>IANA time zone for the 08:00 digest.</summary>
     public string? TimeZone { get; set; }
+}
+
+/// <summary>Per-user Google Calendar connection: offline refresh token, the dedicated calendar and the incremental sync cursor.</summary>
+public class CalendarLinkRow
+{
+    public Guid UserId { get; set; }
+    public string RefreshToken { get; set; } = "";
+    public string? AccessToken { get; set; }
+    public long? AccessTokenExpiresAt { get; set; }
+    public string? CalendarId { get; set; }
+    public string? SyncToken { get; set; }
+    public long? LastSyncAt { get; set; }
+    public string? LastError { get; set; }
+    public long ConnectedAt { get; set; }
+    /// <summary>JSON array of event ids whose tasks were deleted; removed from the calendar on the next pass.</summary>
+    public string PendingDeletesJson { get; set; } = "[]";
 }

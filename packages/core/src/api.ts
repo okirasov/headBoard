@@ -10,6 +10,7 @@ export interface Settings {
   timeZone?: string | null;
 }
 export interface ProjectWithFiles extends Project { files?: FileRef[] }
+export interface CalendarStatus { available: boolean; connected: boolean; calendarId: string | null; lastSyncAt: number | null; lastError: string | null; connectedAt: number | null }
 
 export class ApiError extends Error {
   constructor(public status: number, public code: string, message?: string) {
@@ -69,6 +70,13 @@ export function createApi(baseUrl: string, getToken: () => string | null) {
       },
       contentUrl: (id: string) => base + '/files/' + encodeURIComponent(id) + '/content',
       remove: (id: string) => req<void>('DELETE', '/files/' + encodeURIComponent(id)),
+    },
+    calendar: {
+      status: () => req<CalendarStatus>('GET', '/calendar'),
+      /** Returns the Google consent URL; the browser/system browser is sent there and comes back to `returnUrl?calendar=connected|denied|error`. */
+      connect: (returnUrl: string) => req<{ url: string }>('POST', '/calendar/connect', { returnUrl }),
+      syncNow: () => req<CalendarStatus>('POST', '/calendar/sync'),
+      disconnect: () => req<void>('DELETE', '/calendar'),
     },
     settings: {
       get: () => req<Settings>('GET', '/settings'),

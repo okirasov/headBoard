@@ -22,6 +22,8 @@ public class ApiFactory : WebApplicationFactory<Program>
     public string AnthropicApiKey { get; init; } = "";
     /// <summary>When set, the Google OAuth HttpClient (code exchange) uses this handler instead of the network.</summary>
     public HttpMessageHandler? GoogleHandler { get; init; }
+    /// <summary>When set, the Google Calendar HttpClient uses this handler (fake OAuth + Calendar v3).</summary>
+    public HttpMessageHandler? GoogleCalendarHandler { get; init; }
     public string GoogleWebClientId { get; init; } = "";
     public string GoogleClientSecret { get; init; } = "";
 
@@ -41,9 +43,12 @@ public class ApiFactory : WebApplicationFactory<Program>
             ["Auth:GoogleWebClientId"] = GoogleWebClientId,
             ["Auth:GoogleClientSecret"] = GoogleClientSecret,
             ["Digest:Enabled"] = "false",
+            ["Calendar:Enabled"] = "false",
         }));
         if (AnthropicHandler is not null)
             builder.ConfigureTestServices(s => TestAnthropic.Register(s, AnthropicHandler));
+        if (GoogleCalendarHandler is not null)
+            builder.ConfigureTestServices(s => s.AddHttpClient(Headboard.Api.Calendar.GoogleCalendarClient.HttpClientName).ConfigurePrimaryHttpMessageHandler(() => GoogleCalendarHandler));
         if (GoogleHandler is not null)
             builder.ConfigureTestServices(s => s.AddHttpClient(GoogleVerifier.HttpClientName).ConfigurePrimaryHttpMessageHandler(() => GoogleHandler));
     }

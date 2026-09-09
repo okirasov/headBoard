@@ -3,6 +3,7 @@ import { useStore } from '../../store/useStore';
 import { useT } from '../../lib/useT';
 import { useNow } from '../../lib/useNow';
 import { Dot, Empty } from '../../components/ui/primitives';
+import { CalendarSyncChip } from './CalendarSyncChip';
 import { cx } from '../../lib/cx';
 
 const TONE = { hi: 'text-hi', acc: 'text-acc', mut2: 'text-mut2' } as const;
@@ -39,7 +40,7 @@ export function CalendarView() {
     <div className="min-h-0 flex-1 overflow-y-auto px-24 pb-24 pt-18">
       <div className="flex items-baseline gap-14">
         <h1 className="m-0 font-sans text-26 font-medium leading-[1.2] tracking-tight">{T.calendar}</h1>
-        <div className="flex items-center gap-6 rounded-7 border border-okBd bg-okBg px-10 py-3 font-mono text-10.5 text-ok"><Dot color="var(--ok)" size={6} />{T.gcal}</div>
+        <CalendarSyncChip />
       </div>
       <div className="mt-16 flex items-start gap-20">
         <div className="shrink-0 rounded-16 border border-line bg-card p-20">

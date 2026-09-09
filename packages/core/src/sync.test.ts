@@ -96,6 +96,27 @@ describe('sync engine', () => {
     eng.stop();
   });
 
+  it('refreshTasks adopts newer or unknown server tasks and keeps local-newer ones', async () => {
+    const mine = newTask({ id: 'a', title: 'Local newer', touched: 500 }, now);
+    const stale = newTask({ id: 'b', title: 'Old local', touched: 100 }, now);
+    const st = fakeStore({ tasks: [mine, stale] });
+    const server = { tasks: [] as any[], projects: [] };
+    const { api } = fakeApi(server);
+    const eng = createSyncEngine({ api, ...st, fileToPart: async () => null, onUnauthorized: () => undefined, onError: () => undefined, baseUrl: '' });
+    await eng.start();
+    server.tasks = [
+      { ...mine, title: 'Server older', touched: 400 },
+      { ...stale, title: 'Moved in calendar', touched: 900, due: 123 },
+      newTask({ id: 'g1', title: 'Created in Google Calendar', due: 456 }, now),
+    ];
+    await eng.refreshTasks();
+    const tasks = st.getState().tasks;
+    expect(tasks.find(t => t.id === 'a')!.title).toBe('Local newer');
+    expect(tasks.find(t => t.id === 'b')!.title).toBe('Moved in calendar');
+    expect(tasks.find(t => t.id === 'g1')).toBeTruthy();
+    eng.stop();
+  });
+
   it('signs out on 401', async () => {
     const st = fakeStore({});
     const out: string[] = [];

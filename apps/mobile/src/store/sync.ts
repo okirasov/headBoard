@@ -33,7 +33,13 @@ export async function startSync(): Promise<void> {
   await getEngine()?.start();
 }
 
-/** Pull a newer scheduled digest; called when the app returns to the foreground. */
+/** Pull a newer scheduled digest and server-side task changes (calendar sync); called when the app returns to the foreground. */
 export async function refreshSettings(): Promise<void> {
-  await getEngine()?.refreshSettings();
+  const e = getEngine();
+  if (!e) return;
+  await Promise.all([e.refreshSettings(), e.refreshTasks()]);
+}
+
+export async function refreshTasks(): Promise<void> {
+  await getEngine()?.refreshTasks();
 }

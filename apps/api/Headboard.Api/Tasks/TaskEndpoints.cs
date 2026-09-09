@@ -2,6 +2,7 @@ using System.Text.Json;
 using Headboard.Api.Auth;
 using Headboard.Api.Data;
 using Headboard.Api.Files;
+using Headboard.Api.Calendar;
 using Microsoft.EntityFrameworkCore;
 
 namespace Headboard.Api.Tasks;
@@ -33,7 +34,7 @@ public static class TaskEndpoints
             return t is null ? Results.NotFound() : Results.Ok(await Load(db, t));
         });
 
-        g.MapPost("/", async (TaskDto body, HttpContext ctx, AppDb db) =>
+        g.MapPost("/", async (TaskDto body, HttpContext ctx, AppDb db, CalendarSyncScheduler calendar) =>
         {
             var uid = CurrentUser.Id(ctx);
             if (TaskMapper.Validate(body) is { } err) return Results.BadRequest(new { error = err });
@@ -55,10 +56,11 @@ public static class TaskEndpoints
             }
             await LinkFiles(db, uid, row.Id, body.Files);
             await db.SaveChangesAsync();
+            if (row.Due is not null) calendar.Nudge(uid);
             return Results.Created($"/tasks/{row.Id}", await Load(db, row));
         });
 
-        g.MapPatch("/{id}", async (string id, JsonElement body, HttpContext ctx, AppDb db) =>
+        g.MapPatch("/{id}", async (string id, JsonElement body, HttpContext ctx, AppDb db, CalendarSyncScheduler calendar) =>
         {
             var uid = CurrentUser.Id(ctx);
             var t = await db.Tasks.SingleOrDefaultAsync(x => x.Id == id && x.UserId == uid);
@@ -87,10 +89,11 @@ public static class TaskEndpoints
                 await LinkFiles(db, uid, t.Id, files.Deserialize<List<FileRefDto>>(JsonSerializerOptions.Web));
 
             await db.SaveChangesAsync();
+            if (t.Due is not null || t.CalendarEventId is not null) calendar.Nudge(uid);
             return Results.Ok(await Load(db, t));
         });
 
-        g.MapDelete("/{id}", async (string id, HttpContext ctx, AppDb db, LocalStorage storage) =>
+        g.MapDelete("/{id}", async (string id, HttpContext ctx, AppDb db, LocalStorage storage, CalendarSyncScheduler calendar) =>
         {
             var uid = CurrentUser.Id(ctx);
             var t = await db.Tasks.SingleOrDefaultAsync(x => x.Id == id && x.UserId == uid);
@@ -99,8 +102,16 @@ public static class TaskEndpoints
             foreach (var f in files) storage.Delete(f.StoragePath);
             db.Files.RemoveRange(files);
             db.Comments.RemoveRange(db.Comments.Where(c => c.TaskId == id && c.UserId == uid));
+            var hadEvent = t.CalendarEventId is not null;
+            if (hadEvent && await db.CalendarLinks.FindAsync(uid) is { } link)
+            {
+                var pending = TaskMapper.ParseTags(link.PendingDeletesJson);
+                pending.Add(t.CalendarEventId!);
+                link.PendingDeletesJson = TaskMapper.TagsJson(pending);
+            }
             db.Tasks.Remove(t);
             await db.SaveChangesAsync();
+            if (hadEvent) calendar.Nudge(uid); // the orphaned event is removed on the next pass
             return Results.NoContent();
         });
 

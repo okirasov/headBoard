@@ -35,6 +35,15 @@ Google Cloud console: create one OAuth client per platform (Web application with
 
 `DigestScheduler` wakes every `Digest:CheckIntervalSeconds`, and for each user whose local clock (IANA `timeZone` from `PUT /settings`, UTC when unknown) has passed `Digest:Hour` without a digest that day, `DigestService` computes the same statistics as core `digestStats` (due today, forgotten ≥ 7 idle days, closed this week, in focus, recurring), asks Anthropic with the shared prompt, or falls back to the canned texts (`cannedDigest` port), and stores the result in `Settings.DigestText` with `Settings.DigestAt`. A manual regeneration from a client also updates `DigestAt`, so the scheduler does not overwrite it the same day. Clients pick the new text up with `GET /settings` when they come to the foreground.
 
+## Google Calendar sync
+
+Uses the same Google web client as sign-in (`Auth:GoogleWebClientId` + `Auth:GoogleClientSecret`) with the `https://www.googleapis.com/auth/calendar` scope and offline access; enable the Google Calendar API in the Cloud project and register `Calendar:RedirectUri`.
+
+- `POST /calendar/connect {returnUrl}` → `{url}` consent screen; `GET /calendar/oauth/callback` stores the refresh token in `CalendarLinks` and redirects to `returnUrl?calendar=connected|denied|error`. `GET /calendar` status, `POST /calendar/sync` reconcile now, `DELETE /calendar` disconnect (revokes the token, events stay).
+- A dedicated calendar named **Headboard** is created on first sync. Every task with a due date that is not done/archived is an all-day event tagged with `extendedProperties.private.headboardTaskId`; the pushed fingerprint is stored in `Tasks.CalendarHash` so unchanged tasks cost no calls.
+- Inbound uses incremental listing (`syncToken`, 410 → full resync): date moves and renames update the task when the event changed after the task was last touched, cancelled events clear the task's date, events created directly in the Headboard calendar become Inbox tasks (and are tagged back). Our own pushes are recognised by fingerprint and ignored.
+- Deleted tasks leave their event id in `CalendarLinks.PendingDeletesJson`; the next pass removes the event.
+
 ## Tests
 
 ```bash
@@ -68,6 +77,10 @@ Keys can be set in `appsettings*.json`, environment variables (`Jwt__Secret`, ..
 | `Digest:Enabled` | `true` | Runs the morning digest scheduler (`DigestScheduler`, a hosted service). |
 | `Digest:Hour` | `8` | Local hour (per user's `timeZone`) after which today's digest is generated. |
 | `Digest:CheckIntervalSeconds` | `60` | How often the scheduler looks for due users. |
+| `Calendar:Enabled` | `true` | Runs the Google Calendar reconciliation loop (`CalendarSyncScheduler`). |
+| `Calendar:PollIntervalSeconds` | `300` | Full pass over connected users; task mutations and "sync now" trigger immediate passes. |
+| `Calendar:RedirectUri` | `{host}/calendar/oauth/callback` | Must be registered as an authorized redirect URI of the Google web client. |
+| `Calendar:AllowedReturnUrls` | localhost web/Expo, `headboard://` | Prefixes the OAuth flow may redirect back to. |
 
 ### Database schema
 

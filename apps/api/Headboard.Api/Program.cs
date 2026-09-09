@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Headboard.Api.Ai;
 using Headboard.Api.Auth;
+using Headboard.Api.Calendar;
 using Headboard.Api.Comments;
 using Headboard.Api.Files;
 using Headboard.Api.Projects;
@@ -57,6 +58,12 @@ builder.Services.AddSingleton<LocalStorage>();
 builder.Services.AddHttpClient<AnthropicClient>(AnthropicClient.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(60));
 builder.Services.AddHttpClient(GoogleVerifier.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(15));
 builder.Services.AddScoped<Headboard.Api.Digest.DigestService>();
+builder.Services.AddHttpClient(Headboard.Api.Calendar.GoogleCalendarClient.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(30));
+builder.Services.AddSingleton<Headboard.Api.Calendar.GoogleCalendarClient>();
+builder.Services.AddSingleton<Headboard.Api.Calendar.CalendarState>();
+builder.Services.AddScoped<Headboard.Api.Calendar.CalendarSyncService>();
+builder.Services.AddSingleton<Headboard.Api.Calendar.CalendarSyncScheduler>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<Headboard.Api.Calendar.CalendarSyncScheduler>());
 builder.Services.AddSingleton<Headboard.Api.Digest.DigestScheduler>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<Headboard.Api.Digest.DigestScheduler>());
 
@@ -94,6 +101,7 @@ app.MapProjects();
 app.MapSettings();
 app.MapFiles();
 app.MapAi();
+app.MapCalendar();
 
 app.Run();
 

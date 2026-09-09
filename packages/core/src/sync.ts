@@ -39,6 +39,8 @@ export interface SyncEngine {
   flush: () => Promise<void>;
   /** Re-read settings from the server and adopt a newer digest (call on focus / app foreground). */
   refreshSettings: () => Promise<void>;
+  /** Pull tasks changed on the server (calendar sync, other devices) and merge the newer ones into the store. */
+  refreshTasks: () => Promise<void>;
   stop: () => void;
 }
 
@@ -180,10 +182,32 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
     } catch { /* offline: keep local */ }
   }
 
+  /** Server tasks newer than local (by `touched`) or unknown locally are adopted; local-only tasks are left for flush. */
+  async function refreshTasks(): Promise<void> {
+    const s = a.getState();
+    if (!s.token) return;
+    try {
+      const srv = await api.tasks.list(true);
+      const local = new Map(s.tasks.map(t => [t.id, t]));
+      const merged = [...s.tasks];
+      let changed = false;
+      for (const raw of srv) {
+        const t = { ...raw, files: raw.files.map(f => ({ ...f, src: f.src ? absolute(f.src) : undefined })) };
+        const mine = local.get(t.id);
+        const json = JSON.stringify(t);
+        if (!mine) { merged.unshift(t); taskSnap.set(t.id, json); changed = true; continue; }
+        if (JSON.stringify(mine) === json) { taskSnap.set(t.id, json); continue; }
+        if (t.touched >= mine.touched) { merged[merged.findIndex(x => x.id === t.id)] = t; taskSnap.set(t.id, json); changed = true; }
+      }
+      if (changed) a.setState({ tasks: merged });
+    } catch { /* offline: keep local */ }
+  }
+
   return {
     start: () => { if (!inflight) inflight = doStart().finally(() => { inflight = null; }); return inflight; },
     flush,
     refreshSettings,
+    refreshTasks,
     stop: () => { unsub?.(); unsub = null; clearTimeout(retryTimer); clearTimeout(settingsTimer); },
   };
 }

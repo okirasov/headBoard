@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { dict } from '@headboard/core';
 import { useStore, applyThemeClass } from './store/useStore';
 import { startSync, refreshSettings } from './store/sync';
 import { Shell } from './components/layout/Shell';
@@ -14,6 +15,18 @@ export function App() {
   const theme = useStore(s => s.theme);
   useEffect(() => applyThemeClass(theme), [theme]);
   useEffect(() => { void startSync(); }, []);
+  // Return from the Google Calendar consent screen: ?calendar=connected|denied|error
+  useEffect(() => {
+    const u = new URL(location.href);
+    const r = u.searchParams.get('calendar');
+    if (!r) return;
+    u.searchParams.delete('calendar');
+    history.replaceState(null, '', u.pathname + (u.search || '') + u.hash);
+    const s = useStore.getState();
+    const T = dict(s.lang);
+    s.set({ view: 'calendar' });
+    s.toast(r === 'connected' ? T.gcalConnected : r === 'denied' ? T.gcalDenied : T.gcalError);
+  }, []);
   useEffect(() => {
     const onVis = () => { if (document.visibilityState === 'visible') void refreshSettings(); };
     document.addEventListener('visibilitychange', onVis);

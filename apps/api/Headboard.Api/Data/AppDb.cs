@@ -10,9 +10,11 @@ public class AppDb(DbContextOptions<AppDb> options) : DbContext(options)
     public DbSet<CommentRow> Comments => Set<CommentRow>();
     public DbSet<FileRow> Files => Set<FileRow>();
     public DbSet<SettingsRow> Settings => Set<SettingsRow>();
+    public DbSet<CalendarLinkRow> CalendarLinks => Set<CalendarLinkRow>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
+        b.Entity<CalendarLinkRow>(e => e.HasKey(x => x.UserId));
         b.Entity<UserRow>(e =>
         {
             e.HasKey(x => x.Id);

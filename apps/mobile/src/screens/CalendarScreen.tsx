@@ -5,6 +5,7 @@ import { useTheme } from '../theme/ThemeContext';
 import { useT } from '../lib/useT';
 import { txt } from '../theme/type';
 import { Card, Dot, EmptyLine, SectionTitle } from '../components/ui';
+import { CalendarSyncCard } from '../components/CalendarSyncCard';
 
 function DayCell({ d, onPress }: { d: MonthDay; onPress: () => void }) {
   const { t } = useTheme();
@@ -36,6 +37,7 @@ export function CalendarScreen({ now }: { now: number }) {
   const rows = calSel ? sched.filter(x => startOfDay(x.due as number) === calSel) : sched;
   return (
     <View style={{ gap: 10 }}>
+      <CalendarSyncCard now={now} />
       <Card pad={14}>
         <Text style={[txt(15, { italic: true, color: t.ink }), { marginBottom: 9 }]}>{monthLabel(now, 0, lang)}</Text>
         <View style={{ flexDirection: 'row', gap: 3, marginBottom: 4 }}>
