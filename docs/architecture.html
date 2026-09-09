@@ -144,7 +144,7 @@
     <rect x="185" y="470" width="150" height="52" rx="10" class="box2"/><text x="197" y="492" class="t">Tasks · Comments</text><text x="197" y="510" class="s">scoped by UserId</text>
     <rect x="350" y="470" width="120" height="52" rx="10" class="box2"/><text x="362" y="492" class="t">Projects · Calendar</text><text x="362" y="510" class="s">Google Calendar sync</text>
     <rect x="485" y="470" width="120" height="52" rx="10" class="box2"/><text x="497" y="492" class="t">Files</text><text x="497" y="510" class="s">LocalStorage on disk</text>
-    <rect x="620" y="470" width="110" height="52" rx="10" class="box2"/><text x="632" y="492" class="t">Settings · Digest</text><text x="632" y="510" class="s">08:00 scheduler</text>
+    <rect x="620" y="470" width="110" height="52" rx="10" class="box2"/><text x="632" y="492" class="t">Digest · Push</text><text x="632" y="510" class="s">08:00 · 09:00 jobs</text>
     <rect x="745" y="470" width="205" height="52" rx="10" class="box2"/><text x="757" y="492" class="t">Ai → Anthropic Messages API</text><text x="757" y="510" class="s">extract · digest · 503 без ключа</text>
   </g>
 
@@ -209,7 +209,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <h2 id="state">5. Состояние клиентов</h2>
 <p>В web и mobile один стор zustand, разделённый на персистентную и UI-часть. Действия стора одинаково названы в обоих приложениях, поэтому поведение совпадает.</p>
 <div class="grid">
-  <div class="card"><h4>Персистентная часть</h4><p><code>tasks, projects, projFiles, digestText, digestAt, user, lang, theme, showDone, token</code>. Ключ <code>headboard-v1</code>: web в <code>localStorage</code>, mobile в AsyncStorage. При загрузке без сохранённой темы берётся системная.</p></div>
+  <div class="card"><h4>Персистентная часть</h4><p><code>tasks, projects, projFiles, digestText, digestAt, notifyStale, user, lang, theme, showDone, token</code>. Ключ <code>headboard-v1</code>: web в <code>localStorage</code>, mobile в AsyncStorage. При загрузке без сохранённой темы берётся системная.</p></div>
   <div class="card"><h4>UI-часть</h4><p>Открытая задача (<code>sel</code> / <code>mSel</code>), фильтры (поиск, приоритет, проект), capture, snooze-пикер, предпросмотр файла, меню профиля, drag-состояние, тост. Не сохраняется.</p></div>
   <div class="card"><h4>Действия</h4><p><code>moveTask, markDone, toggleDone, bump, keep, snooze, archive, restore, deleteTask, setPriority, addComment, attachFiles, removeFile, addTasks, setLang, setTheme, signIn, setAuth, signOut, toast</code>. Каждое обновляет <code>touched</code> там, где прототип это делал. <code>archive</code> ставит <code>archivedAt</code>, <code>restore</code> возвращает в Inbox и сбрасывает его, <code>deleteTask</code> удаляет запись насовсем.</p></div>
   <div class="card"><h4>Выборки</h4><p>Компоненты фильтруют <code>live()</code> (без архива), затем зовут <code>sortAutoBump</code> или <code>sortDone</code> из ядра с текущим <code>now</code> из хука <code>useNow</code> (обновляется раз в минуту).</p></div>
@@ -365,6 +365,34 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <h3>Push-напоминания о забытых задачах</h3>
 <p><code>StaleNotifier</code> (hosted service) раз в день после <code>Notify:Hour</code> (9) по зоне пользователя проверяет тех, у кого включён <code>Settings.NotifyStale</code>, по тому же правилу <code>DigestSchedule.IsDue</code> с маркером <code>LastStaleNotifyAt</code>. Если <code>digestStats</code> находит забытые задачи, <code>StaleMessage</code> собирает текст («Забытых задач: N», «“…” ждёт уже X дн.») с deep link <code>/?view=review</code>, а <code>PushDispatcher</code> рассылает его на все устройства из <code>PushSubscriptions</code>: браузеры через Web Push (библиотека WebPush, VAPID-ключи <code>Push:*</code>), мобильные через Expo Push API по токену <code>expo-notifications</code>. Ответы «устройство исчезло» (404/410, <code>DeviceNotRegistered</code>) и пять подряд ошибок удаляют подписку. Web: <code>public/sw.js</code> показывает уведомление и по тапу фокусирует вкладку с <code>?view=review</code>; подписка создаётся из тумблера «Напоминания» в меню профиля (<code>lib/push.ts</code>: разрешение → <code>pushManager.subscribe</code> с VAPID-ключом из <code>GET /push/config</code> → <code>POST /push/subscribe</code>). Mobile: тот же тумблер в профиль-шторке, токен через <code>getExpoPushTokenAsync</code> (нужен EAS <code>projectId</code> и development build), тап обрабатывает <code>addNotificationResponseReceivedListener</code> и переключает <code>mView</code>.</p>
 
+<figure>
+<svg viewBox="0 0 1000 250" role="img" aria-label="Схема push-напоминаний">
+  <rect x="20" y="30" width="250" height="190" rx="14" class="core"/><text x="36" y="56" class="k">StaleNotifier · 09:00 local</text>
+  <rect x="36" y="72" width="218" height="40" rx="10" class="box2"/><text x="48" y="97" class="t" font-size="12">IsDue(now, tz, LastStaleNotifyAt)</text>
+  <rect x="36" y="120" width="218" height="40" rx="10" class="box2"/><text x="48" y="145" class="t" font-size="12">digestStats → staleN &gt; 0 ?</text>
+  <rect x="36" y="168" width="218" height="40" rx="10" class="box2"/><text x="48" y="193" class="t" font-size="12">StaleMessage(lang) + /?view=review</text>
+
+  <rect x="375" y="30" width="250" height="190" rx="14" class="box"/><text x="391" y="56" class="k">PushDispatcher · PushSubscriptions</text>
+  <rect x="391" y="72" width="218" height="40" rx="10" class="box2"/><text x="403" y="97" class="t" font-size="12">webpush → WebPushSender (VAPID)</text>
+  <rect x="391" y="120" width="218" height="40" rx="10" class="box2"/><text x="403" y="145" class="t" font-size="12">expo → ExpoPushSender (exp.host)</text>
+  <rect x="391" y="168" width="218" height="40" rx="10" class="box2"/><text x="403" y="193" class="t" font-size="12">Gone / 5 ошибок → удалить подписку</text>
+
+  <rect x="730" y="30" width="250" height="190" rx="14" class="box"/><text x="746" y="56" class="k">Устройства</text>
+  <rect x="746" y="72" width="218" height="40" rx="10" class="box2"/><text x="758" y="97" class="t" font-size="12">Браузер · sw.js → уведомление</text>
+  <rect x="746" y="120" width="218" height="40" rx="10" class="box2"/><text x="758" y="145" class="t" font-size="12">iOS / Android · expo-notifications</text>
+  <rect x="746" y="168" width="218" height="40" rx="10" class="box2"/><text x="758" y="193" class="t" font-size="12">тап → экран «Разбор»</text>
+
+  <path d="M270 125 H373" class="lnacc" marker-end="url(#p)"/><text x="300" y="118" class="m">payload</text>
+  <path d="M625 125 H728" class="lnacc" marker-end="url(#p)"/><text x="660" y="118" class="m">push</text>
+  <path d="M728 60 H627" class="lnok" marker-end="url(#q)"/><text x="640" y="53" class="m" fill="var(--ok)">subscribe</text>
+  <defs>
+    <marker id="p" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--acc)"/></marker>
+    <marker id="q" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--ok)"/></marker>
+  </defs>
+</svg>
+<figcaption>Рис. 5. Ежедневное напоминание: правило «раз в сутки», текст по статистике, рассылка по двум каналам, самоочистка подписок.</figcaption>
+</figure>
+
 <h2 id="design">10. Дизайн-система</h2>
 <p>Все цвета описаны один раз в <code>core/tokens.ts</code> (таблица README плюс четыре добавленных: <code>wait, okHov, fabShadow, scrimDrawer</code>). Web получает их как CSS-переменные в <code>tokens.css</code>, Tailwind в <code>theme.colors</code> знает только имена токенов (<code>bg-panel</code>, <code>text-mut2</code>, <code>border-goldBd</code>), поэтому литеральный hex в компонентах невозможен. Тест <code>tokens-css.test.ts</code> сверяет CSS с ядром. Mobile читает объекты <code>LIGHT</code> и <code>DARK</code> через <code>ThemeContext</code>.</p>
 <div class="tbl"><table>
@@ -379,15 +407,16 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 
 <h2 id="web">11. Web: структура</h2>
 <pre><code>apps/web/src
-├─ App.tsx                    гейт входа, оверлеи, применение темы, startSync
+├─ public/sw.js               service worker: push → уведомление, тап → /?view=review
+├─ App.tsx                    гейт входа, оверлеи, тема, startSync, регистрация SW, deep link ?view=
 ├─ store/useStore.ts          zustand + persist (partialize, merge с системной темой)
 ├─ store/sync.ts              адаптер движка синхронизации
 ├─ store/devSeed.ts           демо-данные, только dev (динамический import)
-├─ lib/{api,auth,files,useT,useNow,cx}.ts
+├─ lib/{api,auth,providers,push,files,useT,useNow,cx}.ts   push.ts: разрешение → pushManager.subscribe (VAPID) → /push/subscribe
 ├─ components/
 │  ├─ brand/Logo.tsx           Mark + Wordmark, размеры sidebar/auth/title/mobile
 │  ├─ ui/{primitives,Icons,Snackbar}.tsx
-│  ├─ layout/{Shell,Sidebar,NavItem,ProjectList,ProfileMenu,TopBar}.tsx   5 нав-пунктов: Board · Review · Digest · Calendar · Archive
+│  ├─ layout/{Shell,Sidebar,NavItem,ProjectList,ProfileMenu,TopBar}.tsx   5 нав-пунктов; ProfileMenu: язык, тема, «Напоминания» Вкл/Выкл + тест
 │  ├─ task/TaskDrawer.tsx      StatusSelect, PriorityDots, вложения, комментарии, действия;
 │  │                           для архивной задачи бейдж «archived» и кнопки Restore / Delete
 │  ├─ capture/CaptureModal.tsx snooze/SnoozePicker.tsx  files/{FileChip,FilePreviewModal}.tsx
@@ -400,7 +429,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 ├─ App.tsx                    шрифты, splash, ThemeProvider, Root (Header + ScrollView + TabBar + шторки)
 ├─ src/theme/{tokens via core, ThemeContext, type.ts}
 ├─ src/store/{useStore,sync,devSeed}.ts
-├─ src/lib/{api,auth,files,useT,useNow}.ts
+├─ src/lib/{api,auth,push,files,useT,useNow}.ts   push.ts: expo-notifications, токен → /push/subscribe, тап → mView
 ├─ src/components/{Header,TabBar,Sheet,TaskCardM,FileChipM,FilePreviewM,StatusPriority,Logo,Icons,ui,Snack,CalendarSyncCard}.tsx
 ├─ src/screens/{SignIn,Board,Review,Digest,Calendar,Archive}Screen.tsx
 └─ src/sheets/{Task,Capture,Snooze,Profile}Sheet.tsx</code></pre>
@@ -452,6 +481,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
   <li><b>Полный PATCH вместо гранулярных эндпоинтов</b> для комментариев и файлов в потоке синхронизации: проще диф, меньше состояний; гранулярные эндпоинты сохранены для будущих клиентов.</li>
   <li><b>AI только через сервер</b>, ключ не попадает в клиентские бандлы; локальные эвристики остаются как фолбэк.</li>
   <li><b>Демо-данные не в продукте</b>: сид загружается динамическим импортом только в dev-сборках.</li>
+  <li><b>Push только по делу.</b> Одно уведомление в день и только при наличии забытых задач; текст считается на сервере из тех же правил, что и дайджест. Каналы спрятаны за <code>IPushSender</code>, поэтому web и mobile добавляются и тестируются одинаково, а «мёртвые» подписки удаляются сами.</li>
   <li><b>Календарь: отдельный календарь «Headboard» и поллинг.</b> Не трогаем основной календарь пользователя, зеркалим только задачи со сроком; входящие изменения читаем инкрементально каждые 5 минут и сразу после правок вместо push-каналов, которым нужен публичный https.</li>
   <li><b>Дайджест генерирует сервер, а не клиент по таймеру.</b> Только API работает постоянно и знает все данные; клиенты лишь присылают зону и подхватывают результат. Статистика посчитана заново на сервере по правилам ядра, промпт общий.</li>
   <li><b>Архив как статус, а не корзина.</b> Архивирование остаётся обратимым <code>PATCH</code>, удаление явное и двухшаговое; экран архива в web получил пятый нав-пункт, в mobile живёт в профиль-шторке, чтобы не ломать таб-бар из четырёх вкладок с FAB.</li>
