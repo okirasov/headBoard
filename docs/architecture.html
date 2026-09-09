@@ -144,7 +144,7 @@
     <rect x="185" y="470" width="150" height="52" rx="10" class="box2"/><text x="197" y="492" class="t">Tasks · Comments</text><text x="197" y="510" class="s">scoped by UserId</text>
     <rect x="350" y="470" width="120" height="52" rx="10" class="box2"/><text x="362" y="492" class="t">Projects</text><text x="362" y="510" class="s">+ files[]</text>
     <rect x="485" y="470" width="120" height="52" rx="10" class="box2"/><text x="497" y="492" class="t">Files</text><text x="497" y="510" class="s">LocalStorage on disk</text>
-    <rect x="620" y="470" width="110" height="52" rx="10" class="box2"/><text x="632" y="492" class="t">Settings</text><text x="632" y="510" class="s">lang · theme · digest</text>
+    <rect x="620" y="470" width="110" height="52" rx="10" class="box2"/><text x="632" y="492" class="t">Settings · Digest</text><text x="632" y="510" class="s">08:00 scheduler</text>
     <rect x="745" y="470" width="205" height="52" rx="10" class="box2"/><text x="757" y="492" class="t">Ai → Anthropic Messages API</text><text x="757" y="510" class="s">extract · digest · 503 без ключа</text>
   </g>
 
@@ -207,7 +207,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <h2 id="state">5. Состояние клиентов</h2>
 <p>В web и mobile один стор zustand, разделённый на персистентную и UI-часть. Действия стора одинаково названы в обоих приложениях, поэтому поведение совпадает.</p>
 <div class="grid">
-  <div class="card"><h4>Персистентная часть</h4><p><code>tasks, projects, projFiles, digestText, user, lang, theme, showDone, token</code>. Ключ <code>headboard-v1</code>: web в <code>localStorage</code>, mobile в AsyncStorage. При загрузке без сохранённой темы берётся системная.</p></div>
+  <div class="card"><h4>Персистентная часть</h4><p><code>tasks, projects, projFiles, digestText, digestAt, user, lang, theme, showDone, token</code>. Ключ <code>headboard-v1</code>: web в <code>localStorage</code>, mobile в AsyncStorage. При загрузке без сохранённой темы берётся системная.</p></div>
   <div class="card"><h4>UI-часть</h4><p>Открытая задача (<code>sel</code> / <code>mSel</code>), фильтры (поиск, приоритет, проект), capture, snooze-пикер, предпросмотр файла, меню профиля, drag-состояние, тост. Не сохраняется.</p></div>
   <div class="card"><h4>Действия</h4><p><code>moveTask, markDone, toggleDone, bump, keep, snooze, archive, restore, deleteTask, setPriority, addComment, attachFiles, removeFile, addTasks, setLang, setTheme, signIn, setAuth, signOut, toast</code>. Каждое обновляет <code>touched</code> там, где прототип это делал. <code>archive</code> ставит <code>archivedAt</code>, <code>restore</code> возвращает в Inbox и сбрасывает его, <code>deleteTask</code> удаляет запись насовсем.</p></div>
   <div class="card"><h4>Выборки</h4><p>Компоненты фильтруют <code>live()</code> (без архива), затем зовут <code>sortAutoBump</code> или <code>sortDone</code> из ядра с текущим <code>now</code> из хука <code>useNow</code> (обновляется раз в минуту).</p></div>
@@ -215,7 +215,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <p>Различия web и mobile сводятся к именам UI-полей (<code>sel</code> против <code>mSel</code>, <code>capOpen</code> против <code>mCapOpen</code>) и к хранилищу. Выход из аккаунта в API-режиме очищает локальные данные, в локальном режиме оставляет их.</p>
 
 <h2 id="sync">6. Синхронизация</h2>
-<p>Движок <code>createSyncEngine(adapter)</code> в <code>core/sync.ts</code> реализует offline-first модель: клиент всегда работает с локальным стором, движок подписан на изменения и переводит их в вызовы API. Адаптер даёт ему <code>getState / setState / subscribe / fileToPart / onUnauthorized / onError / baseUrl</code>. Web-адаптер занимает 27 строк, mobile 33.</p>
+<p>Движок <code>createSyncEngine(adapter)</code> в <code>core/sync.ts</code> реализует offline-first модель: клиент всегда работает с локальным стором, движок подписан на изменения и переводит их в вызовы API. Адаптер даёт ему <code>getState / setState / subscribe / fileToPart / onUnauthorized / onError / baseUrl / timeZone</code>; движок отдаёт <code>start / flush / refreshSettings / stop</code>. Web-адаптер занимает 27 строк, mobile 33.</p>
 <figure>
 <svg viewBox="0 0 1000 420" role="img" aria-label="Последовательность синхронизации">
   <g class="k">
@@ -256,7 +256,8 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
   <li><b>Очередь.</b> Все запросы идут через одну promise-цепочку, поэтому порядок сохраняется и параллельных гонок нет. <code>start()</code> защищён от повторного входа (React StrictMode вызывает эффекты дважды).</li>
   <li><b>Файлы.</b> <code>fileToPart</code> решает, что загружать: в web это data URL, превращённый в Blob; в mobile это <code>file://</code> или <code>content://</code>, переданный как RN-дескриптор <code>{uri, name, type}</code>. После загрузки движок подменяет <code>FileRef</code> на серверный с абсолютным <code>src</code>.</li>
   <li><b>Ошибки.</b> 409 <code>id_exists</code> переводится в <code>PATCH</code>. Любая другая ошибка забывает снимок и ставит повтор через 3 секунды. 401 на старте вызывает <code>onUnauthorized</code>, клиенты делают <code>signOut</code>.</li>
-  <li><b>Настройки.</b> <code>lang, theme, showDone, digestText</code> сравниваются как одна строка и пишутся <code>PUT /settings</code> с дебаунсом.</li>
+  <li><b>Настройки.</b> <code>lang, theme, showDone, digestText</code> плюс зона клиента <code>timeZone</code> сравниваются как одна строка и пишутся <code>PUT /settings</code> с дебаунсом. Дайджестом владеет сервер: <code>null</code> в теле означает «без изменений», а если ответ на PUT несёт более новый <code>digestAt</code>, движок принимает серверный текст.</li>
+  <li><b>refreshSettings().</b> Повторное чтение <code>GET /settings</code> с принятием более нового дайджеста; web вызывает при возврате вкладки в фокус и раз в 15 минут, mobile при выходе на передний план.</li>
 </ul>
 
 <h2 id="api">7. Контракт API</h2>
@@ -280,7 +281,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <tr><td><code>POST /ai/digest</code></td><td><code>{stats, lang}</code></td><td><code>{text}</code></td><td>503, 502</td></tr>
 <tr><td><code>GET /openapi/v1.json</code></td><td></td><td>OpenAPI 3 (только Development)</td><td></td></tr>
 </table></div>
-<p>Хранение: SQLite (<code>headboard.db</code>) с миграциями EF при старте; при наличии <code>ConnectionStrings:Postgres</code> используется Npgsql и <code>EnsureCreated()</code>. Файлы лежат на диске в <code>{Storage:Root}/{userId}/{fileId}</code>. CORS в Development открыт для <code>localhost:5173</code> (web) и <code>localhost:8081</code> (Expo).</p>
+<p>Фоновая работа: <code>DigestScheduler</code> (hosted service) описан в разделе 6. Хранение: SQLite (<code>headboard.db</code>) с миграциями EF при старте; при наличии <code>ConnectionStrings:Postgres</code> используется Npgsql и <code>EnsureCreated()</code>. Файлы лежат на диске в <code>{Storage:Root}/{userId}/{fileId}</code>. CORS в Development открыт для <code>localhost:5173</code> (web) и <code>localhost:8081</code> (Expo).</p>
 
 <h2 id="auth">8. Авторизация</h2>
 <figure>
@@ -407,6 +408,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
   <li><b>Полный PATCH вместо гранулярных эндпоинтов</b> для комментариев и файлов в потоке синхронизации: проще диф, меньше состояний; гранулярные эндпоинты сохранены для будущих клиентов.</li>
   <li><b>AI только через сервер</b>, ключ не попадает в клиентские бандлы; локальные эвристики остаются как фолбэк.</li>
   <li><b>Демо-данные не в продукте</b>: сид загружается динамическим импортом только в dev-сборках.</li>
+  <li><b>Дайджест генерирует сервер, а не клиент по таймеру.</b> Только API работает постоянно и знает все данные; клиенты лишь присылают зону и подхватывают результат. Статистика посчитана заново на сервере по правилам ядра, промпт общий.</li>
   <li><b>Архив как статус, а не корзина.</b> Архивирование остаётся обратимым <code>PATCH</code>, удаление явное и двухшаговое; экран архива в web получил пятый нав-пункт, в mobile живёт в профиль-шторке, чтобы не ломать таб-бар из четырёх вкладок с FAB.</li>
   <li><b>Четыре дополнительных токена</b> для цветов прототипа вне таблицы вместо литералов, чтобы правило «только токены» проверялось автоматически.</li>
 </ul>
@@ -417,6 +419,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
   <li><span class="pill gold">auth</span> Реальные потоки Google/Apple реализованы, но включаются только при наличии client id: Google Cloud (web, iOS, Android клиенты), Apple Developer (App ID с Sign in with Apple, Services ID с https return URL; <code>localhost</code> Apple не принимает). Apple на Android не поддержан.</li>
   <li><span class="pill gold">db</span> Миграции EF сгенерированы для SQLite; PostgreSQL создаёт схему через <code>EnsureCreated()</code>. Перед эволюцией схемы в проде нужны отдельные Postgres-миграции.</li>
   <li><span class="pill">feature</span> Двусторонняя синхронизация с Google Calendar не реализована; чип календаря декоративный.</li>
+  <li><span class="pill">digest</span> Планировщик живёт в процессе API: при нескольких инстансах нужен выбор лидера или внешний cron, иначе выпуски задублируются. Зона пользователя известна серверу только после первого <code>PUT /settings</code>, до этого используется UTC.</li>
   <li><span class="pill">sync</span> Конфликты решаются правилом «сервер побеждает при первой загрузке, затем последний пишущий»; для нескольких устройств с офлайн-правками нужен вектор изменений или op-log.</li>
   <li><span class="pill">files</span> Вложения из сида без содержимого сервер не сохраняет (нет байтов для загрузки). Реальные файлы загружаются и хранятся.</li>
   <li><span class="pill">ui</span> В mobile курсив заголовка месяца не рендерится: у Golos Text нет italic-начертания, браузер его синтезирует, iOS нет.</li>
