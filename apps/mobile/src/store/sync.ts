@@ -57,6 +57,21 @@ export async function syncTagOp(op: { rename: [string, string] } | { remove: str
   }
 }
 
+/** Delete the account on the server, then drop everything locally and return to sign-in. */
+export async function deleteAccount(): Promise<boolean> {
+  const st = useStore.getState();
+  if (!api || !st.token) { st.signOut(); return true; }
+  try {
+    getEngine()?.stop();
+    await api.auth.deleteAccount();
+  } catch {
+    return false;
+  }
+  engine = null;
+  st.signOut();
+  return true;
+}
+
 export async function refreshTasks(): Promise<void> {
   await getEngine()?.refreshTasks();
 }

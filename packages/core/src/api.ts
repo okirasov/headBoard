@@ -54,6 +54,8 @@ export function createApi(baseUrl: string, getToken: () => string | null) {
       apple: (idToken: string, name?: string) => req<AuthResponse>('POST', '/auth/apple', { idToken, name }),
       dev: (email: string, name: string, provider: 'Google' | 'Apple') => req<AuthResponse>('POST', '/auth/dev', { email, name, provider }),
       me: () => req<User>('GET', '/me'),
+      /** Deletes the account and everything it owns (tasks, comments, files, projects, templates, settings, calendar link, push subscriptions). */
+      deleteAccount: () => req<void>('DELETE', '/me'),
     },
     tasks: {
       list: (includeArchived = false) => req<Task[]>('GET', '/tasks' + (includeArchived ? '?includeArchived=true' : '')),

@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { STALE_DAYS_OPTIONS, fmtTime } from '@headboard/core';
 import { useStore } from '../../store/useStore';
+import { deleteAccount } from '../../store/sync';
+import { downloadBackup, pickAndImportBackup } from '../../lib/backup';
 import { api } from '../../lib/api';
 import { type PushState, disablePush, enablePush, pushState } from '../../lib/push';
 import { useT } from '../../lib/useT';
-import { Kicker, Segmented } from '../ui/primitives';
-import { IcChevronUp, IcTemplate } from '../ui/Icons';
+import { Kicker, Segmented, Button } from '../ui/primitives';
+import { IcChevronUp, IcTemplate, IcDownload, IcUpload } from '../ui/Icons';
 import { cx } from '../../lib/cx';
 
 export function Avatar({ initials, size = 30, textSize = 'text-10.5' }: { initials: string; size?: number; textSize?: string }) {
@@ -27,8 +29,17 @@ export function ProfileBlock() {
   const staleDays = useStore(s => s.staleDays);
   const setStaleDays = useStore(s => s.setStaleDays);
   const signOut = useStore(s => s.signOut);
-  const notifyStale = useStore(s => s.notifyStale);
   const toast = useStore(s => s.toast);
+  const [confirmDel, setConfirmDel] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const onDeleteAccount = async () => {
+    if (!confirmDel) { setConfirmDel(true); setTimeout(() => setConfirmDel(false), 6000); return; }
+    setDeleting(true);
+    const ok = await deleteAccount();
+    setDeleting(false); setConfirmDel(false);
+    toast(ok ? T.tAccountDeleted : T.tAccountDeleteFailed);
+  };
+  const notifyStale = useStore(s => s.notifyStale);
   const [push, setPush] = useState<PushState>('off');
   useEffect(() => { if (profOpen) void pushState().then(setPush); }, [profOpen]);
   const setNotify = async (on: boolean) => {
@@ -49,7 +60,7 @@ export function ProfileBlock() {
   return (
     <div className="relative border-t border-line pt-10">
       {profOpen && (
-        <div className="absolute inset-x-0 z-[45] flex flex-col gap-11 rounded-14 border border-line bg-card p-13 shadow-menu animate-fadeUpFast" style={{ bottom: 'calc(100% + 6px)' }}>
+        <div className="absolute inset-x-0 z-[45] flex max-h-[calc(100vh-140px)] flex-col gap-11 overflow-y-auto rounded-14 border border-line bg-card p-13 shadow-menu animate-fadeUpFast" style={{ bottom: 'calc(100% + 6px)' }}>
           <div className="flex flex-col gap-2">
             <span className="text-13 font-semibold leading-normal">{user.name}</span>
             <span className="font-mono text-10 text-mut2">{user.email}</span>
@@ -77,8 +88,25 @@ export function ProfileBlock() {
               <div className="mt-5 font-mono text-9 text-mut2">{T.notifyHint}</div>
             </div>
           )}
+          <div>
+            <Kicker size={9} className="mb-6">{T.dataTitle}</Kicker>
+            <div className="flex gap-6">
+              <Button variant="outline" hoverTone="acc" className="flex-1 rounded-9 px-10 py-6 text-12" onClick={downloadBackup}><IcDownload size={11} />{T.exportData}</Button>
+              <Button variant="outline" hoverTone="acc" className="flex-1 rounded-9 px-10 py-6 text-12" onClick={() => void pickAndImportBackup()}><IcUpload size={11} />{T.importData}</Button>
+            </div>
+            <div className="mt-5 font-mono text-9 text-mut2">{T.exportHint}</div>
+          </div>
           <div className="h-px bg-line" />
           <button type="button" onClick={signOut} className="cursor-pointer p-1 text-left text-12.5 font-semibold leading-normal text-hi">{T.signOut}</button>
+          {api && (
+            <div className="rounded-9 border border-dashed border-hi/40 px-10 py-8">
+              <Kicker size={9} className="mb-4 !text-hi">{T.dangerTitle}</Kicker>
+              <div className="mb-6 font-mono text-9 leading-[1.5] text-mut2">{T.deleteAccountHint}</div>
+              <Button variant="outline" tone="mut2" hoverTone="hi" className={cx('w-full rounded-9 px-10 py-6 text-12', confirmDel && '!border-hi !text-hi')} onClick={() => void onDeleteAccount()} disabled={deleting}>
+                {deleting ? T.deleteAccountBusy : confirmDel ? T.deleteAccountConfirm : T.deleteAccount}
+              </Button>
+            </div>
+          )}
         </div>
       )}
       <button

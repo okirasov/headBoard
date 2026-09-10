@@ -76,6 +76,12 @@ export const IcTemplate = (p: P) => (
 export const IcHistory = (p: P) => (
   <svg {...base(p)}><path d="M2.6 8a5.4 5.4 0 1 0 1.6-3.8" {...S} strokeWidth="1.5" /><path d="M2.5 2.5v3h3" {...S} strokeWidth="1.5" /><path d="M8 5v3.3l2.2 1.4" {...S} strokeWidth="1.5" /></svg>
 );
+export const IcDownload = (p: P) => (
+  <svg {...base(p)}><path d="M8 2.5v8M4.8 7.3L8 10.5l3.2-3.2M3 13.5h10" {...S} strokeWidth="1.5" /></svg>
+);
+export const IcUpload = (p: P) => (
+  <svg {...base(p)}><path d="M8 10.5v-8M4.8 5.7L8 2.5l3.2 3.2M3 13.5h10" {...S} strokeWidth="1.5" /></svg>
+);
 export const IcHash = (p: P) => (
   <svg {...base(p)}><path d="M6 2.5l-1.5 11M11.5 2.5L10 13.5M2.5 6h11M2 10h11" {...S} strokeWidth="1.5" /></svg>
 );

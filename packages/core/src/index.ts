@@ -17,3 +17,4 @@ export * from './tags';
 export * from './templates';
 export * from './history';
 export * from './merge';
+export * from './backup';

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -215,6 +216,36 @@ public class TagOpTests
         Assert.Equal(HttpStatusCode.BadRequest, (await c.PostAsJsonAsync("/tags/rename", new { from = "", to = "x" }, ApiFactory.Json)).StatusCode);
         var noop = await (await c.PostAsJsonAsync("/tags/rename", new { from = "a", to = "A" }, ApiFactory.Json)).Content.ReadFromJsonAsync<Headboard.Api.Tags.TagOpResult>(ApiFactory.Json);
         Assert.Equal(0, noop!.Changed);
+    }
+}
+
+public class AccountDeletionTests
+{
+    [Fact]
+    public async Task DeleteMe_RemovesEverythingTheUserOwns_AndOnlyTheirs()
+    {
+        using var f = new ApiFactory();
+        var (c, _) = await f.LoginAsync("bye@example.com");
+        var (other, _) = await f.LoginAsync("stays@example.com");
+        (await c.PostAsJsonAsync("/projects", new { id = "dp", name = "Gone", color = "#000" }, ApiFactory.Json)).EnsureSuccessStatusCode();
+        (await c.PostAsJsonAsync("/tasks", new { id = "dt", title = "Gone", pr = 1, status = "inbox", touched = 1L, created = 1L, proj = "dp", tags = new string[0], note = "", files = new object[0], comments = new object[] { new { id = "dc", text = "c", at = 1L } } }, ApiFactory.Json)).EnsureSuccessStatusCode();
+        (await c.PostAsJsonAsync("/templates", new { id = "dtpl", name = "Gone", title = "x", pr = 1, tags = new string[0], note = "", dueInDays = (int?)null, remindDays = (int?)null, usedCount = 0 }, ApiFactory.Json)).EnsureSuccessStatusCode();
+        (await c.PutAsJsonAsync("/settings", new { lang = "ru", theme = "dark", showDone = true }, ApiFactory.Json)).EnsureSuccessStatusCode();
+        (await other.PostAsJsonAsync("/tasks", new { id = "keep", title = "Keep", pr = 1, status = "inbox", touched = 1L, created = 1L, tags = new string[0], note = "", files = new object[0], comments = new object[0] }, ApiFactory.Json)).EnsureSuccessStatusCode();
+
+        Assert.Equal(HttpStatusCode.NoContent, (await c.DeleteAsync("/me")).StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, (await c.GetAsync("/me")).StatusCode); // token now points at nobody
+        using (var scope = f.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<Headboard.Api.Data.AppDb>();
+            Assert.Empty(db.Tasks.Where(t => t.Id == "dt"));
+            Assert.Empty(db.Comments.Where(x => x.Id == "dc"));
+            Assert.Empty(db.Projects.Where(p => p.Id == "dp"));
+            Assert.Empty(db.Templates.Where(t => t.Id == "dtpl"));
+            Assert.Empty(db.Users.Where(u => u.Email == "bye@example.com"));
+            Assert.Single(db.Tasks.Where(t => t.Id == "keep"));
+        }
+        Assert.Equal(HttpStatusCode.OK, (await other.GetAsync("/me")).StatusCode);
     }
 }
 

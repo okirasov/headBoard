@@ -139,6 +139,7 @@ scoped to the authenticated user.
 | POST | `/auth/dev` | `{email, name?, provider?}` → `{token, user}` (dev only) |
 | GET | `/me` | → `User {name, email, provider, initials}` |
 | GET | `/tasks?includeArchived=true` | → `Task[]` (archived excluded by default) |
+| DELETE | `/me` | deletes the account and everything it owns (tasks, comments, files on disk, projects, templates, settings, calendar link, push subscriptions) → 204 |
 | GET | `/tasks/{id}` | → `Task` |
 | POST | `/tasks` | `Task` (id optional; nested `comments` created, `files` linked by id) → `201 Task` |
 | PATCH | `/tasks/{id}` | partial `Task` (`"due": null` clears; absent keeps; `comments` are upserted by id, never deleted here; `history` is unioned by id, 400 `invalid_history` on unknown kinds) → `Task` |

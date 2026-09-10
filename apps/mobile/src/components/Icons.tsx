@@ -33,6 +33,12 @@ export const IcTemplate = ({ size = 16, color }: P) => (
 export const IcHistory = ({ size = 16, color }: P) => (
   <Svg width={size} height={size} viewBox="0 0 16 16" fill="none"><Path d="M2.6 8a5.4 5.4 0 1 0 1.6-3.8" stroke={color} strokeWidth="1.5" {...R} /><Path d="M2.5 2.5v3h3" stroke={color} strokeWidth="1.5" {...R} /><Path d="M8 5v3.3l2.2 1.4" stroke={color} strokeWidth="1.5" {...R} /></Svg>
 );
+export const IcDownload = ({ size = 16, color }: P) => (
+  <Svg width={size} height={size} viewBox="0 0 16 16" fill="none"><Path d="M8 2.5v8M4.8 7.3L8 10.5l3.2-3.2M3 13.5h10" stroke={color} strokeWidth="1.5" {...R} /></Svg>
+);
+export const IcUpload = ({ size = 16, color }: P) => (
+  <Svg width={size} height={size} viewBox="0 0 16 16" fill="none"><Path d="M8 10.5v-8M4.8 5.7L8 2.5l3.2 3.2M3 13.5h10" stroke={color} strokeWidth="1.5" {...R} /></Svg>
+);
 export const IcHash = ({ size = 16, color }: P) => (
   <Svg width={size} height={size} viewBox="0 0 16 16" fill="none"><Path d="M6 2.5l-1.5 11M11.5 2.5L10 13.5M2.5 6h11M2 10h11" stroke={color} strokeWidth="1.5" {...R} /></Svg>
 );

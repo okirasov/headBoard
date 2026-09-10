@@ -205,8 +205,17 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
         taskSnap = new Map(fixed.map(t => [t.id, JSON.stringify(t)]));
         const projFiles: Record<string, FileRef[]> = {};
         for (const p of projects) if (p.files?.length) projFiles[p.id] = p.files.map(f => ({ ...f, src: f.src ? absolute(f.src) : undefined }));
-        a.setState({ tasks: fixed, projects: plain, projFiles, ...(templates.length ? { templates } : {}), lang: settings.lang, theme: settings.theme, showDone: settings.showDone, digestText: settings.digestText, digestAt: settings.digestAt ?? null, notifyStale: settings.notifyStale ?? true, notifyDue: settings.notifyDue ?? true, staleDays: settings.staleDays ?? 7 });
+        // Server copy first; anything that exists only on this device (work done before signing in) is kept
+        // and pushed by the flush that follows. Same-id tasks go to the more recently touched version.
+        const localTasks = st.tasks;
+        const mergedTasks = fixed.map(t => { const mine = localTasks.find(x => x.id === t.id); return mine ? mergeTask(null, mine, t) : t; });
+        for (const mine of localTasks) if (!fixed.some(t => t.id === mine.id)) mergedTasks.push(mine);
+        const mergedProjects = [...plain, ...st.projects.filter(p => !plain.some(x => x.id === p.id))];
+        const mergedTemplates = templates.length ? [...templates, ...st.templates.filter(t => !templates.some(x => x.id === t.id))] : st.templates;
+        for (const p of mergedProjects) if (!projSnap.has(p.id)) { /* local-only: no snapshot → POSTed by flush */ }
+        a.setState({ tasks: mergedTasks, projects: mergedProjects, projFiles, templates: mergedTemplates, lang: settings.lang, theme: settings.theme, showDone: settings.showDone, digestText: settings.digestText, digestAt: settings.digestAt ?? null, notifyStale: settings.notifyStale ?? true, notifyDue: settings.notifyDue ?? true, staleDays: settings.staleDays ?? 7 });
         settingsKey = JSON.stringify(settingsOf(a.getState(), a.timeZone));
+        if (localTasks.some(t => !fixed.some(x => x.id === t.id)) || st.projects.some(p => !plain.some(x => x.id === p.id))) await flush();
       } else {
         taskSnap = new Map();
         await flush();

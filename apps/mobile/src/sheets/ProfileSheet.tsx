@@ -3,12 +3,14 @@ import { Pressable, Text, View } from 'react-native';
 import { api } from '../lib/api';
 import { type PushState, disablePush, enablePush, pushState } from '../lib/push';
 import { useStore } from '../store/useStore';
+import { deleteAccount } from '../store/sync';
+import { pickAndImportBackup, shareBackup } from '../lib/backup';
 import { useTheme } from '../theme/ThemeContext';
 import { useT } from '../lib/useT';
 import { kicker, txt } from '../theme/type';
 import { Sheet } from '../components/Sheet';
-import { Segmented } from '../components/ui';
-import { IcArchive, IcBell, IcChevronRightSm, IcFolder, IcHash, IcHistory, IcRepeat, IcStats, IcTemplate } from '../components/Icons';
+import { Btn, Segmented } from '../components/ui';
+import { IcArchive, IcBell, IcChevronRightSm, IcFolder, IcHash, IcHistory, IcRepeat, IcStats, IcTemplate, IcDownload, IcUpload } from '../components/Icons';
 import { STALE_DAYS_OPTIONS, archived } from '@headboard/core';
 
 export function ProfileSheet() {
@@ -20,6 +22,17 @@ export function ProfileSheet() {
   const set = useStore(s => s.set);
   const setLang = useStore(s => s.setLang);
   const setTheme = useStore(s => s.setTheme);
+  const toast = useStore(s => s.toast);
+  const [confirmDel, setConfirmDel] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const onDeleteAccount = async () => {
+    if (!confirmDel) { setConfirmDel(true); setTimeout(() => setConfirmDel(false), 6000); return; }
+    if (deleting) return;
+    setDeleting(true);
+    const ok = await deleteAccount();
+    setDeleting(false); setConfirmDel(false);
+    toast(ok ? T.tAccountDeleted : T.tAccountDeleteFailed);
+  };
   const staleDays = useStore(s => s.staleDays);
   const setStaleDays = useStore(s => s.setStaleDays);
   const signOut = useStore(s => s.signOut);
@@ -27,7 +40,6 @@ export function ProfileSheet() {
   const projectsN = useStore(s => s.projects.length);
   const templatesN = useStore(s => s.templates.length);
   const notifyStale = useStore(s => s.notifyStale);
-  const toast = useStore(s => s.toast);
   const [push, setPush] = useState<PushState>('off');
   useEffect(() => { if (open) void pushState().then(setPush); }, [open]);
   const setNotify = async (on: boolean) => {
@@ -115,9 +127,24 @@ export function ProfileSheet() {
         <Text style={txt(10.5, { mono: true, color: t.mut2 })}>{archivedN}</Text>
         <IcChevronRightSm size={12} color={t.mut2} />
       </Pressable>
+      <View>
+        <Text style={[kicker(9.5, t.mut2), { marginBottom: 7 }]}>{T.dataTitle}</Text>
+        <View style={{ flexDirection: 'row', gap: 7 }}>
+          <Btn variant="card" label={T.exportData} icon={<IcDownload size={11} color={t.ink} />} size={12} pad={10} style={{ flex: 1 }} onPress={() => void shareBackup().catch(() => undefined)} />
+          <Btn variant="card" label={T.importData} icon={<IcUpload size={11} color={t.ink} />} size={12} pad={10} style={{ flex: 1 }} onPress={() => void pickAndImportBackup().catch(() => undefined)} />
+        </View>
+        <Text style={[txt(9, { mono: true, color: t.mut2 }), { marginTop: 5 }]}>{T.exportHint}</Text>
+      </View>
       <Pressable onPress={signOut} style={{ alignItems: 'center', padding: 14, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.card }}>
         <Text style={txt(13.5, { w: 600, color: t.hi })}>{T.signOut}</Text>
       </Pressable>
+      {api && (
+        <View style={{ borderWidth: 1, borderStyle: 'dashed', borderColor: t.hi, borderRadius: 12, padding: 12, gap: 6, opacity: 0.95 }}>
+          <Text style={kicker(9.5, t.hi)}>{T.dangerTitle}</Text>
+          <Text style={txt(9.5, { mono: true, color: t.mut2, lh: 1.5 })}>{T.deleteAccountHint}</Text>
+          <Btn variant="outline" color={confirmDel ? t.hi : t.mut2} label={deleting ? T.deleteAccountBusy : confirmDel ? T.deleteAccountConfirm : T.deleteAccount} size={12} pad={10} style={{ borderColor: confirmDel ? t.hi : t.line }} onPress={() => void onDeleteAccount()} />
+        </View>
+      )}
     </Sheet>
   );
 }

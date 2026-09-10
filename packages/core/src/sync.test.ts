@@ -45,14 +45,21 @@ function fakeApi(server: { tasks: any[]; projects: any[]; settings?: any; templa
 const tick = () => new Promise(r => setTimeout(r, 10));
 
 describe('sync engine', () => {
-  it('server wins on initial load when it has tasks', async () => {
-    const st = fakeStore({ tasks: [newTask({ id: 'local', title: 'L' }, now)] });
-    const { api } = fakeApi({ tasks: [newTask({ id: 'srv', title: 'S' }, now)], projects: [{ id: 'p', name: 'P', color: '#000', files: [{ id: 'f', name: 'x.png', kind: 'img', src: '/files/f/content' }] }] });
+  it('initial load: server copy wins for shared ids, local-only work is kept and pushed', async () => {
+    const shared = newTask({ id: 'both', title: 'Local version', touched: 10 }, now);
+    const st = fakeStore({ tasks: [newTask({ id: 'local', title: 'L', proj: 'lp' }, now), shared], projects: [{ id: 'lp', name: 'Local project', color: '#333' }] });
+    const server = { tasks: [newTask({ id: 'srv', title: 'S' }, now), { ...shared, title: 'Server version', touched: 20 }], projects: [{ id: 'p', name: 'P', color: '#000', files: [{ id: 'f', name: 'x.png', kind: 'img', src: '/files/f/content' }] }] };
+    const { api, calls } = fakeApi(server);
     const eng = createSyncEngine({ api, ...st, fileToPart: async () => null, onUnauthorized: () => undefined, onError: () => undefined, baseUrl: 'http://api/' });
     await eng.start();
+    await tick();
     const s = st.getState();
-    expect(s.tasks.map(t => t.id)).toEqual(['srv']);
-    expect(s.projects).toEqual([{ id: 'p', name: 'P', color: '#000' }]);
+    expect(s.tasks.map(t => t.id).sort()).toEqual(['both', 'local', 'srv']);
+    expect(s.tasks.find(t => t.id === 'both')!.title).toBe('Server version');
+    expect(s.projects).toEqual([{ id: 'p', name: 'P', color: '#000' }, { id: 'lp', name: 'Local project', color: '#333' }]);
+    expect(calls).toContain('POST project lp');
+    expect(calls).toContain('POST task local');
+    expect(calls.some(c => c.startsWith('POST task both'))).toBe(false);
     expect(s.projFiles.p[0].src).toBe('http://api/files/f/content');
     expect(s.lang).toBe('ru');
     expect(s.theme).toBe('dark');

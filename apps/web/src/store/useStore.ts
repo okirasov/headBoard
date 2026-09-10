@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import {
   type CaptureItem, type FileRef, type Lang, type Priority, type Project, type Provider, type Status, type Task, type Theme,
-  type User, type View, type ColumnKey, type Recur, type Template, newTask, newProject, dict, statusLabel, priorityLabel, phrases, fmtDate, rollRecurring, normalizeTags, renameTag, removeTag, applyTemplate, templateFromTask, withHistory, createdEntry, type SyncStatus } from '@headboard/core';
+  type User, type View, type ColumnKey, type Recur, type Template, newTask, newProject, dict, statusLabel, priorityLabel, phrases, fmtDate, rollRecurring, normalizeTags, renameTag, removeTag, applyTemplate, templateFromTask, withHistory, createdEntry, type SyncStatus, parseBackup, mergeBackup } from '@headboard/core';
 
 export const STORAGE_KEY = 'headboard-v1';
 export const TOAST_MS = 2400;
@@ -116,6 +116,8 @@ export interface Actions {
   setAuth: (token: string, user: User) => void;
   signOut: () => void;
   toast: (msg: string, undo?: () => void) => void;
+  /** Merge a backup file (see core/backup.ts); null when the file is not a Headboard export. */
+  importBackup: (json: string) => { added: number; updated: number } | null;
   toggleSelect: (id: string) => void;
   clearSelection: () => void;
   bulkMove: (status: ColumnKey) => void;
@@ -231,6 +233,15 @@ export const useStore = create<Store>()(
           const snap = snapshot(ids);
           patchTasks(t => (ids.includes(t.id) && t.pr !== pr ? { ...t, pr } : t));
           toast(T().tBulkPriority + priorityLabel(pr, get().lang), restoreFn(snap));
+        },
+        importBackup: json => {
+          const b = parseBackup(json, Date.now());
+          if (!b) { toast(T().tImportBad); return null; }
+          const s = get();
+          const r = mergeBackup({ tasks: s.tasks, projects: s.projects, templates: s.templates }, b);
+          set({ tasks: r.tasks, projects: r.projects, templates: r.templates });
+          toast(T().tImported + r.added + ' · ' + r.updated);
+          return { added: r.added, updated: r.updated };
         },
         undo: () => { const u = get().snackUndo; clearTimeout(toastTimer); set({ snack: null, snackUndo: null }); u?.(); },
         patchTask,

@@ -61,6 +61,27 @@ public static class AuthEndpoints
             return user is null ? Results.Unauthorized() : Results.Ok(ToDto(user));
         }).RequireAuthorization();
 
+        // Account deletion: every row the user owns plus stored file bytes. Idempotent; tokens stop working because the user row is gone.
+        app.MapDelete("/me", async (HttpContext ctx, AppDb db, Headboard.Api.Files.LocalStorage storage) =>
+        {
+            var uid = CurrentUser.Id(ctx);
+            var user = await db.Users.FindAsync(uid);
+            if (user is null) return Results.NoContent();
+            var files = await db.Files.Where(f => f.UserId == uid).ToListAsync();
+            foreach (var f in files) storage.Delete(f.StoragePath);
+            db.Files.RemoveRange(files);
+            db.Comments.RemoveRange(db.Comments.Where(c => c.UserId == uid));
+            db.Tasks.RemoveRange(db.Tasks.Where(t => t.UserId == uid));
+            db.Projects.RemoveRange(db.Projects.Where(p => p.UserId == uid));
+            db.Templates.RemoveRange(db.Templates.Where(t => t.UserId == uid));
+            db.PushSubscriptions.RemoveRange(db.PushSubscriptions.Where(p => p.UserId == uid));
+            db.CalendarLinks.RemoveRange(db.CalendarLinks.Where(l => l.UserId == uid));
+            db.Settings.RemoveRange(db.Settings.Where(s => s.UserId == uid));
+            db.Users.Remove(user);
+            await db.SaveChangesAsync();
+            return Results.NoContent();
+        }).RequireAuthorization();
+
         return app;
     }
 
