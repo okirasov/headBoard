@@ -42,7 +42,7 @@ public static class TaskMapper
         if (string.IsNullOrWhiteSpace(d.Title)) return "title_required";
         if (d.Pr is < 0 or > 2) return "invalid_pr";
         if (!Wire.Statuses.Contains(d.Status)) return "invalid_status";
-        if (d.Recur is not null && d.Recur != "weekly") return "invalid_recur";
+        if (d.Recur is not null && !Wire.Recurrences.Contains(d.Recur)) return "invalid_recur";
         return null;
     }
 
@@ -119,7 +119,7 @@ public static class TaskMapper
                     break;
                 case "recur":
                     if (v.ValueKind == JsonValueKind.Null) t.Recur = null;
-                    else if (v.ValueKind == JsonValueKind.String && v.GetString() == "weekly") t.Recur = "weekly";
+                    else if (v.ValueKind == JsonValueKind.String && Wire.Recurrences.Contains(v.GetString()!)) t.Recur = v.GetString();
                     else return "invalid_recur";
                     break;
                 case "tags":

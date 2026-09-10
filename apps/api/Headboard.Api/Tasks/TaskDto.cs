@@ -30,6 +30,7 @@ public class TaskDto
 public static class Wire
 {
     public static readonly string[] Statuses = ["inbox", "focus", "waiting", "done", "archived"];
+    public static readonly string[] Recurrences = ["daily", "weekly", "monthly"];
     public static readonly string[] Langs = ["en", "ru"];
     public static readonly string[] Themes = ["light", "dark"];
 

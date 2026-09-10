@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Appearance } from 'react-native';
 import {
   type CaptureItem, type ColumnKey, type FileRef, type Lang, type Priority, type Project, type Provider, type Task, type Theme,
-  type User, type View, newTask, newProject, dict, statusLabel, phrases, fmtDate, sizeHuman,
+  type User, type View, type Recur, newTask, newProject, dict, statusLabel, phrases, fmtDate, sizeHuman, rollRecurring,
 } from '@headboard/core';
 
 export const STORAGE_KEY = 'headboard-v1';
@@ -40,6 +40,8 @@ export interface Actions {
   setPriority: (id: string, pr: Priority) => void;
   setDue: (id: string, due: number | null) => void;
   setRemind: (id: string, remindDays: 0 | 1 | null) => void;
+  setRecur: (id: string, recur: Recur) => void;
+  complete: (id: string) => void;
   addComment: (id: string, text: string) => void;
   attachFiles: (id: string, files: FileRef[]) => void;
   removeFile: (id: string, fileId: string) => void;
@@ -88,12 +90,25 @@ export const useStore = create<Store>()(
         ...initialPersisted, ...initialUi,
         set: patch => set(patch),
         patchTask,
-        moveTask: (id, status) => { const now = Date.now(); patchTask(id, { status, touched: now, doneAt: status === 'done' ? now : null }); toast(T().tMoved + statusLabel(status, get().lang)); },
+        moveTask: (id, status) => { if (status === 'done') { get().complete(id); return; } const now = Date.now(); patchTask(id, { status, touched: now, doneAt: null }); toast(T().tMoved + statusLabel(status, get().lang)); },
+        complete: id => {
+          const t = get().tasks.find(x => x.id === id); if (!t) return;
+          const now = Date.now();
+          if (t.recur) {
+            const { done, next } = rollRecurring(t, now);
+            set(s => ({ tasks: [next, ...s.tasks.map(x => (x.id === id ? done : x))], mSel: s.mSel === id ? null : s.mSel }));
+            toast(T().tRolled + fmtDate(next.due as number, get().lang));
+            return;
+          }
+          patchTask(id, { status: 'done', doneAt: now, touched: now });
+          toast(T().tDoneS);
+        },
         toggleDone: id => {
           const t = get().tasks.find(x => x.id === id); if (!t) return;
           const now = Date.now(); const done = t.status === 'done';
-          patchTask(id, { status: done ? 'focus' : 'done', doneAt: done ? null : now, touched: now });
-          toast(done ? T().tReopen : T().tDoneS);
+          if (!done) { get().complete(id); return; }
+          patchTask(id, { status: 'focus', doneAt: null, touched: now });
+          toast(T().tReopen);
         },
         bump: id => { patchTask(id, { touched: Date.now(), snoozedUntil: 0 }); toast(T().tBump); },
         keep: id => { patchTask(id, { touched: Date.now(), snoozedUntil: 0 }); toast(T().tKeep); },
@@ -104,6 +119,7 @@ export const useStore = create<Store>()(
         setPriority: (id, pr) => patchTask(id, { pr }),
         setDue: (id, due) => { patchTask(id, { due, touched: Date.now(), ...(due === null ? { remindDays: null } : {}) }); set({ dueTask: null }); },
         setRemind: (id, remindDays) => patchTask(id, { remindDays }),
+        setRecur: (id, recur) => { const t = get().tasks.find(x => x.id === id); patchTask(id, { recur, ...(recur && t && t.due === null ? { due: Date.now() } : {}) }); },
         addComment: (id, text) => {
           const txt = text.trim(); if (!txt) return;
           patchTask(id, { comments: [...(get().tasks.find(t => t.id === id)?.comments ?? []), { id: 'c' + Date.now(), text: txt, at: Date.now() }] });

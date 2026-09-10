@@ -12,7 +12,7 @@ import { Btn, Dot } from '../components/ui';
 import { IdleBadge } from '../components/TaskCardM';
 import { PriorityDots, StatusPicker } from '../components/StatusPriority';
 import { AttachButtonM, FileChipM } from '../components/FileChipM';
-import { DueButton, RemindChips } from '../components/DueControls';
+import { DueButton, RecurChips, RemindChips } from '../components/DueControls';
 import { IcArchive, IcLink, IcSend } from '../components/Icons';
 
 function Body({ task }: { task: Task }) {
@@ -72,6 +72,12 @@ function Body({ task }: { task: Task }) {
           <Text style={txt(9.5, { mono: true, upper: true, ls: 0.8, color: t.mut2 })}>{T.due}</Text>
           <DueButton task={task} />
           <RemindChips task={task} />
+        </View>
+      )}
+      {!isArchived && (
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+          <Text style={txt(9.5, { mono: true, upper: true, ls: 0.8, color: t.mut2 })}>{T.repeats}</Text>
+          <RecurChips task={task} />
         </View>
       )}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6, alignItems: 'center', paddingBottom: 2 }}>

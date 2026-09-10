@@ -1,4 +1,4 @@
-import { type MonthDay, buildMonthGrid, dueLabel, dueTone, live, monthLabel, startOfDay, weekdayLabels } from '@headboard/core';
+import { type MonthDay, buildMonthGrid, dueLabel, dueTone, live, monthLabel, recurLabel, startOfDay, weekdayLabels } from '@headboard/core';
 import { useStore } from '../../store/useStore';
 import { useT } from '../../lib/useT';
 import { useNow } from '../../lib/useNow';
@@ -64,7 +64,7 @@ export function CalendarView() {
                 <span className={cx('w-80 shrink-0 font-mono text-10.5', TONE[dueTone(t, now)])}>{dueLabel(t, lang, now)}</span>
                 <Dot color={projects.find(p => p.id === t.proj)?.color ?? 'var(--mut2)'} />
                 <span className="flex-1 text-13.5 font-medium leading-normal">{t.title}</span>
-                {t.recur && <span className="font-mono text-10 text-mut2">↻ {T.weekly}</span>}
+                {t.recur && <span className="font-mono text-10 text-mut2">↻ {recurLabel(t.recur, lang, true).toLowerCase()}</span>}
               </div>
             ))}
             {rows.length === 0 && <Empty className="px-2 py-6 text-13">{T.nothingSched}</Empty>}

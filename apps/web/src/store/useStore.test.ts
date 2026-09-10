@@ -19,7 +19,7 @@ describe('store', () => {
     expect(t.status).toBe('done');
     expect(t.doneAt).not.toBeNull();
     expect(t.touched).toBeGreaterThan(now - 1000);
-    expect(useStore.getState().snack).toBe('Moved to Done');
+    expect(useStore.getState().snack).toBe('Done — moved to Done'); // moving to Done goes through complete()
   });
   it('bump resets idle and snooze', () => {
     useStore.getState().bump('a');
@@ -59,6 +59,20 @@ describe('store', () => {
     useStore.getState().deleteTask('a');
     expect(useStore.getState().tasks.find(t => t.id === 'a')).toBeUndefined();
     expect(useStore.getState().snack).toBe('Deleted');
+  });
+  it('completing a recurring task rolls it forward', () => {
+    useStore.getState().setRecur('a', 'weekly');
+    let t = useStore.getState().tasks.find(x => x.id === 'a')!;
+    expect(t.recur).toBe('weekly');
+    expect(t.due).not.toBeNull(); // undated → due today
+    useStore.getState().markDone('a');
+    const s = useStore.getState();
+    const done = s.tasks.find(x => x.id === 'a')!;
+    const next = s.tasks.find(x => x.id !== 'a' && x.id !== 'b' && x.recur === 'weekly')!;
+    expect(done.status).toBe('done');
+    expect(next.status).toBe('inbox');
+    expect(next.due! > done.due!).toBe(true);
+    expect(s.snack!.startsWith('Done — next on ')).toBe(true);
   });
   it('projects: add, rename, delete detaches tasks', () => {
     const p = useStore.getState().addProject('  Writing ', '#6B7FA3')!;

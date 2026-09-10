@@ -6,6 +6,7 @@ task extraction / digest generation through the Anthropic Messages API.
 
 - Solution: `Headboard.Api.sln` → `Headboard.Api` (app) and `Headboard.Api.Tests` (xunit).
 - Listens on `http://localhost:5080`.
+- `recur` accepts `daily`, `weekly`, `monthly` or `null`; rolling a completed recurring task into its next instance happens on the client (the original is patched to done, the next instance is a new task), so the API only validates the value.
 - Wire format is exactly the TypeScript model: camelCase, epoch-millisecond `long`s,
   `pr` 0|1|2, `status` string union, nullable fields serialized as `null`.
 

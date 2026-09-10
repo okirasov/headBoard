@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
-import { type Task, fmtDate } from '@headboard/core';
+import { type Recur, type Task, fmtDate, recurLabel, RECUR_OPTIONS } from '@headboard/core';
 import { useStore } from '../store/useStore';
 import { useTheme } from '../theme/ThemeContext';
 import { useT } from '../lib/useT';
@@ -15,6 +15,17 @@ export function DueButton({ task }: { task: Task }) {
     <Pressable onPress={() => set({ dueTask: task.id, dueMonth: 0 })} style={{ paddingVertical: 6, paddingHorizontal: 10, borderRadius: 9, borderWidth: 1, borderColor: t.line, backgroundColor: t.card }}>
       <Text style={txt(10.5, { mono: true, w: 500, color: task.due === null ? t.mut : t.ink })}>{task.due === null ? T.setDue : fmtDate(task.due, lang)}</Text>
     </Pressable>
+  );
+}
+
+export function RecurChips({ task }: { task: Task }) {
+  const { T, lang } = useT();
+  const setRecur = useStore(s => s.setRecur);
+  const opts: Array<{ v: Recur; L: string }> = [{ v: null, L: T.recurNone }, ...RECUR_OPTIONS.map(r => ({ v: r as Recur, L: recurLabel(r, lang, true) }))];
+  return (
+    <View style={{ flexDirection: 'row', gap: 5, flexWrap: 'wrap' }}>
+      {opts.map(o => <Chip key={String(o.v)} mono active={task.recur === o.v} label={o.L} onPress={() => setRecur(task.id, o.v)} />)}
+    </View>
   );
 }
 

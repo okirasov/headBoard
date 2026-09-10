@@ -8,7 +8,7 @@ import { cx } from '../../lib/cx';
 import { Button, Dot, IconButton, Kicker, Scrim } from '../ui/primitives';
 import { IcArchive, IcChevronDown, IcLink, IcSend, IcX } from '../ui/Icons';
 import { AttachButton, FileChip } from '../files/FileChip';
-import { DueDateInput, RemindPicker } from './DueControls';
+import { DueDateInput, RecurPicker, RemindPicker } from './DueControls';
 import { IdleBadge } from '../../views/board/TaskCard';
 
 const BAR = { hi: 'bg-hi', med: 'bg-med', lineStrong: 'bg-lineStrong' } as const;
@@ -78,7 +78,6 @@ function DrawerBody({ task }: { task: Task }) {
 
   const meta: Array<[string, string]> = [
     [T.created, fmtDate(task.created, lang)],
-    [T.repeats, task.recur ? T.everyWeek : '—'],
   ];
 
   return (
@@ -148,6 +147,7 @@ function DrawerBody({ task }: { task: Task }) {
         <div className="flex flex-col gap-8 border-t border-line pt-12">
           <div className="flex items-center text-12 leading-normal"><span className="w-130 shrink-0 text-mut2">{T.due}</span><DueDateInput task={task} size="sm" />{task.due !== null && <span className="ml-8 font-mono text-10.5 text-mut2">{dueLabel(task, lang, now)}</span>}</div>
           {!isArchived && <div className="flex items-center text-12 leading-normal"><span className="w-130 shrink-0 text-mut2">{T.remindLbl}</span><RemindPicker task={task} size="sm" /></div>}
+          {!isArchived && <div className="flex items-center text-12 leading-normal"><span className="w-130 shrink-0 text-mut2">{T.repeats}</span><RecurPicker task={task} size="sm" /></div>}
           {meta.map(([l, v]) => (
             <div key={l} className="flex text-12 leading-normal"><span className="w-130 shrink-0 text-mut2">{l}</span><span className="font-mono text-11 text-mut">{v}</span></div>
           ))}

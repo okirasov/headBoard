@@ -1,4 +1,4 @@
-import { cannedDigest, digestStats, digestStatsLine, dueDiff, fmtDateTimeShort, idleDays, live, todayLabel } from '@headboard/core';
+import { cannedDigest, digestStats, digestStatsLine, dueDiff, fmtDateTimeShort, idleDays, live, recurLabel, todayLabel } from '@headboard/core';
 import { useStore } from '../../store/useStore';
 import { useT } from '../../lib/useT';
 import { useNow } from '../../lib/useNow';
@@ -29,7 +29,7 @@ export function DigestView() {
 
   const dueRows = stats.due.map(t => ({ task: t, chip: (dueDiff(t, now) as number) < 0 ? T.overdue : T.today, chipClass: 'text-10.5 ' + ((dueDiff(t, now) as number) < 0 ? 'text-hi' : 'text-acc') }));
   const pickRows = stats.stale.slice(0, 3).map(t => ({ task: t, chip: idleDays(t, now) + T.idleSuf, chipClass: 'text-10.5 text-goldInk' }));
-  const recurRows = live(tasks).filter(t => t.recur).map(t => ({ task: t, chip: T.everyWeek, chipClass: 'text-10.5 text-mut2' }));
+  const recurRows = live(tasks).filter(t => t.recur && t.status !== 'done').map(t => ({ task: t, chip: recurLabel(t.recur, lang), chipClass: 'text-10.5 text-mut2' }));
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto px-24 pb-24 pt-18">

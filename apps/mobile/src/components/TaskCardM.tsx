@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
-import { type Task, dueLabel, dueTone, idleDays, isSnoozed, isStale, resolveColor, PRIORITY_BAR_TOKEN } from '@headboard/core';
+import { type Task, dueLabel, dueTone, idleDays, isSnoozed, isStale, recurLabel, resolveColor, PRIORITY_BAR_TOKEN } from '@headboard/core';
 import { useStore } from '../store/useStore';
 import { useTheme } from '../theme/ThemeContext';
 import { useT } from '../lib/useT';
@@ -47,7 +47,7 @@ export function TaskCardM({ task, now }: { task: Task; now: number }) {
         <View style={{ flex: 1 }} />
         {task.comments.length > 0 && <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}><IcComment size={9} color={t.mut2} /><Text style={txt(10, { mono: true, color: t.mut2 })}>{task.comments.length}</Text></View>}
         {task.files.length > 0 && <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}><IcPaperclip size={9} color={t.mut2} /><Text style={txt(10, { mono: true, color: t.mut2 })}>{task.files.length}</Text></View>}
-        {task.recur && <Text style={txt(10, { mono: true, color: t.mut2 })}>↻ {T.weekly}</Text>}
+        {task.recur && <Text style={txt(10, { mono: true, color: t.mut2 })}>↻ {recurLabel(task.recur, lang, true).toLowerCase()}</Text>}
       </View>
     </Pressable>
   );

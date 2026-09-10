@@ -124,7 +124,7 @@ public class TasksTests(ApiFactory f) : IClassFixture<ApiFactory>
     [InlineData("{\"title\":\"\"}", "title_required")]
     [InlineData("{\"title\":\"x\",\"pr\":5}", "invalid_pr")]
     [InlineData("{\"title\":\"x\",\"status\":\"later\"}", "invalid_status")]
-    [InlineData("{\"title\":\"x\",\"recur\":\"daily\"}", "invalid_recur")]
+    [InlineData("{\"title\":\"x\",\"recur\":\"yearly\"}", "invalid_recur")]
     [InlineData("{\"title\":\"x\",\"proj\":\"nope\"}", "invalid_proj")]
     public async Task Create_ValidatesBody(string json, string error)
     {

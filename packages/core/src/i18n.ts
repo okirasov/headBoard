@@ -24,6 +24,7 @@ export interface Dict {
   tDone: string; tBump: string; tSnooze: string; tArch: string; tKeep: string; tMoved: string; tReopen: string; tDoneS: string;
   showDone: string; zTomorrow: string; z3d: string; zWeek: string; zMonth: string;
   digestUpdated: string;
+  recurTitle: string; recurSub: string; recurNone: string; recurDaily: string; recurWeekly: string; recurMonthly: string; everyDay: string; everyMonth: string; nextLbl: string; noRecurring: string; recurHint: string; tRolled: string; doneNext: string; historyLbl: string;
   dueTitle: string; dueSub: string; gOverdue: string; gToday: string; gTomorrow: string; gWeek: string; gLater: string; gUndated: string; remindLbl: string; remindNone: string; remindDay: string; remindDayBefore: string; dueDateLbl: string; clearDue: string; setDue: string; dueNotify: string; dueNotifyHint: string; noDue: string; dueIn: string; dueAgo: string;
   searchTitle: string; searchSub: string; searchBigPh: string; typeToSearch: string; noResults: string; inNote: string; inComment: string; inTags: string; inProject: string; allStatuses: string; sArchived: string;
   statsTitle: string; statsSub: string; closedThisWeek: string; vsLastWeek: string; openNow: string; forgottenNow: string; streakLbl: string; streakUnit: string; medianClose: string; daysUnit: string; closedPerWeek: string; createdSeries: string; closedSeries: string; priorityMixTitle: string; idleAgeTitle: string; openByProjectTitle: string; showTable: string; showChart: string; noStats: string; weekShort: string; nowLbl: string;
@@ -69,6 +70,7 @@ export const EN: Dict = {
   tKeep: 'Kept — bumped to top of its column', tMoved: 'Moved to ', tReopen: 'Reopened into In focus', tDoneS: 'Done ✓',
   showDone: 'Done', zTomorrow: 'Tomorrow', z3d: '+3 days', zWeek: 'Next week', zMonth: 'Next month',
   digestUpdated: 'updated ',
+  recurTitle: 'Recurring', recurSub: 'series that come back on schedule', recurNone: 'Off', recurDaily: 'Daily', recurWeekly: 'Weekly', recurMonthly: 'Monthly', everyDay: 'every day', everyMonth: 'every month', nextLbl: 'Next', noRecurring: 'No recurring tasks — set “Repeats” on a task to start a series.', recurHint: 'Completing a recurring task closes this instance and schedules the next one in the same column.', tRolled: 'Done — next on ', doneNext: 'Done → next', historyLbl: 'completed',
   dueTitle: 'Deadlines', dueSub: 'what is due, and when to be reminded', gOverdue: 'Overdue', gToday: 'Today', gTomorrow: 'Tomorrow', gWeek: 'This week', gLater: 'Later', gUndated: 'No date yet', remindLbl: 'Remind', remindNone: 'Off', remindDay: 'On the day', remindDayBefore: 'Day before', dueDateLbl: 'Due date', clearDue: 'Clear', setDue: 'Set date', dueNotify: 'Morning push about due tasks', dueNotifyHint: 'At 9:00 on the reminder day: tasks due today, or tomorrow when “Day before” is on.', noDue: 'No deadlines — set a date on a task to see it here.', dueIn: 'in ', dueAgo: ' ago',
   searchTitle: 'Search', searchSub: 'across every task, including done and archived', searchBigPh: 'Title, note, tags, comments, project…', typeToSearch: 'Type to search. Words can match in different fields; #tags work too.', noResults: 'Nothing found for ', inNote: 'in note', inComment: 'in comment', inTags: 'in tags', inProject: 'in project', allStatuses: 'All', sArchived: 'Archived',
   statsTitle: 'Statistics', statsSub: 'how the board moves', closedThisWeek: 'Closed this week', vsLastWeek: 'vs last week', openNow: 'Open now', forgottenNow: 'Forgotten', streakLbl: 'Streak', streakUnit: 'days in a row', medianClose: 'Median time to close', daysUnit: 'days', closedPerWeek: 'Closed and created per week', createdSeries: 'created', closedSeries: 'closed', priorityMixTitle: 'Open tasks by priority', idleAgeTitle: 'Open tasks by idle time', openByProjectTitle: 'Load by project', showTable: 'Table', showChart: 'Chart', noStats: 'Nothing to show yet — close a task or two.', weekShort: 'wk', nowLbl: 'now',
@@ -117,6 +119,7 @@ export const RU: Dict = {
   tKeep: 'Оставлено — поднято наверх колонки', tMoved: 'Перемещено: ', tReopen: 'Возвращено в «В фокусе»', tDoneS: 'Готово ✓',
   showDone: 'Готово', zTomorrow: 'Завтра', z3d: '+3 дня', zWeek: 'Через неделю', zMonth: 'Через месяц',
   digestUpdated: 'обновлено ',
+  recurTitle: 'Повторы', recurSub: 'серии, которые возвращаются по расписанию', recurNone: 'Нет', recurDaily: 'Ежедневно', recurWeekly: 'Еженедельно', recurMonthly: 'Ежемесячно', everyDay: 'каждый день', everyMonth: 'каждый месяц', nextLbl: 'Следующая', noRecurring: 'Повторяющихся задач нет — задайте «Повтор» на задаче, чтобы начать серию.', recurHint: 'Завершение повторяющейся задачи закрывает этот экземпляр и ставит следующий в ту же колонку.', tRolled: 'Готово — следующая ', doneNext: 'Готово → следующая', historyLbl: 'выполнено',
   dueTitle: 'Сроки', dueSub: 'что и когда пора, и когда напомнить', gOverdue: 'Просрочено', gToday: 'Сегодня', gTomorrow: 'Завтра', gWeek: 'На этой неделе', gLater: 'Позже', gUndated: 'Без срока', remindLbl: 'Напомнить', remindNone: 'Нет', remindDay: 'В день срока', remindDayBefore: 'За день', dueDateLbl: 'Срок', clearDue: 'Убрать', setDue: 'Задать срок', dueNotify: 'Утренний push о сроках', dueNotifyHint: 'В 9:00 в день напоминания: задачи на сегодня, а при «За день» и на завтра.', noDue: 'Сроков нет — задайте дату задаче, и она появится здесь.', dueIn: 'через ', dueAgo: ' назад',
   searchTitle: 'Поиск', searchSub: 'по всем задачам, включая готовые и архив', searchBigPh: 'Название, заметка, теги, комментарии, проект…', typeToSearch: 'Начните вводить. Слова могут совпасть в разных полях; #теги тоже работают.', noResults: 'Ничего не найдено по запросу ', inNote: 'в заметке', inComment: 'в комментарии', inTags: 'в тегах', inProject: 'в проекте', allStatuses: 'Все', sArchived: 'В архиве',
   statsTitle: 'Статистика', statsSub: 'как движется доска', closedThisWeek: 'Закрыто за неделю', vsLastWeek: 'к прошлой неделе', openNow: 'Открыто сейчас', forgottenNow: 'Забыто', streakLbl: 'Серия', streakUnit: 'дней подряд', medianClose: 'Медиана до закрытия', daysUnit: 'дней', closedPerWeek: 'Закрыто и создано по неделям', createdSeries: 'создано', closedSeries: 'закрыто', priorityMixTitle: 'Открытые задачи по приоритету', idleAgeTitle: 'Открытые задачи по простою', openByProjectTitle: 'Нагрузка по проектам', showTable: 'Таблица', showChart: 'График', noStats: 'Пока нечего показать — закройте пару задач.', weekShort: 'нед', nowLbl: 'сейчас',
@@ -140,6 +143,14 @@ export function dict(lang: Lang): Dict {
 export function priorityLabel(pr: Priority, lang: Lang, full = true): string {
   const d = dict(lang);
   return (full ? d.prFull : d.prShort)[pr];
+}
+
+export function recurLabel(recur: string | null, lang: Lang, short = false): string {
+  const d = dict(lang);
+  if (recur === 'daily') return short ? d.recurDaily : d.everyDay;
+  if (recur === 'monthly') return short ? d.recurMonthly : d.everyMonth;
+  if (recur === 'weekly') return short ? d.recurWeekly : d.everyWeek;
+  return short ? d.recurNone : '—';
 }
 
 export function statusLabel(status: string, lang: Lang, waitingOn = false): string {

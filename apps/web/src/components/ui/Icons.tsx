@@ -70,6 +70,9 @@ export const IcArchive = (p: P) => (
 export const IcRestore = (p: P) => (
   <svg {...base(p)}><path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9" {...S} strokeWidth="1.6" /><path d="M2.5 2.5V6h3.5" {...S} strokeWidth="1.6" /></svg>
 );
+export const IcRepeatNav = (p: P) => (
+  <svg {...base(p)}><path d="M13.5 7A5.5 5.5 0 0 0 3.3 4.6M2.5 9a5.5 5.5 0 0 0 10.2 2.4" {...S} strokeWidth="1.5" /><path d="M13.5 2.5V7H9M2.5 13.5V9h4.5" {...S} strokeWidth="1.5" /></svg>
+);
 export const IcBell = (p: P) => (
   <svg {...base(p)}><path d="M4 11V7.5a4 4 0 0 1 8 0V11l1 1.5H3z" {...S} strokeWidth="1.5" /><path d="M6.5 14a1.5 1.5 0 0 0 3 0" {...S} strokeWidth="1.5" /></svg>
 );

@@ -1,5 +1,5 @@
 import type { DragEvent } from 'react';
-import { type Task, dueLabel, dueTone, idleDays, isSnoozed, isStale, PRIORITY_BAR_TOKEN } from '@headboard/core';
+import { type Task, dueLabel, dueTone, idleDays, isSnoozed, isStale, recurLabel, PRIORITY_BAR_TOKEN } from '@headboard/core';
 import { useStore } from '../../store/useStore';
 import { useT } from '../../lib/useT';
 import { Dot } from '../../components/ui/primitives';
@@ -88,7 +88,7 @@ export function TaskCard({ task, now }: { task: Task; now: number }) {
           <span className="flex items-center gap-3 font-mono text-10.5 text-mut2"><IcPaperclip size={10} />{task.files.length}</span>
         )}
         {due && open && <span className={cx('font-mono text-10.5', TONE[dueTone(task, now)])}>{due}</span>}
-        {task.recur && <span className="flex items-center gap-3 font-mono text-10.5 text-mut2"><IcRepeat size={10} />{T.weekly}</span>}
+        {task.recur && <span className="flex items-center gap-3 font-mono text-10.5 text-mut2"><IcRepeat size={10} />{recurLabel(task.recur, lang, true).toLowerCase()}</span>}
         {task.chat && (
           <a href={task.chat} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()} className="flex items-center gap-3 font-mono text-10.5 text-mut2 no-underline hover:text-acc">
             <IcLink size={10} />{T.chat}

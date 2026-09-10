@@ -1,4 +1,5 @@
-import type { Task } from '@headboard/core';
+import type { Recur, Task } from '@headboard/core';
+import { RECUR_OPTIONS, recurLabel } from '@headboard/core';
 import { useStore } from '../../store/useStore';
 import { useT } from '../../lib/useT';
 import { cx } from '../../lib/cx';
@@ -30,6 +31,21 @@ export function DueDateInput({ task, size = 'md' }: { task: Task; size?: 'sm' | 
       {task.due !== null && (
         <button type="button" onClick={() => setDue(task.id, null)} title={T.clearDue} className="flex h-22 w-22 cursor-pointer items-center justify-center rounded-6 text-mut2 hover:bg-sel hover:text-hi"><IcX size={9} /></button>
       )}
+    </div>
+  );
+}
+
+/** Off / Daily / Weekly / Monthly chips. Turning recurrence on for an undated task dates it today. */
+export function RecurPicker({ task, size = 'md' }: { task: Task; size?: 'sm' | 'md' }) {
+  const { T, lang } = useT();
+  const setRecur = useStore(s => s.setRecur);
+  const opts: Array<{ v: Recur; L: string }> = [{ v: null, L: T.recurNone }, ...RECUR_OPTIONS.map(r => ({ v: r as Recur, L: recurLabel(r, lang, true) }))];
+  return (
+    <div className="flex gap-4" role="radiogroup" aria-label={T.repeats}>
+      {opts.map(o => (
+        <button key={String(o.v)} type="button" role="radio" aria-checked={task.recur === o.v} onClick={() => setRecur(task.id, o.v)}
+          className={cx('cursor-pointer rounded-7 border font-mono font-medium leading-normal', size === 'md' ? 'px-8 py-4 text-10.5' : 'px-7 py-3 text-10', task.recur === o.v ? 'border-lineStrong bg-chipBg text-chipInk' : 'border-line bg-card text-mut')}>{o.L}</button>
+      ))}
     </div>
   );
 }
