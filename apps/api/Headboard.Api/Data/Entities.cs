@@ -87,6 +87,8 @@ public class SettingsRow
     /// <summary>Morning push about tasks due today / tomorrow (default on).</summary>
     public bool NotifyDue { get; set; } = true;
     public long? LastDueNotifyAt { get; set; }
+    /// <summary>Idle days before a task counts as forgotten (digest, stale push). Default 7.</summary>
+    public int StaleDays { get; set; } = 7;
 }
 
 /// <summary>Per-user Google Calendar connection: offline refresh token, the dedicated calendar and the incremental sync cursor.</summary>

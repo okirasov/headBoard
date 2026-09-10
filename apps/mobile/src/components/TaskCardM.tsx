@@ -13,7 +13,8 @@ export function IdleBadge({ task, now }: { task: Task; now: number }) {
   const idle = idleDays(task, now);
   const snz = isSnoozed(task, now);
   if (task.status === 'done' || (idle < 2 && !snz)) return null;
-  const stale = isStale(task, now);
+  const staleDays = useStore(s => s.staleDays);
+  const stale = isStale(task, now, staleDays);
   return (
     <View style={{ paddingVertical: 2, paddingHorizontal: 6, borderRadius: 6, backgroundColor: stale ? t.heat2b : t.inset }}>
       <Text style={txt(10, { mono: true, color: stale ? t.goldInk : t.mut2 })}>{snz ? T.snoozed : idle + T.idleSuf}</Text>
@@ -27,7 +28,8 @@ export function TaskCardM({ task, now }: { task: Task; now: number }) {
   const projects = useStore(s => s.projects);
   const set = useStore(s => s.set);
   const p = projects.find(x => x.id === task.proj);
-  const stale = isStale(task, now);
+  const staleDays = useStore(s => s.staleDays);
+  const stale = isStale(task, now, staleDays);
   const due = dueLabel(task, lang, now);
   const open = task.status !== 'done';
   return (

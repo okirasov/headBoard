@@ -23,6 +23,8 @@ export interface PersistedSlice {
   notifyStale: boolean;
   /** Morning push about due tasks. */
   notifyDue: boolean;
+  /** Idle days before a task is "forgotten" (badge, Review, digest, push). */
+  staleDays: number;
   user: User | null;
   lang: Lang;
   theme: Theme;
@@ -104,6 +106,7 @@ export interface Actions {
   deleteProject: (id: string) => void;
   setLang: (lang: Lang) => void;
   setTheme: (theme: Theme) => void;
+  setStaleDays: (days: number) => void;
   signIn: (provider: Provider, user?: Partial<User>) => void;
   setAuth: (token: string, user: User) => void;
   signOut: () => void;
@@ -118,7 +121,7 @@ export interface Actions {
 export type Store = PersistedSlice & UiSlice & Actions;
 
 const initialPersisted: PersistedSlice = {
-  tasks: [], projects: [], templates: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, user: null, lang: 'en', theme: 'light', showDone: true, token: null,
+  tasks: [], projects: [], templates: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, staleDays: 7, user: null, lang: 'en', theme: 'light', showDone: true, token: null,
 };
 
 const initialUi: UiSlice = {
@@ -328,6 +331,7 @@ export const useStore = create<Store>()(
           toast(T().tProjectDeleted);
         },
         setLang: lang => set({ lang }),
+        setStaleDays: days => set({ staleDays: Math.min(60, Math.max(1, Math.round(days))) }),
         setTheme: theme => {
           set({ theme });
           applyThemeClass(theme);
@@ -358,7 +362,7 @@ export const useStore = create<Store>()(
       storage: createJSONStorage(() => safeStorage()),
       partialize: s => ({
         tasks: s.tasks, projects: s.projects, templates: s.templates, projFiles: s.projFiles, digestText: s.digestText,
-        digestAt: s.digestAt, notifyStale: s.notifyStale, notifyDue: s.notifyDue, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token,
+        digestAt: s.digestAt, notifyStale: s.notifyStale, notifyDue: s.notifyDue, staleDays: s.staleDays, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token,
       }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<PersistedSlice>;

@@ -84,7 +84,8 @@ function Root() {
   const user = useStore(s => s.user);
   const mView = useStore(s => s.mView);
   const tasks = useStore(s => s.tasks);
-  const stats = digestStats(tasks, now);
+  const staleDays = useStore(s => s.staleDays);
+  const stats = digestStats(tasks, now, staleDays);
   const openN = tasks.filter(x => x.status !== 'done' && x.status !== 'archived').length;
   const titles = { board: T.board, review: T.resurface, digest: T.digTitle, calendar: T.calendar, archive: T.archiveTitle, projects: T.projectsTitle, stats: T.statsTitle, search: T.searchTitle, due: T.dueTitle, recurring: T.recurTitle, tags: T.tagsTitle, templates: T.templatesTitle, history: T.historyTitle };
   const subs = { board: phrases.openTasks(openN, lang), review: phrases.forgottenN(stats.staleN, lang), digest: todayLabel(now, lang), calendar: T.gcal, archive: phrases.archivedN(tasks.filter(x => x.status === 'archived').length, lang), projects: phrases.projectsN(useStore.getState().projects.length, lang), stats: T.statsSub, search: T.searchSub, due: T.dueSub, recurring: T.recurSub, tags: T.tagsSub, templates: T.templatesSub, history: T.historySub };

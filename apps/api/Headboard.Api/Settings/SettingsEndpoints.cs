@@ -5,10 +5,10 @@ using Headboard.Api.Tasks;
 namespace Headboard.Api.Settings;
 
 /// <summary>Wire shape of core <c>Settings</c>. <c>DigestAt</c> is server-owned; <c>TimeZone</c> is an IANA id.</summary>
-public record SettingsDto(string Lang, string Theme, bool ShowDone, string? DigestText, long? DigestAt, string? TimeZone, bool? NotifyStale, bool? NotifyDue)
+public record SettingsDto(string Lang, string Theme, bool ShowDone, string? DigestText, long? DigestAt, string? TimeZone, bool? NotifyStale, bool? NotifyDue, int? StaleDays)
 {
-    public static SettingsDto Defaults => new("en", "light", true, null, null, null, true, true);
-    public static SettingsDto From(SettingsRow r) => new(r.Lang, r.Theme, r.ShowDone, r.DigestText, r.DigestAt, r.TimeZone, r.NotifyStale, r.NotifyDue);
+    public static SettingsDto Defaults => new("en", "light", true, null, null, null, true, true, 7);
+    public static SettingsDto From(SettingsRow r) => new(r.Lang, r.Theme, r.ShowDone, r.DigestText, r.DigestAt, r.TimeZone, r.NotifyStale, r.NotifyDue, r.StaleDays);
 }
 
 public static class SettingsEndpoints
@@ -39,6 +39,7 @@ public static class SettingsEndpoints
             if (!string.IsNullOrWhiteSpace(body.TimeZone)) row.TimeZone = body.TimeZone;
             if (body.NotifyStale is { } ns) row.NotifyStale = ns;
             if (body.NotifyDue is { } nd) row.NotifyDue = nd;
+            if (body.StaleDays is { } sd) { if (sd is < 1 or > 60) return Results.BadRequest(new { error = "invalid_staleDays" }); row.StaleDays = sd; }
             await db.SaveChangesAsync();
             return Results.Ok(SettingsDto.From(row));
         });

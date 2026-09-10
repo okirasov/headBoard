@@ -15,7 +15,8 @@ export function Sidebar() {
   const tasks = useStore(s => s.tasks);
   const set = useStore(s => s.set);
   const now = useNow();
-  const staleN = digestStats(tasks, now).staleN;
+  const staleDays = useStore(s => s.staleDays);
+  const staleN = digestStats(tasks, now, staleDays).staleN;
   const archivedN = archived(tasks).length;
   const dueSoon = dueGroups(tasks, now).filter(g => g.key === 'overdue' || g.key === 'today').reduce((n, g) => n + g.tasks.length, 0);
   return (

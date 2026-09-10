@@ -15,7 +15,8 @@ export function ReviewScreen({ now }: { now: number }) {
   const keep = useStore(s => s.keep);
   const archive = useStore(s => s.archive);
   const openSnooze = useStore(s => s.openSnooze);
-  const stale = digestStats(tasks, now).stale;
+  const staleDays = useStore(s => s.staleDays);
+  const stale = digestStats(tasks, now, staleDays).stale;
   return (
     <View style={{ gap: 9 }}>
       {stale.map(task => {

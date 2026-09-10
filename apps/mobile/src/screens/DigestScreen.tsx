@@ -31,7 +31,8 @@ export function DigestScreen({ now }: { now: number }) {
   const digestBusy = useStore(s => s.digestBusy);
   const digestSeed = useStore(s => s.digestSeed);
   const set = useStore(s => s.set);
-  const stats = digestStats(tasks, now);
+  const staleDays = useStore(s => s.staleDays);
+  const stats = digestStats(tasks, now, staleDays);
   const regen = async () => {
     if (digestBusy) return;
     set({ digestBusy: true });

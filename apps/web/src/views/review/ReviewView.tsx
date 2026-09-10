@@ -36,7 +36,8 @@ export function ReviewView() {
   const { T, lang } = useT();
   const tasks = useStore(s => s.tasks);
   const now = useNow();
-  const stale = digestStats(tasks, now).stale;
+  const staleDays = useStore(s => s.staleDays);
+  const stale = digestStats(tasks, now, staleDays).stale;
   return (
     <div className="min-h-0 flex-1 overflow-y-auto px-24 pb-24 pt-18">
       <h1 className="m-0 font-sans text-26 font-medium leading-[1.2] tracking-tight">{T.resurface}</h1>

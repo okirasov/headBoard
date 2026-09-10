@@ -14,7 +14,8 @@ export function IdleBadge({ task, now, radius = 7 }: { task: Task; now: number; 
   const idle = idleDays(task, now);
   const snz = isSnoozed(task, now);
   if (task.status === 'done' || (idle < 2 && !snz)) return null;
-  const stale = isStale(task, now);
+  const staleDays = useStore(s => s.staleDays);
+  const stale = isStale(task, now, staleDays);
   return (
     <span className={cx('font-mono text-10 leading-normal', radius === 7 ? 'rounded-7 px-6 py-2' : 'rounded-6 px-7 py-2 text-10.5', stale ? 'bg-heat2b text-goldInk' : 'bg-inset text-mut2')}>
       {snz ? T.snoozed : idle + T.idleSuf}
@@ -30,7 +31,8 @@ export function TaskCard({ task, now }: { task: Task; now: number }) {
   const markDone = useStore(s => s.markDone);
   const bump = useStore(s => s.bump);
   const p = projects.find(x => x.id === task.proj) ?? null;
-  const stale = isStale(task, now);
+  const staleDays = useStore(s => s.staleDays);
+  const stale = isStale(task, now, staleDays);
   const open = task.status !== 'done';
   const due = dueLabel(task, lang, now);
 

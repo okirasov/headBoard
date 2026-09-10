@@ -103,6 +103,8 @@ export interface CaptureItem {
 
 export const DAY_MS = 864e5;
 export const STALE_DAYS_DEFAULT = 7;
+/** Choices offered in settings for the forgotten-task threshold. */
+export const STALE_DAYS_OPTIONS = [3, 5, 7, 14] as const;
 export const COLUMN_KEYS: ColumnKey[] = ['inbox', 'focus', 'waiting', 'done'];
 
 export function clampPriority(n: number): Priority {

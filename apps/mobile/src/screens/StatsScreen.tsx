@@ -55,7 +55,8 @@ export function StatsScreen({ now }: { now: number }) {
   const { T, lang } = useT();
   const tasks = useStore(s => s.tasks);
   const projects = useStore(s => s.projects);
-  const sum = statsSummary(tasks, now);
+  const staleDays = useStore(s => s.staleDays);
+  const sum = statsSummary(tasks, now, staleDays);
   const weeks = weeklyActivity(tasks, now, 8);
   const mix = priorityMix(tasks);
   const idle = idleBuckets(tasks, now);

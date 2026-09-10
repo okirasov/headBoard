@@ -15,7 +15,8 @@ export function StatsView() {
   const now = useNow();
   const [table, setTable] = useState(false);
 
-  const sum = statsSummary(tasks, now);
+  const staleDays = useStore(s => s.staleDays);
+  const sum = statsSummary(tasks, now, staleDays);
   const weeks = weeklyActivity(tasks, now, 8);
   const mix = priorityMix(tasks);
   const idle = idleBuckets(tasks, now);

@@ -42,7 +42,7 @@ public class StaleNotifier(IServiceScopeFactory scopes, IConfiguration cfg, Head
             s.LastStaleNotifyAt = now; // one evaluation per day whether or not something was sent
             if (subs.Count == 0) continue;
             var tasks = await db.Tasks.Where(t => t.UserId == s.UserId).ToListAsync(ct);
-            var stats = DigestService.ComputeStats(tasks, now, DigestSchedule.Zone(s.TimeZone));
+            var stats = DigestService.ComputeStats(tasks, now, DigestSchedule.Zone(s.TimeZone), s.StaleDays);
             var payload = StaleMessage.Build(stats, s.Lang);
             if (payload is null) continue;
             sent += await dispatcher.SendToAllAsync(subs, payload, now, ct);

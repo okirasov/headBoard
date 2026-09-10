@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { STALE_DAYS_OPTIONS } from '@headboard/core';
 import { useStore } from '../../store/useStore';
 import { api } from '../../lib/api';
 import { type PushState, disablePush, enablePush, pushState } from '../../lib/push';
@@ -23,6 +24,8 @@ export function ProfileBlock() {
   const set = useStore(s => s.set);
   const setLang = useStore(s => s.setLang);
   const setTheme = useStore(s => s.setTheme);
+  const staleDays = useStore(s => s.staleDays);
+  const setStaleDays = useStore(s => s.setStaleDays);
   const signOut = useStore(s => s.signOut);
   const notifyStale = useStore(s => s.notifyStale);
   const toast = useStore(s => s.toast);
@@ -59,6 +62,11 @@ export function ProfileBlock() {
           <div>
             <Kicker size={9} className="mb-6">{T.theme}</Kicker>
             <Segmented value={theme} onChange={setTheme} options={[{ v: 'light', label: T.light }, { v: 'dark', label: T.dark }]} />
+          </div>
+          <div>
+            <Kicker size={9} className="mb-6">{T.staleAfter}</Kicker>
+            <Segmented value={String(STALE_DAYS_OPTIONS.includes(staleDays as 3) ? staleDays : 7)} onChange={v => setStaleDays(Number(v))} options={STALE_DAYS_OPTIONS.map(d => ({ v: String(d), label: d + T.dShort }))} />
+            <div className="mt-5 font-mono text-9 text-mut2">{T.staleAfterHint}</div>
           </div>
           <button type="button" onClick={() => set({ view: 'templates', profOpen: false })} className="flex cursor-pointer items-center gap-8 rounded-9 border border-line bg-card px-10 py-7 text-left text-12.5 font-semibold leading-normal hover:border-lineStrong"><IcTemplate size={13} className="text-mut2" /><span className="flex-1">{T.templatesTitle}</span><span className="font-mono text-10.5 font-normal text-mut2">{useStore.getState().templates.length}</span></button>
           {api && (

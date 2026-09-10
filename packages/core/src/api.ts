@@ -12,6 +12,8 @@ export interface Settings {
   notifyStale?: boolean;
   /** Morning push about tasks due today / tomorrow (per-task `remindDays`). */
   notifyDue?: boolean;
+  /** Idle days before a task counts as forgotten (default 7). */
+  staleDays?: number;
 }
 export interface TagOpResult { changed: number; tasks: Task[] }
 export interface PushConfig { webPush: boolean; vapidPublicKey: string | null; expo: boolean }

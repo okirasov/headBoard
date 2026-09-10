@@ -9,7 +9,7 @@ import { kicker, txt } from '../theme/type';
 import { Sheet } from '../components/Sheet';
 import { Segmented } from '../components/ui';
 import { IcArchive, IcBell, IcChevronRightSm, IcFolder, IcHash, IcHistory, IcRepeat, IcStats, IcTemplate } from '../components/Icons';
-import { archived } from '@headboard/core';
+import { STALE_DAYS_OPTIONS, archived } from '@headboard/core';
 
 export function ProfileSheet() {
   const { t } = useTheme();
@@ -20,6 +20,8 @@ export function ProfileSheet() {
   const set = useStore(s => s.set);
   const setLang = useStore(s => s.setLang);
   const setTheme = useStore(s => s.setTheme);
+  const staleDays = useStore(s => s.staleDays);
+  const setStaleDays = useStore(s => s.setStaleDays);
   const signOut = useStore(s => s.signOut);
   const archivedN = useStore(s => archived(s.tasks).length);
   const projectsN = useStore(s => s.projects.length);
@@ -54,6 +56,11 @@ export function ProfileSheet() {
       <View>
         <Text style={[kicker(9.5, t.mut2), { marginBottom: 7 }]}>{T.theme}</Text>
         <Segmented value={theme} onChange={setTheme} options={[{ v: 'light', label: T.light }, { v: 'dark', label: T.dark }]} />
+      </View>
+      <View>
+        <Text style={[kicker(9.5, t.mut2), { marginBottom: 7 }]}>{T.staleAfter}</Text>
+        <Segmented value={String(STALE_DAYS_OPTIONS.includes(staleDays as 3) ? staleDays : 7)} onChange={v => setStaleDays(Number(v))} options={STALE_DAYS_OPTIONS.map(d => ({ v: String(d), label: d + T.dShort }))} />
+        <Text style={[txt(9, { mono: true, color: t.mut2 }), { marginTop: 5 }]}>{T.staleAfterHint}</Text>
       </View>
       {api && (
         <View>

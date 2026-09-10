@@ -11,6 +11,7 @@ import { SeedHint } from './SeedHint';
 export function BoardView() {
   const { T, lang } = useT();
   const tasks = useStore(s => s.tasks);
+  const staleDays = useStore(s => s.staleDays);
   const q = useStore(s => s.q);
   const fPr = useStore(s => s.fPr);
   const fProj = useStore(s => s.fProj);
@@ -23,7 +24,7 @@ export function BoardView() {
   const cols: ColumnKey[] = showDone ? ['inbox', 'focus', 'waiting', 'done'] : ['inbox', 'focus', 'waiting'];
   const cardsFor = (c: ColumnKey) => {
     const group = lv.filter(t => t.status === c);
-    return c === 'done' ? sortDone(group) : sortAutoBump(group, now);
+    return c === 'done' ? sortDone(group) : sortAutoBump(group, now, staleDays);
   };
   const prChips: Array<{ v: Priority | null; L: string }> = [{ v: null, L: T.all }, ...([0, 1, 2] as Priority[]).map(i => ({ v: i, L: priorityLabel(i, lang) }))];
 

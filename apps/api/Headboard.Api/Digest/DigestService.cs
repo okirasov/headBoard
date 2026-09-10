@@ -14,13 +14,13 @@ public class DigestService(AppDb db, AnthropicClient ai, ILogger<DigestService> 
     public const int StaleDays = 7;
     private const long Day = 86_400_000;
 
-    public static DigestStatsDto ComputeStats(IReadOnlyList<TaskRow> tasks, long now, TimeZoneInfo tz)
+    public static DigestStatsDto ComputeStats(IReadOnlyList<TaskRow> tasks, long now, TimeZoneInfo tz, int staleDays = StaleDays)
     {
         var live = tasks.Where(t => t.Status != "archived").ToList();
         var today = DigestSchedule.StartOfLocalDay(now, tz);
         int DueDiff(TaskRow t) => (int)Math.Round((DigestSchedule.StartOfLocalDay(t.Due!.Value, tz) - today) / (double)Day);
         int Idle(TaskRow t) => (int)Math.Max(0, Math.Floor((now - t.Touched) / (double)Day));
-        bool Stale(TaskRow t) => t.Status != "done" && Idle(t) >= StaleDays && (t.SnoozedUntil == 0 || t.SnoozedUntil < now);
+        bool Stale(TaskRow t) => t.Status != "done" && Idle(t) >= staleDays && (t.SnoozedUntil == 0 || t.SnoozedUntil < now);
 
         var due = live.Where(t => t.Status != "done" && t.Due is not null && DueDiff(t) <= 0).ToList();
         var stale = live.Where(Stale).OrderByDescending(Idle).ToList();
@@ -55,7 +55,7 @@ public class DigestService(AppDb db, AnthropicClient ai, ILogger<DigestService> 
         if (settings is null) { settings = new SettingsRow { UserId = userId }; db.Settings.Add(settings); }
         var tz = DigestSchedule.Zone(settings.TimeZone);
         var tasks = await db.Tasks.Where(t => t.UserId == userId).ToListAsync(ct);
-        var stats = ComputeStats(tasks, now, tz);
+        var stats = ComputeStats(tasks, now, tz, settings.StaleDays);
 
         string? text = null;
         if (ai.IsConfigured)

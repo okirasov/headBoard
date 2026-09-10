@@ -16,7 +16,8 @@ export function DigestView() {
   const digestSeed = useStore(s => s.digestSeed);
   const set = useStore(s => s.set);
   const now = useNow();
-  const stats = digestStats(tasks, now);
+  const staleDays = useStore(s => s.staleDays);
+  const stats = digestStats(tasks, now, staleDays);
 
   const regen = async () => {
     if (digestBusy) return;

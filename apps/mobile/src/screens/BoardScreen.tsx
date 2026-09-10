@@ -12,13 +12,14 @@ export function BoardScreen({ now }: { now: number }) {
   const { t } = useTheme();
   const { T, lang } = useT();
   const tasks = useStore(s => s.tasks);
+  const staleDays = useStore(s => s.staleDays);
   const fTag = useStore(s => s.fTag);
   const mCol = useStore(s => s.mCol);
   const set = useStore(s => s.set);
   const loadSeed = useStore(s => s.loadSeed);
   const lv = live(tasks).filter(x => matchesFilter(x, '', null, null, fTag));
   const group = (c: ColumnKey) => lv.filter(x => x.status === c);
-  const cards = mCol === 'done' ? sortDone(group('done')) : sortAutoBump(group(mCol), now);
+  const cards = mCol === 'done' ? sortDone(group('done')) : sortAutoBump(group(mCol), now, staleDays);
   const cols: ColumnKey[] = ['inbox', 'focus', 'waiting', 'done'];
   return (
     <View>
