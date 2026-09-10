@@ -1,0 +1,93 @@
+README.md
+  s_2372cb08d633fa::t_b9d41e94dcc653 3
+apps/api/Headboard.Api.Tests/DueNotifierTests.cs
+  s_2372cb08d633fa::t_3bb9c9857054e4 1-63
+apps/api/Headboard.Api.Tests/TasksTests.cs
+  s_2372cb08d633fa::t_79879a9b9d9d88 94,170
+apps/api/Headboard.Api/Data/Entities.cs
+  s_2372cb08d633fa::t_4174c31dcea7c8 43-44,83-85
+apps/api/Headboard.Api/Data/Migrations/20260910060446_DueReminders.Designer.cs
+  s_2372cb08d633fa::t_5c14d39c012a00 1-354
+apps/api/Headboard.Api/Data/Migrations/20260910060446_DueReminders.cs
+  s_2372cb08d633fa::t_8795606a456c27 1-49
+apps/api/Headboard.Api/Data/Migrations/AppDbModelSnapshot.cs
+  s_2372cb08d633fa::t_ed5bb3cd3b56a7 213-215,219-221,279-281
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_75ef39733d25b5 75-76
+apps/api/Headboard.Api/Push/DueNotifier.cs
+  s_2372cb08d633fa::t_396c5fa5e9b3c2 1-80
+apps/api/Headboard.Api/Settings/SettingsEndpoints.cs
+  s_2372cb08d633fa::t_1d22ae9f9e0f2d 8,10-11,41
+apps/api/Headboard.Api/Tasks/TaskDto.cs
+  s_2372cb08d633fa::t_1cbba9a4409a10 27
+apps/api/Headboard.Api/Tasks/TaskMapper.cs
+  s_2372cb08d633fa::t_c74e89ec7f9867 28,70,148-152
+apps/api/README.md
+  s_2372cb08d633fa::t_39e9f366d76641 47-50
+apps/mobile/App.tsx
+  s_2372cb08d633fa::t_b09580b0ba3155 29-30,57,84-85,103,109
+apps/mobile/src/components/DueControls.tsx
+  s_2372cb08d633fa::t_91184285e53049 1-30
+apps/mobile/src/components/Icons.tsx
+  s_2372cb08d633fa::t_3a578dd613215b 30-32
+apps/mobile/src/screens/DueScreen.tsx
+  s_2372cb08d633fa::t_97932fcbb39570 1-71
+apps/mobile/src/sheets/DueSheet.tsx
+  s_2372cb08d633fa::t_5fbddc22310983 1-54
+apps/mobile/src/sheets/ProfileSheet.tsx
+  s_2372cb08d633fa::t_a41e6764001767 11,67-71
+apps/mobile/src/sheets/TaskSheet.tsx
+  s_2372cb08d633fa::t_0cf70ade4627a8 15,70-76
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_1abca68dd3c398 16,25-26,41-42,63,66,105-106,153
+apps/web/src/App.tsx
+  s_2372cb08d633fa::t_91f329f6fbb470 23
+apps/web/src/components/layout/Shell.tsx
+  s_2372cb08d633fa::t_69325a7e10cf27 12,29
+apps/web/src/components/layout/Sidebar.tsx
+  s_2372cb08d633fa::t_ff84cf1d4ae1f4 4,7,20,32
+apps/web/src/components/task/DueControls.tsx
+  s_2372cb08d633fa::t_cca81d03b64429 1-60
+apps/web/src/components/task/TaskDrawer.tsx
+  s_2372cb08d633fa::t_6149e7d620082b 11,149-150
+apps/web/src/components/ui/Icons.tsx
+  s_2372cb08d633fa::t_f629976e1f7ae2 73-75
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_7a601d503d59a2 22-23,68-69,94,188-189,266
+apps/web/src/views/due/DueView.tsx
+  s_2372cb08d633fa::t_f0c297c58e94d1 1-77
+docs/architecture.html
+  s_2372cb08d633fa::t_e552aa7672ff80 93,177,193,205,208,287,416-418,433,437-438,452-453
+packages/core/src/api.ts
+  s_2372cb08d633fa::t_0a427ddb3bd571 13-14
+packages/core/src/due.test.ts
+  s_2372cb08d633fa::t_a44adfa3f0cf40 1-29
+packages/core/src/due.ts
+  s_2372cb08d633fa::t_1268b9e90ffd17 1-43
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_1008949354fdd6 27,72,120,163
+packages/core/src/index.ts
+  s_2372cb08d633fa::t_776b17be9558d5 14
+packages/core/src/model.ts
+  s_2372cb08d633fa::t_d9f46a2bbd113b 6,43-44,95
+packages/core/src/sync.test.ts
+  s_2372cb08d633fa::t_2f17d50a461284 7
+packages/core/src/sync.ts
+  s_2372cb08d633fa::t_95d1e2d06ba941 18,51,162
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "67ec1333dd7ea621ebb2d52c5022ffd55aef4385",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
