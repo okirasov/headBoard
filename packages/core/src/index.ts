@@ -16,3 +16,4 @@ export * from './recurring';
 export * from './tags';
 export * from './templates';
 export * from './history';
+export * from './merge';

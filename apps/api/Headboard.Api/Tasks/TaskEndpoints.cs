@@ -74,7 +74,7 @@ public static class TaskEndpoints
 
             if (body.TryGetProperty("comments", out var comments) && comments.ValueKind == JsonValueKind.Array)
             {
-                // Replace the comment set: upsert by id, delete the ones missing from the body.
+                // Upsert by id. Deletions go through DELETE /tasks/{id}/comments/{cid}, so a device that has not seen a comment cannot drop it.
                 var incoming = comments.Deserialize<List<CommentDto>>(JsonSerializerOptions.Web) ?? [];
                 var existing = await db.Comments.Where(c => c.TaskId == t.Id && c.UserId == uid).ToListAsync();
                 var keep = new HashSet<string>();
@@ -86,12 +86,8 @@ public static class TaskEndpoints
                     if (row is null) db.Comments.Add(new CommentRow { Id = cid, TaskId = t.Id, UserId = uid, Text = c.Text, At = c.At > 0 ? c.At : Wire.Now() });
                     else { row.Text = c.Text; if (c.At > 0) row.At = c.At; }
                 }
-                db.Comments.RemoveRange(existing.Where(e => !keep.Contains(e.Id)));
                 if (!clientLog)
-                {
                     foreach (var added in incoming.Where(c => !string.IsNullOrWhiteSpace(c.Text) && !existing.Any(e => e.Id == c.Id))) TaskMapper.AppendHistory(t, "comment", Wire.Now(), null, added.Text, "api");
-                    if (existing.Any(e => !keep.Contains(e.Id))) TaskMapper.AppendHistory(t, "comment_removed", Wire.Now(), null, null, "api");
-                }
             }
             if (!clientLog) TaskMapper.AppendDiff(t, before, Wire.Now());
             if (body.TryGetProperty("files", out var files) && files.ValueKind == JsonValueKind.Array)

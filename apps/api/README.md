@@ -141,7 +141,7 @@ scoped to the authenticated user.
 | GET | `/tasks?includeArchived=true` | → `Task[]` (archived excluded by default) |
 | GET | `/tasks/{id}` | → `Task` |
 | POST | `/tasks` | `Task` (id optional; nested `comments` created, `files` linked by id) → `201 Task` |
-| PATCH | `/tasks/{id}` | partial `Task` (`"due": null` clears; absent keeps; `history` replaces the log, 400 `invalid_history` on unknown kinds) → `Task` |
+| PATCH | `/tasks/{id}` | partial `Task` (`"due": null` clears; absent keeps; `comments` are upserted by id, never deleted here; `history` is unioned by id, 400 `invalid_history` on unknown kinds) → `Task` |
 | DELETE | `/tasks/{id}` | → 204 (also removes its comments and files) |
 | POST | `/tasks/{id}/comments` | `{text, id?, at?}` → `201 Comment` |
 | DELETE | `/tasks/{id}/comments/{cid}` | → 204 |

@@ -218,7 +218,10 @@ public static class TaskMapper
                     if (v.ValueKind != JsonValueKind.Array) return "invalid_history";
                     var hist = v.Deserialize<List<HistoryEntryDto>>(JsonSerializerOptions.Web);
                     if (hist is null || hist.Any(h => string.IsNullOrEmpty(h.Id) || h.At <= 0 || !Wire.HistoryKinds.Contains(h.Kind))) return "invalid_history";
-                    t.HistoryJson = HistoryJson(hist);
+                    // Union by id with what is stored: entries another device pushed are never lost to a partial client log.
+                    var byId = ParseHistory(t.HistoryJson).ToDictionary(h => h.Id);
+                    foreach (var h in hist) byId[h.Id] = h;
+                    t.HistoryJson = HistoryJson(byId.Values.OrderBy(h => h.At));
                     break;
                 case "id":
                 case "files":

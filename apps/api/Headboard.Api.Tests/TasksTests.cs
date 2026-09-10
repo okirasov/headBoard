@@ -218,6 +218,23 @@ public class TagOpTests
     }
 }
 
+public class CommentMergeTests
+{
+    [Fact]
+    public async Task PatchUpsertsComments_AndOnlyTheDeleteEndpointRemovesThem()
+    {
+        using var f = new ApiFactory();
+        var (c, _) = await f.LoginAsync("cm@example.com");
+        (await c.PostAsJsonAsync("/tasks", new { id = "cm1", title = "Shared", pr = 1, status = "inbox", touched = 1L, created = 1L, tags = new string[0], note = "", files = new object[0], comments = new object[] { new { id = "c1", text = "one", at = 1L } } }, ApiFactory.Json)).EnsureSuccessStatusCode();
+        // device A adds c2 without listing c1; device B edits c1
+        (await c.PatchAsJsonAsync("/tasks/cm1", new { comments = new object[] { new { id = "c2", text = "two", at = 2L } } }, ApiFactory.Json)).EnsureSuccessStatusCode();
+        var after = await (await c.PatchAsJsonAsync("/tasks/cm1", new { comments = new object[] { new { id = "c1", text = "one (edited)", at = 1L } } }, ApiFactory.Json)).Content.ReadFromJsonAsync<Headboard.Api.Tasks.TaskDto>(ApiFactory.Json);
+        Assert.Equal(["one (edited)", "two"], after!.Comments.OrderBy(x => x.At).Select(x => x.Text));
+        (await c.DeleteAsync("/tasks/cm1/comments/c1")).EnsureSuccessStatusCode();
+        Assert.Equal(["two"], (await c.GetFromJsonAsync<Headboard.Api.Tasks.TaskDto>("/tasks/cm1", ApiFactory.Json))!.Comments.Select(x => x.Text));
+    }
+}
+
 public class SeriesTests
 {
     [Fact]
@@ -253,7 +270,7 @@ public class HistoryTests
         Assert.Single(t!.History);
         Assert.Equal("created", t.History[0].Kind);
 
-        var patch = await c.PatchAsJsonAsync("/tasks/hs1", new { pr = 0, history = new object[] { created, new { id = "h2", at = 1_700_000_001_000L, kind = "priority", from = "1", to = "0" } } }, ApiFactory.Json);
+        var patch = await c.PatchAsJsonAsync("/tasks/hs1", new { pr = 0, history = new object[] { new { id = "h2", at = 1_700_000_001_000L, kind = "priority", from = "1", to = "0" } } }, ApiFactory.Json); // partial log: unioned with h1
         patch.EnsureSuccessStatusCode();
         var p = await patch.Content.ReadFromJsonAsync<Headboard.Api.Tasks.TaskDto>(ApiFactory.Json);
         Assert.Equal(["created", "priority"], p!.History.Select(h => h.Kind));
@@ -293,11 +310,13 @@ public class HistoryTests
         (await c.DeleteAsync($"/tasks/ah1/comments/{t3.Comments.Single().Id}")).EnsureSuccessStatusCode();
         Assert.Equal("comment_removed", (await c.GetFromJsonAsync<Headboard.Api.Tasks.TaskDto>("/tasks/ah1", ApiFactory.Json))!.History.Last().Kind);
 
-        // a client patch carrying its own log is stored as-is, no extra server entries
+        // a client patch carrying its own log adds no server entries; its entries are unioned by id with what is stored
+        var before = (await c.GetFromJsonAsync<Headboard.Api.Tasks.TaskDto>("/tasks/ah1", ApiFactory.Json))!.History.Count;
         var own = new object[] { new { id = "h1", at = 1L, kind = "created" } };
         var p4 = await c.PatchAsJsonAsync("/tasks/ah1", new { pr = 2, history = own }, ApiFactory.Json);
         var t4 = await p4.Content.ReadFromJsonAsync<Headboard.Api.Tasks.TaskDto>(ApiFactory.Json);
-        Assert.Equal(["created"], t4!.History.Select(h => h.Kind));
+        Assert.Equal(before + 1, t4!.History.Count);
+        Assert.Equal("created", t4.History[0].Kind);
     }
 
     [Fact]

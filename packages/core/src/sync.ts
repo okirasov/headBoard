@@ -1,3 +1,4 @@
+import { mergeTask, taskDelta } from './merge';
 import type { Api, ApiError } from './api';
 import type { FileRef, Lang, Project, Task, Template, Theme } from './model';
 
@@ -130,13 +131,18 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
       seen.add(t.id);
       const json = JSON.stringify(t);
       if (taskSnap.get(t.id) === json) continue;
-      const isNew = !taskSnap.has(t.id);
+      const prev = taskSnap.get(t.id);
+      const isNew = prev === undefined;
       taskSnap.set(t.id, json);
       await enqueue(async () => {
         try {
           const ready = await uploadPendingFiles(t);
           taskSnap.set(t.id, JSON.stringify(ready));
-          if (isNew) await api.tasks.create(ready); else await api.tasks.patch(t.id, ready);
+          if (isNew) { await api.tasks.create(ready); return; }
+          // Send only what changed on this device (see mergeTask/taskDelta): other devices' edits to other fields survive.
+          const { patch, removedComments } = taskDelta(JSON.parse(prev) as Task, ready);
+          for (const cid of removedComments) await api.tasks.removeComment(t.id, cid).catch(() => undefined);
+          if (Object.keys(patch).length) await api.tasks.patch(t.id, patch);
         } catch (e) {
           if (code(e) === 'id_exists') { await api.tasks.patch(t.id, t).catch(() => undefined); return; }
           taskSnap.delete(t.id); scheduleRetry();
@@ -202,7 +208,12 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
     } catch { /* offline: keep local */ }
   }
 
-  /** Server tasks newer than local (by `touched`) or unknown locally are adopted; local-only tasks are left for flush. */
+  /**
+   * Pull server tasks and three-way merge them with local state (base = last synced snapshot):
+   * unknown tasks are adopted, one-sided edits from either side are kept, conflicts go to the newer
+   * `touched`. When the merge differs from the server copy the snapshot stays at the server version, so
+   * the next flush PATCHes the merged result back. Local-only tasks are left for flush.
+   */
   async function refreshTasks(): Promise<void> {
     const s = a.getState();
     if (!s.token) return;
@@ -217,7 +228,13 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
         const json = JSON.stringify(t);
         if (!mine) { merged.unshift(t); taskSnap.set(t.id, json); changed = true; continue; }
         if (JSON.stringify(mine) === json) { taskSnap.set(t.id, json); continue; }
-        if (t.touched >= mine.touched) { merged[merged.findIndex(x => x.id === t.id)] = t; taskSnap.set(t.id, json); changed = true; }
+        const snap = taskSnap.get(t.id);
+        const base = snap ? (JSON.parse(snap) as Task) : null;
+        if (base && t.touched < base.touched) continue; // stale read (replica lag / push still in flight): keep local
+        const m = mergeTask(base, mine, t);
+        taskSnap.set(t.id, json);
+        if (m === mine) { if (base) continue; }
+        if (JSON.stringify(m) !== JSON.stringify(mine)) { merged[merged.findIndex(x => x.id === t.id)] = m; changed = true; }
       }
       if (changed) a.setState({ tasks: merged });
     } catch { /* offline: keep local */ }
