@@ -1,0 +1,271 @@
+apps/api/Headboard.Api.Tests/CalendarTests.cs
+  s_2372cb08d633fa::t_3cc8ac75a0815f 181-183,186,195-196
+apps/api/Headboard.Api.Tests/TasksTests.cs
+  s_2372cb08d633fa::t_2587acd98a34c5 94,183-219
+apps/api/Headboard.Api/Calendar/CalendarSyncService.cs
+  s_2372cb08d633fa::t_eb74250dc00298 103-107,121,133,136-137
+apps/api/Headboard.Api/Data/Entities.cs
+  s_2372cb08d633fa::t_ed735fbfa2e8cc 45-46
+apps/api/Headboard.Api/Data/Migrations/20260910092816_TaskHistory.Designer.cs
+  s_2372cb08d633fa::t_d2fcda451fe7b6 1-404
+apps/api/Headboard.Api/Data/Migrations/20260910092816_TaskHistory.cs
+  s_2372cb08d633fa::t_15c1c9ec796433 1-29
+apps/api/Headboard.Api/Data/Migrations/AppDbModelSnapshot.cs
+  s_2372cb08d633fa::t_d74d24b71cee0e 266-269
+apps/api/Headboard.Api/Tasks/TaskDto.cs
+  s_2372cb08d633fa::t_9803118d14ef18 7-17,39,60-62
+apps/api/Headboard.Api/Tasks/TaskMapper.cs
+  s_2372cb08d633fa::t_5e3711ec6bf5c1 29,32-53,94,177-182
+apps/api/README.md
+  s_2372cb08d633fa::t_26d1d27fb49eb4 52-55,138
+apps/mobile/App.tsx
+  s_2372cb08d633fa::t_9dadfd8e3139ac 35,61-62,89-90,112
+apps/mobile/src/components/Icons.tsx
+  s_2372cb08d633fa::t_f72aaf9ddb6d36 33-35
+apps/mobile/src/sheets/ProfileSheet.tsx
+  s_2372cb08d633fa::t_5b1beaf877a822 11,100-104
+apps/mobile/src/sheets/TaskSheet.tsx
+  s_2372cb08d633fa::t_31e0bf062435e9 3,113-129
+apps/mobile/src/store/devSeed.ts
+  s_2372cb08d633fa::t_6637f590faab33 2,14-29
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_fcb1d58ed69bc2 7,26-27,77,94-95,166,206-207
+apps/web/src/App.tsx
+  s_2372cb08d633fa::t_825e27039dc2a8 23
+apps/web/src/components/layout/Shell.tsx
+  s_2372cb08d633fa::t_1dad23f1962fa9 16,37
+apps/web/src/components/layout/Sidebar.tsx
+  s_2372cb08d633fa::t_15ea262733c1a4 7,36
+apps/web/src/components/task/TaskDrawer.tsx
+  s_2372cb08d633fa::t_0e363e05d920a1 1,170,197-227
+apps/web/src/components/ui/Icons.tsx
+  s_2372cb08d633fa::t_715f0659c4f62b 76-78
+apps/web/src/store/devSeed.ts
+  s_2372cb08d633fa::t_86e4094519e34c 2,14-29
+apps/web/src/store/useStore.test.ts
+  s_2372cb08d633fa::t_8c54f06168db18 131-147
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_1ebec0baf7e2aa 5,49-50,116,145-146,267,328-330
+apps/web/tailwind.config.ts
+  s_2372cb08d633fa::t_48e0ef7ea87a31 26
+docs/architecture.html
+  s_2372cb08d633fa::t_2752d2764acdd2 89,93,101-102,104,177,199,201,228,290,411-413,459-460,479,496-498,535,548,554
+graphify-out/.graphify_labels.json
+  s_2372cb08d633fa::t_09622e5287fc56 1-114
+graphify-out/.graphify_labels.json.sig
+  s_2372cb08d633fa::t_6c462654b76f68 1
+graphify-out/.graphify_root
+  s_2372cb08d633fa::t_fbb4f04ca82bf3 1
+graphify-out/GRAPH_REPORT.md
+  s_2372cb08d633fa::t_ee6f319b806c6f 1-458
+graphify-out/cache/ast/v0.9.28/009160050e3257b50f9156061e5f2819ff085d360747c3c5df596261d344e7e6.json
+  s_2372cb08d633fa::t_0e4377d585623b 1
+graphify-out/cache/ast/v0.9.28/00c251b63400e780ccaf947f62de0049c77674ac80b63efe04fa96f0f37332ca.json
+  s_2372cb08d633fa::t_ad3457e38f9b23 1
+graphify-out/cache/ast/v0.9.28/00c9f2c144d9e0f25a60d8446aca8b2bdf149d965e36d4e37486d001bcd3766f.json
+  s_2372cb08d633fa::t_ff4e2fc68916f1 1
+graphify-out/cache/ast/v0.9.28/06d4a2da5802f477727badb38f62c0deef03264015bac0b0caec2d698255febf.json
+  s_2372cb08d633fa::t_1a74621ab08599 1
+graphify-out/cache/ast/v0.9.28/07297f06d84d049d1617c36dd313a196fd9ebd0a0b043901ab43e2484fa5fdb0.json
+  s_2372cb08d633fa::t_2cb33c2be7807a 1
+graphify-out/cache/ast/v0.9.28/08f8b06d8bec3136d014efe3c847b8a6a890c68cb8ecf065295e76f55e4d40e5.json
+  s_2372cb08d633fa::t_367d5e62fc9a3a 1
+graphify-out/cache/ast/v0.9.28/0924e3ec241ab1532332a3803aa59b499bcdb0748e6c9203d753ac1ccbc0bf6d.json
+  s_2372cb08d633fa::t_58fba764274ed7 1
+graphify-out/cache/ast/v0.9.28/11ce699b9b3870cec848c0079d732f75aee06722518b69277cded768143ccfe6.json
+  s_2372cb08d633fa::t_75058c584eb638 1
+graphify-out/cache/ast/v0.9.28/1276b4146dcea5f93e68cc4f25b00ee4af25783f30eea5e562aa57ebcb037a54.json
+  s_2372cb08d633fa::t_0ee6c42f01c6c8 1
+graphify-out/cache/ast/v0.9.28/1c26a466169b06a17ad4db1ee73fef9312ae5deceec925426be492b49cd4739a.json
+  s_2372cb08d633fa::t_c98a1440597d2f 1
+graphify-out/cache/ast/v0.9.28/1c4ed8e4ea00e5d5fcf19de98feb875d22e903a809a08fb64366cc78f1011b70.json
+  s_2372cb08d633fa::t_9bbc525aef60bd 1
+graphify-out/cache/ast/v0.9.28/1f7a9027f0873fa1a4c2e2f85d8c5d29227706d6c8e0673aabc4020fa2dfc3d6.json
+  s_2372cb08d633fa::t_f7145d1add1369 1
+graphify-out/cache/ast/v0.9.28/21951fe8b83107cdbe39da50e18b887845d529579a8d969755c08b245230513f.json
+  s_2372cb08d633fa::t_7cfad83889fce8 1
+graphify-out/cache/ast/v0.9.28/26b4d2c306e9edd77ee749a1252f043acd98bcb356def371b778960d03f45a88.json
+  s_2372cb08d633fa::t_306bbc03a503f3 1
+graphify-out/cache/ast/v0.9.28/274c35fa363e435ddec22642048f1a462dd36d7e00a7aa73313e2cbe2d5f7732.json
+  s_2372cb08d633fa::t_d09e9bc5a3e1c3 1
+graphify-out/cache/ast/v0.9.28/2c8a9e09e6679a10b22f6985666baa3107e561a0a7aa92b5f9bfa30f99cf669a.json
+  s_2372cb08d633fa::t_bfcb15d5682c84 1
+graphify-out/cache/ast/v0.9.28/2ddb83c0af03cf597539c22f7a6d3b80db54585bbd77f10e37376da1b32ec3f8.json
+  s_2372cb08d633fa::t_548573cacbacba 1
+graphify-out/cache/ast/v0.9.28/32cf986fb4363a6f323ff22afbcd04f26fe272852a7d00ea283d70769b1b8df0.json
+  s_2372cb08d633fa::t_0beb0507cbcb82 1
+graphify-out/cache/ast/v0.9.28/32d94eea0f75e4f2c3755e6884847c422a9286b569c8021e486d48edb2c1865e.json
+  s_2372cb08d633fa::t_dd60ef87a25351 1
+graphify-out/cache/ast/v0.9.28/33783da504aea2f14651d8ed4ea96f42f0d8801fb70f4b43d6762448c82179a0.json
+  s_2372cb08d633fa::t_b6970efcc2bfe7 1
+graphify-out/cache/ast/v0.9.28/33d79b7ed7f5a1a9a6e419412a2348d953a362d4c9a900f76a818e3b01be58ae.json
+  s_2372cb08d633fa::t_6c096cfc88e8b5 1
+graphify-out/cache/ast/v0.9.28/33dfddbaa88860fc6fbd01edd2b21f96c615faaa871f78384a4731ffc0b98872.json
+  s_2372cb08d633fa::t_164563d5cf8ad5 1
+graphify-out/cache/ast/v0.9.28/386d3f99014816c0b65f0918c715112ec9afebbf68576ea2d5b6ef7e273ab421.json
+  s_2372cb08d633fa::t_89149ca730d75f 1
+graphify-out/cache/ast/v0.9.28/3b1c81668d7c8a434f4de68434d2a31b5b9eacdce648fcc6f85acba3fdf15f17.json
+  s_2372cb08d633fa::t_aae177c680ed3e 1
+graphify-out/cache/ast/v0.9.28/3d6c45c7a42e41b21c829d5f3483091697aa4afbea92c48cd9c14b31557c5ee0.json
+  s_2372cb08d633fa::t_bccdad61ace5e3 1
+graphify-out/cache/ast/v0.9.28/49ea402bde354d2051e0950b1e1214940cb48f6248c93db7ed29f10ec2c4a200.json
+  s_2372cb08d633fa::t_0138079d4387c8 1
+graphify-out/cache/ast/v0.9.28/4c384e62769bd53418f5cd8f97f490aa9e9b29ced6071126f006f0b833391dff.json
+  s_2372cb08d633fa::t_18f899a6b443cd 1
+graphify-out/cache/ast/v0.9.28/4d918f0f50cd84848ed6f531be88ba924449fd030325312a2607405deeacf215.json
+  s_2372cb08d633fa::t_d27fe064f5befb 1
+graphify-out/cache/ast/v0.9.28/4ff0e3406533d5370d4ef97cadda45f566193b45b77e7b4331cd91fb7d1fe7eb.json
+  s_2372cb08d633fa::t_23c0184c6dc76b 1
+graphify-out/cache/ast/v0.9.28/51d8e8bdf4812aabe84ebb73e8b17710f68b557bd4ca82d565eb3bf81f692110.json
+  s_2372cb08d633fa::t_c7c4e8a9e944e3 1
+graphify-out/cache/ast/v0.9.28/530d7980c21f82f23be7fc194066f0711781d5cd84a80d5e4d3107d55948776b.json
+  s_2372cb08d633fa::t_71f47f3571c8aa 1
+graphify-out/cache/ast/v0.9.28/5374e532c63c89252d114638988bb10effd121a40bd139d77e832e3a75ca770f.json
+  s_2372cb08d633fa::t_9627245406f9b5 1
+graphify-out/cache/ast/v0.9.28/55583a38aaeee1867f909ea35c01ff6172dadf1f2ac616be69a22f351293aefd.json
+  s_2372cb08d633fa::t_63eb616d02aae9 1
+graphify-out/cache/ast/v0.9.28/583492853035983d405d7a29a541c514e36efb4108bc8f97078fb3d9cb5f6ed4.json
+  s_2372cb08d633fa::t_87e6215e20f69b 1
+graphify-out/cache/ast/v0.9.28/5997d28e593c0dcaf9a376f207e5aefc152d2434d541c7f925f6265316c807b7.json
+  s_2372cb08d633fa::t_8ed7c0404a6d63 1
+graphify-out/cache/ast/v0.9.28/676897eb82c7c7d53569f2c4444509735cbcaedaddcf0f4d1710bc6ee47b5081.json
+  s_2372cb08d633fa::t_a30a20572a908a 1
+graphify-out/cache/ast/v0.9.28/6b78bb3356247b79c4a1b5001f2a716b40ad2150e8f666de57f2179683dc79e3.json
+  s_2372cb08d633fa::t_fc5c182aa4e2ad 1
+graphify-out/cache/ast/v0.9.28/724440d57a9d19b1efad882f0cd2214d11a208c276a0f6bc705eb72b1f56dd89.json
+  s_2372cb08d633fa::t_15f0ae84fb573e 1
+graphify-out/cache/ast/v0.9.28/73aa31e8fe5dcc7c6985d5b70fc0158b1377ed01e3faa0bb4a3217beeac62303.json
+  s_2372cb08d633fa::t_50d8a5179b1438 1
+graphify-out/cache/ast/v0.9.28/75f31d8b11f6be06583de0e5fa3d7ce34f412a2193457bc8c421bfad3e745f63.json
+  s_2372cb08d633fa::t_4ce3ba6caff2ec 1
+graphify-out/cache/ast/v0.9.28/7fb9ade18b1813a43abb0dcd5c27cfa1cceb2ffd37413aa281e53fa9052cc1e8.json
+  s_2372cb08d633fa::t_64f219ef5c83fe 1
+graphify-out/cache/ast/v0.9.28/85c8605e12dddc9cdea8c85512f0c164ed033c671b1f49e9ea28982f8a565247.json
+  s_2372cb08d633fa::t_8772d0e643e407 1
+graphify-out/cache/ast/v0.9.28/8a4b450e1ab7af7e5ed482770f779a9202e1640069b183773adcc1e6db802c81.json
+  s_2372cb08d633fa::t_c0d37967e9dfe0 1
+graphify-out/cache/ast/v0.9.28/8aea67dfcc3146cabcd681ef605d910fb24861c51bddb9daf5930ebc5f08c9d7.json
+  s_2372cb08d633fa::t_576258404c511d 1
+graphify-out/cache/ast/v0.9.28/8df66e56294e3101831e0be734e356314bc0746ca584b40395acb5cbf96550ab.json
+  s_2372cb08d633fa::t_5110828223f874 1
+graphify-out/cache/ast/v0.9.28/8f8396a96207124ba5361ca7387c5056c0ea05956eb7c7f80a73b76337c84b3a.json
+  s_2372cb08d633fa::t_76f1f8008090c7 1
+graphify-out/cache/ast/v0.9.28/95aa844bcbc5b33a30a7dacd5e86f50b7dfb2e4934f100a421530cb8d419882a.json
+  s_2372cb08d633fa::t_75a25647a27eea 1
+graphify-out/cache/ast/v0.9.28/9afbb856904145bede07d91a247d36c47c74f8aa5b01a3a427cab6bddcc948cc.json
+  s_2372cb08d633fa::t_b767ac1effe9db 1
+graphify-out/cache/ast/v0.9.28/9cfc55a5599fff04d67d4e556031e5e0109d37804d5270990e5091b29d984002.json
+  s_2372cb08d633fa::t_a2bc0448c06baf 1
+graphify-out/cache/ast/v0.9.28/9ebb23829dfd52ecb93d2a9a828417c6d087af3d5945393e58ee58accc79ac39.json
+  s_2372cb08d633fa::t_0e62d0a6731fc0 1
+graphify-out/cache/ast/v0.9.28/a0e122ce2a818379a24209f37257af84bc01ac82596c7b1e03a32700daabc98f.json
+  s_2372cb08d633fa::t_0effa791e54c15 1
+graphify-out/cache/ast/v0.9.28/a1714078e075d428a73e8780713ad0a9b239568b59e0ca06fa7dd3008a1afbfc.json
+  s_2372cb08d633fa::t_69732e1f19bb56 1
+graphify-out/cache/ast/v0.9.28/a6ab3de7de657a90a06e4af3c24dd455040367e7657c94c4ff717439ae3328ba.json
+  s_2372cb08d633fa::t_0e03498e447263 1
+graphify-out/cache/ast/v0.9.28/b28c436cd8c01ce9ba273aa94c5f59c70ace6dc8d6a53910d1ef8a5012580af1.json
+  s_2372cb08d633fa::t_3861252b0a44c1 1
+graphify-out/cache/ast/v0.9.28/b30822f9f1ae4f2aa8ee654e9ab83b734ea74f014cf9144f7a14f3265419a214.json
+  s_2372cb08d633fa::t_37b64ddf182d73 1
+graphify-out/cache/ast/v0.9.28/b4cd009234d127dea7d95bf4fa43c85c6340d662640f82e32763979c176018b8.json
+  s_2372cb08d633fa::t_875a50beb5d87e 1
+graphify-out/cache/ast/v0.9.28/b5ec2b1b16cf51d2be04bb0d7578f38fcff6b25141f2550ae8c6775348ba20a5.json
+  s_2372cb08d633fa::t_d8ae62c3b2ec9e 1
+graphify-out/cache/ast/v0.9.28/b62a7a11217e361298768e5bffee4312ea84813609a0fb1229fea255d8fa0da1.json
+  s_2372cb08d633fa::t_f717c52b9abca2 1
+graphify-out/cache/ast/v0.9.28/b8cb66eaf0114d196345edfae0045220e1ca2094962bcff60327d1e84eb3751d.json
+  s_2372cb08d633fa::t_54d3a94f90b6fd 1
+graphify-out/cache/ast/v0.9.28/b92ce2728213c667a444ded897adc391cdfe5b910b29761e23a5a442403bc9d0.json
+  s_2372cb08d633fa::t_d34b5433858e21 1
+graphify-out/cache/ast/v0.9.28/bef75d47ab79a9c6a3b424dcc23776059f5effcf3d92b896df0c6e5b0624edee.json
+  s_2372cb08d633fa::t_94b8b16c00f100 1
+graphify-out/cache/ast/v0.9.28/bfe8852444dbf43ad242132eea4a2caeae7e3823dda8a277beac938af73fc52f.json
+  s_2372cb08d633fa::t_9c0a5d19b1b151 1
+graphify-out/cache/ast/v0.9.28/c0cdad9ea4b9de73c176dbea207792975c484d6891fa0006dafee76fa1025dc8.json
+  s_2372cb08d633fa::t_13109222c85764 1
+graphify-out/cache/ast/v0.9.28/c7eebf200ae0b4593006fb241abac9291dfa1564713c876d86991f1970f3ac7f.json
+  s_2372cb08d633fa::t_4a81799988cbda 1
+graphify-out/cache/ast/v0.9.28/c80ad567e2c0ed49d908185b2d58b09220fe07b5da668f1429b83f22e3f308e4.json
+  s_2372cb08d633fa::t_6dfb457c04406f 1
+graphify-out/cache/ast/v0.9.28/ca350b19d8f71ef53212b8a0e2beac0ae6df675e376876ef8f5c63465bafa934.json
+  s_2372cb08d633fa::t_88e3d9163528b8 1
+graphify-out/cache/ast/v0.9.28/cbd6dd880f58cd2b060ef61dd2b2bd86bb2c0a8274c051cd27a9710af6d4156a.json
+  s_2372cb08d633fa::t_bd4504c5368ce1 1
+graphify-out/cache/ast/v0.9.28/d395a0966a5ac04188becff996fbb812573694fa8882efb6e2450e1582291ed7.json
+  s_2372cb08d633fa::t_1ccc2219376e89 1
+graphify-out/cache/ast/v0.9.28/d95b0a07e868301106ad3bd0c42704f94f145c7e573ce52a59351a1effa0cf05.json
+  s_2372cb08d633fa::t_05f336e48dfaa5 1
+graphify-out/cache/ast/v0.9.28/d982e7911045927ee6909f36d457503b4b4693df04b816a08956ca0ed2dc9483.json
+  s_2372cb08d633fa::t_585f87aaf1c108 1
+graphify-out/cache/ast/v0.9.28/db22e288a95378feea9b18d010aa51941e805fada8d5fd7ceeb77246cdd20f6f.json
+  s_2372cb08d633fa::t_38abd478a880f9 1
+graphify-out/cache/ast/v0.9.28/db49b01b17cb7b84d3c18789dc8c2f3f95ac716dd76bf198ae649b6cf9c296dc.json
+  s_2372cb08d633fa::t_e9fdf6dcaf8bda 1
+graphify-out/cache/ast/v0.9.28/dc264831ac45069eefd84d833532b806b455066f44e8758b3cea4705f400cfb7.json
+  s_2372cb08d633fa::t_5ee7e7d7d2442c 1
+graphify-out/cache/ast/v0.9.28/dea6d3e89e4905c887b27afccae1224d85b15fce7f89dbc1f8eb9a0b959a8c6a.json
+  s_2372cb08d633fa::t_98c1b46484cccd 1
+graphify-out/cache/ast/v0.9.28/dfa429e2f9f13682a4c4245540f77f1f74d74b2615cc5b86c3691dc0234dbd33.json
+  s_2372cb08d633fa::t_debf0b730c7daa 1
+graphify-out/cache/ast/v0.9.28/e253c6cea42998f174c1c4138cc06069a59f7ecce5255a09b00426991facb55f.json
+  s_2372cb08d633fa::t_ff68aecbb8f68b 1
+graphify-out/cache/ast/v0.9.28/e503a1106bbf8237232ff84f9aa86d9933c4d8038a94f036ffb4c2bcaeae5be8.json
+  s_2372cb08d633fa::t_21b4377e8e3045 1
+graphify-out/cache/ast/v0.9.28/e7e8ff5a78c42745e0f584ad384d41ce6d48155bff5fc0932c9497e8ff9dfafc.json
+  s_2372cb08d633fa::t_ab4605f69ea979 1
+graphify-out/cache/ast/v0.9.28/e8843c72abe6ad007ef130d4925274e4d0a924b077d95655b0911f0b39ec0bdb.json
+  s_2372cb08d633fa::t_592b3413a9c85f 1
+graphify-out/cache/ast/v0.9.28/ec183349cb3c8316585a4f8fd082db9dfc5bfea54b3771d5504894627b05f920.json
+  s_2372cb08d633fa::t_06bbdc35dc7ad1 1
+graphify-out/cache/ast/v0.9.28/ede7880b43e55e85487f43c38e37d6507d7469a1f7ef9e64ed7165c0b84a30d7.json
+  s_2372cb08d633fa::t_d1634a04faca1e 1
+graphify-out/cache/ast/v0.9.28/efdf4886947938e8205c906b627916b3fda040eb77cf64305b94be12e602e213.json
+  s_2372cb08d633fa::t_8dc8eea75baf17 1
+graphify-out/cache/ast/v0.9.28/f8e047bbeaa384c76c6b202ead013a5149602d2d716ec6b66b9cd9fdeac8fb76.json
+  s_2372cb08d633fa::t_eb803216ffa979 1
+graphify-out/cache/ast/v0.9.28/fbf6d765d329e2014bc1ccb13d2a82ae7a88ac9785faae6c6c55a490f4b12cb4.json
+  s_2372cb08d633fa::t_ea73d5c0cbc696 1
+graphify-out/cache/stat-index.json
+  s_2372cb08d633fa::t_efb30d97b61c8b 1
+graphify-out/graph.html
+  s_2372cb08d633fa::t_9c667c4dbdfe6c 1-320
+graphify-out/graph.json
+  s_2372cb08d633fa::t_0e8c537cebc5ad 1-77097
+graphify-out/manifest.json
+  s_2372cb08d633fa::t_8d51bdfd369f6b 1-1227
+packages/core/src/history.test.ts
+  s_2372cb08d633fa::t_eb1bb314a718b3 1-60
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_382cdb35d42abd 27,76,128,188
+packages/core/src/index.ts
+  s_2372cb08d633fa::t_cd87882c15ccff 18
+packages/core/src/model.ts
+  s_2372cb08d633fa::t_7a684cf582a9c5 6,25-40,62-63,130
+packages/core/src/recurring.ts
+  s_2372cb08d633fa::t_c60b22328ba24b 2,34,36
+packages/core/src/templates.ts
+  s_2372cb08d633fa::t_d840266e5568d7 4,36
+apps/mobile/src/screens/HistoryScreen.tsx
+  s_2372cb08d633fa::t_7397bc8af48b09 1-108
+apps/web/src/views/history/HistoryView.tsx
+  s_2372cb08d633fa::t_0c682c3a78147a 1-122
+packages/core/src/history.ts
+  s_2372cb08d633fa::t_9ac1b8d16e80d1 1-119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "58714e2b7e81ffe9a0188c59858f330e84e4b4d5",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
