@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Linking, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import { type ColumnKey, type Task, commentTime, fmtDate, resolveColor } from '@headboard/core';
+import { type ColumnKey, type Task, commentTime, fmtDate, resolveColor, historyText, historyTime } from '@headboard/core';
 import { useStore, selectSelectedTask } from '../store/useStore';
 import { useTheme } from '../theme/ThemeContext';
 import { useT } from '../lib/useT';
@@ -109,6 +109,23 @@ function Body({ task }: { task: Task }) {
         <Pressable onPress={() => addComment(task.id, cmText)} style={{ width: 40, height: 40, borderRadius: 10, backgroundColor: t.acc, alignItems: 'center', justifyContent: 'center' }}>
           <IcSend size={14} color={t.onAcc} />
         </Pressable>
+      </View>
+      <View style={{ borderTopWidth: 1, borderTopColor: t.line, paddingTop: 10, gap: 5 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={txt(9.5, { mono: true, upper: true, ls: 0.8, color: t.mut2 })}>{T.historyTitle} · {(task.history ?? []).length}</Text>
+          <View style={{ flex: 1 }} />
+          <Pressable onPress={() => set({ mSel: null, mView: 'history', histId: task.id })} hitSlop={6}><Text style={txt(10.5, { mono: true, color: t.mut })}>{T.fullHistory} →</Text></Pressable>
+        </View>
+        {[...(task.history ?? [])].sort((a, b) => b.at - a.at).slice(0, 3).map(e => {
+          const { label, detail } = historyText(e, lang, projects);
+          return (
+            <View key={e.id} style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
+              <Text style={[txt(10, { mono: true, color: t.mut2 }), { width: 38 }]}>{historyTime(e)}</Text>
+              <Text style={txt(12, { w: 600, color: t.ink })}>{label}</Text>
+              {detail ? <Text numberOfLines={1} style={[txt(12, { color: t.mut }), { flex: 1 }]}>{detail}</Text> : null}
+            </View>
+          );
+        })}
       </View>
       {!isArchived && <Btn variant="card" color={t.mut} label={T.saveAsTemplate} size={12} pad={9} onPress={() => saveAsTemplate(task.id)} />}
       {task.chat && (

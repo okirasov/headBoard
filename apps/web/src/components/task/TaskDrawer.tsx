@@ -1,4 +1,4 @@
-import { type Priority, type Task, type ColumnKey, COLUMN_KEYS, dueLabel, fmtDate, commentTime, priorityLabel, statusLabel, PRIORITY_BAR_TOKEN } from '@headboard/core';
+import { type Priority, type Task, type ColumnKey, COLUMN_KEYS, dueLabel, fmtDate, commentTime, priorityLabel, statusLabel, PRIORITY_BAR_TOKEN, historyText, historyTime } from '@headboard/core';
 import { useState } from 'react';
 import { useStore, selectSelectedTask } from '../../store/useStore';
 import { useT } from '../../lib/useT';
@@ -167,6 +167,7 @@ function DrawerBody({ task }: { task: Task }) {
             </div>
           )}
         </div>
+        <HistoryPeek task={task} />
       </div>
       <div className="flex flex-col gap-8 pt-4">
         {isArchived ? (
@@ -188,6 +189,37 @@ function DrawerBody({ task }: { task: Task }) {
             </div>
           </>
         )}
+      </div>
+    </div>
+  );
+}
+
+/** Last few log entries with a link to the full timeline (History view). */
+function HistoryPeek({ task }: { task: Task }) {
+  const { T, lang } = useT();
+  const projects = useStore(s => s.projects);
+  const set = useStore(s => s.set);
+  const history = task.history ?? [];
+  const last = [...history].sort((a, b) => b.at - a.at).slice(0, 4);
+  return (
+    <div className="border-t border-line pt-12">
+      <div className="mb-7 flex items-center">
+        <Kicker>{T.historyTitle} · {history.length}</Kicker>
+        <span className="flex-1" />
+        <button type="button" onClick={() => set({ view: 'history', histId: task.id, sel: null })} className="cursor-pointer font-mono text-10.5 text-mut hover:text-acc">{T.fullHistory} →</button>
+      </div>
+      <div className="flex flex-col gap-5">
+        {last.map(e => {
+          const { label, detail } = historyText(e, lang, projects);
+          return (
+            <div key={e.id} className="flex items-baseline gap-8 text-12 leading-normal">
+              <span className="w-40 shrink-0 font-mono text-10.5 text-mut2">{historyTime(e)}</span>
+              <span className="shrink-0 font-semibold">{label}</span>
+              {detail && <span className="min-w-0 truncate text-mut">{detail}</span>}
+            </div>
+          );
+        })}
+        {last.length === 0 && <div className="text-12 text-mut2">{T.noHistory}</div>}
       </div>
     </div>
   );

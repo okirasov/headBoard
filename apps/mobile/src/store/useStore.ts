@@ -4,8 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Appearance } from 'react-native';
 import {
   type CaptureItem, type ColumnKey, type FileRef, type Lang, type Priority, type Project, type Provider, type Task, type Theme,
-  type User, type View, type Recur, type Template, newTask, newProject, dict, statusLabel, phrases, fmtDate, sizeHuman, rollRecurring, normalizeTags, renameTag, removeTag, applyTemplate, templateFromTask,
-} from '@headboard/core';
+  type User, type View, type Recur, type Template, newTask, newProject, dict, statusLabel, phrases, fmtDate, sizeHuman, rollRecurring, normalizeTags, renameTag, removeTag, applyTemplate, templateFromTask, withHistory, createdEntry } from '@headboard/core';
 
 export const STORAGE_KEY = 'headboard-v1';
 export const TOAST_MS = 2400;
@@ -24,6 +23,8 @@ export interface UiSlice {
   calSel: number | null; snack: string | null; zTask: string | null; zMonth: number; cmText: string;
   /** Task whose due date is being picked in the date sheet. */
   dueTask: string | null; dueMonth: number;
+  /** Task shown on the History screen; null = recently-changed list. */
+  histId: string | null;
   digestBusy: boolean; digestSeed: number;
 }
 export interface Actions {
@@ -73,7 +74,7 @@ export type Store = PersistedSlice & UiSlice & Actions;
 const initialPersisted: PersistedSlice = { tasks: [], projects: [], templates: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, user: null, lang: 'en', theme: 'light', showDone: true, token: null };
 const initialUi: UiSlice = {
   mView: 'board', mCol: 'focus', mSel: null, fTag: null, mCapOpen: false, mProfOpen: false, mPv: null,
-  capText: '', capItems: null, capBusy: false, q: '', calSel: null, snack: null, zTask: null, zMonth: 0, cmText: '', dueTask: null, dueMonth: 0, digestBusy: false, digestSeed: 0,
+  capText: '', capItems: null, capBusy: false, q: '', calSel: null, snack: null, zTask: null, zMonth: 0, cmText: '', dueTask: null, dueMonth: 0, histId: null, digestBusy: false, digestSeed: 0,
 };
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -90,7 +91,8 @@ export function systemTheme(): Theme {
 export const useStore = create<Store>()(
   persist(
     (set, get) => {
-      const patchTasks = (fn: (t: Task) => Task) => set(s => ({ tasks: s.tasks.map(fn) }));
+      // Every task mutation goes through here, so the change log is a by-product: diff prev → next and append.
+      const patchTasks = (fn: (t: Task) => Task) => set(s => { const now = Date.now(); return { tasks: s.tasks.map(t => { const n = fn(t); return n === t ? t : withHistory(t, n, now); }) }; });
       const patchTask: Actions['patchTask'] = (id, up) => patchTasks(t => (t.id === id ? { ...t, ...up } : t));
       const toast: Actions['toast'] = msg => { clearTimeout(toastTimer); set({ snack: msg }); toastTimer = setTimeout(() => set({ snack: null }), TOAST_MS); };
       const T = () => dict(get().lang);
@@ -161,7 +163,7 @@ export const useStore = create<Store>()(
         removeFile: (id, fileId) => patchTasks(t => (t.id === id ? { ...t, files: t.files.filter(f => f.id !== fileId) } : t)),
         addTasks: items => {
           const now = Date.now();
-          const fresh = items.map((x, i) => newTask({ id: 'n' + now + i, title: x.title, proj: x.proj, pr: x.pr, tags: normalizeTags(x.tags) }, now));
+          const fresh = items.map((x, i) => newTask({ id: 'n' + now + i, title: x.title, proj: x.proj, pr: x.pr, tags: normalizeTags(x.tags), history: [createdEntry(now, 'capture')] }, now));
           set(s => ({ tasks: [...fresh, ...s.tasks], mCapOpen: false, capText: '', capItems: null }));
           toast(phrases.addedToInbox(fresh.length, get().lang));
         },
@@ -201,7 +203,8 @@ export const useStore = create<Store>()(
       partialize: s => ({ tasks: s.tasks, projects: s.projects, templates: s.templates, projFiles: s.projFiles, digestText: s.digestText, digestAt: s.digestAt, notifyStale: s.notifyStale, notifyDue: s.notifyDue, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<PersistedSlice>;
-        return { ...current, ...p, theme: p.theme ?? systemTheme() };
+        const tasks = (p.tasks ?? current.tasks).map(t => (t.history ? t : { ...t, history: [] }));
+        return { ...current, ...p, tasks, theme: p.theme ?? systemTheme() };
       },
     },
   ),

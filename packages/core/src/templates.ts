@@ -1,6 +1,7 @@
 import { type Priority, type Task, type Template, newTask } from './model';
 import { addDays, startOfDay } from './dates';
 import { normalizeTags } from './tags';
+import { createdEntry } from './history';
 
 export function newTemplate(partial: Partial<Template> & { name: string }, now = Date.now()): Template {
   return {
@@ -32,6 +33,7 @@ export function fillPlaceholders(text: string, values: Record<string, string>): 
 export function applyTemplate(t: Template, values: Record<string, string>, now: number): Task {
   const due = t.dueInDays === null ? null : addDays(startOfDay(now), t.dueInDays) + 12 * 3600_000;
   return newTask({
+    history: [createdEntry(now, 'template')],
     title: fillPlaceholders(t.title, values).slice(0, 90), proj: t.proj, pr: t.pr as Priority, tags: t.tags,
     note: fillPlaceholders(t.note, values), due, remindDays: due === null ? null : t.remindDays, created: now, touched: now,
   }, now);

@@ -1,5 +1,5 @@
 // Development-only sample data (mirrors the handoff prototype). Never imported in production builds.
-import { DAY_MS, newTask, type FileRef, type Project, type Task } from '@headboard/core';
+import { DAY_MS, newTask, withHistory, type FileRef, type Project, type Task } from '@headboard/core';
 
 export function buildSeed(now = Date.now()): { tasks: Task[]; projects: Project[]; projFiles: Record<string, FileRef[]> } {
   const d = DAY_MS;
@@ -11,7 +11,22 @@ export function buildSeed(now = Date.now()): { tasks: Task[]; projects: Project[
     { id: 'p5', name: 'Health', color: '#97658C' },
   ];
   const T = (id: string, title: string, proj: string, pr: 0 | 1 | 2, status: Task['status'], idle: number, extra: Partial<Task> = {}) =>
-    newTask({ id, title, proj, pr, status, touched: now - idle * d, created: now - (idle + 4) * d, ...extra }, now);
+    seedHistory(newTask({ id, title, proj, pr, status, touched: now - idle * d, created: now - (idle + 4) * d, ...extra }, now), now);
+  // Replay a plausible past for the change log: created → (priority) → column move → comments / done.
+  const seedHistory = (t: Task, at: number): Task => {
+    const base: Task = { ...t, status: 'inbox', pr: 1, comments: [], files: [], doneAt: null, due: t.due === null ? null : t.due + 2 * d, tags: t.tags.slice(0, 1), history: t.history };
+    let cur = base;
+    const step = (next: Partial<Task>, when: number) => { cur = withHistory(cur, { ...cur, ...next }, when); };
+    const c = t.created;
+    if (t.tags.length > 1) step({ tags: t.tags }, c + 0.2 * d);
+    if (t.pr !== 1) step({ pr: t.pr }, c + 0.5 * d);
+    if (t.due !== null) step({ due: t.due }, c + 1 * d);
+    if (t.status !== 'inbox' && t.status !== 'done') step({ status: t.status }, c + 1.5 * d);
+    if (t.files.length) step({ files: t.files }, c + 2 * d);
+    for (const cm of t.comments) step({ comments: [...cur.comments, cm] }, cm.at);
+    if (t.status === 'done') { step({ status: 'focus' }, c + 1.5 * d); step({ status: 'done', doneAt: t.doneAt }, t.doneAt ?? at); }
+    return { ...t, history: cur.history };
+  };
   const tasks = [
     T('t1', 'Compare vector DBs for the memory feature', 'p2', 0, 'inbox', 0, { tags: ['infra', 'claude'], chat: 'https://claude.ai/', note: 'Pinecone vs pgvector vs sqlite-vss. Need a call before the sync spike lands.', files: [{ id: 'sf1', name: 'benchmarks.csv', kind: 'file', size: 18400 }] }),
     T('t2', 'Is spaced repetition the right resurfacing model?', 'p1', 1, 'inbox', 2, { tags: ['ux'], chat: 'https://claude.ai/' }),

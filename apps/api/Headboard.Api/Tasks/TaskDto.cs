@@ -4,6 +4,17 @@ namespace Headboard.Api.Tasks;
 
 public record CommentDto(string Id, string Text, long At);
 
+/// <summary>Core <c>HistoryEntry</c>: one change on a task.</summary>
+public class HistoryEntryDto
+{
+    public string Id { get; set; } = "";
+    public long At { get; set; }
+    public string Kind { get; set; } = "";
+    public string? From { get; set; }
+    public string? To { get; set; }
+    public string? Source { get; set; }
+}
+
 /// <summary>Wire shape of core <c>Task</c>. Property order matches model.ts; nulls serialize as null.</summary>
 public class TaskDto
 {
@@ -25,6 +36,7 @@ public class TaskDto
     public long? DoneAt { get; set; }
     public long? ArchivedAt { get; set; }
     public int? RemindDays { get; set; }
+    public List<HistoryEntryDto> History { get; set; } = [];
 }
 
 public static class Wire
@@ -45,4 +57,7 @@ public static class Wire
     }
 
     public static int ClampPriority(int n) => Math.Clamp(n, 0, 2);
+
+    public const int HistoryCap = 200;
+    public static readonly string[] HistoryKinds = ["created", "status", "done", "reopened", "archived", "restored", "priority", "due", "title", "note", "project", "tags", "recur", "remind", "snoozed", "unsnoozed", "bumped", "comment", "comment_removed", "file", "file_removed"];
 }

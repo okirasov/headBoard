@@ -4,7 +4,7 @@ import { useNow } from '../../lib/useNow';
 import { archived, digestStats, dueGroups, recurringTasks } from '@headboard/core';
 import { Logo } from '../brand/Logo';
 import { Kicker } from '../ui/primitives';
-import { IcArchive, IcBell, IcBoard, IcCalendar, IcDigest, IcRepeatNav, IcReview, IcSearch, IcStats } from '../ui/Icons';
+import { IcArchive, IcBell, IcBoard, IcCalendar, IcDigest, IcHistory, IcRepeatNav, IcReview, IcSearch, IcStats } from '../ui/Icons';
 import { NavItem } from './NavItem';
 import { ProjectList } from './ProjectList';
 import { ProfileBlock, SyncStatus } from './ProfileMenu';
@@ -33,6 +33,7 @@ export function Sidebar() {
         <NavItem active={view === 'recurring'} icon={<IcRepeatNav size={15} />} label={T.recurTitle} count={recurringTasks(tasks).length} onClick={() => set({ view: 'recurring' })} />
         <NavItem active={view === 'stats'} icon={<IcStats size={15} />} label={T.statsTitle} onClick={() => set({ view: 'stats' })} />
         <NavItem active={view === 'search'} icon={<IcSearch size={15} />} label={T.searchTitle} onClick={() => set({ view: 'search' })} />
+        <NavItem active={view === 'history'} icon={<IcHistory size={15} />} label={T.historyTitle} onClick={() => set({ view: 'history' })} />
         <NavItem active={view === 'archive'} icon={<IcArchive size={15} />} label={T.archiveTitle} count={archivedN} onClick={() => set({ view: 'archive' })} />
       </nav>
       <ProjectList />

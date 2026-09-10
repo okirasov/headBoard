@@ -1,4 +1,5 @@
 import { type Recur, type Task, newTask } from './model';
+import { createdEntry, withHistory } from './history';
 import { addDays, startOfDay } from './dates';
 import { live } from './tasks';
 
@@ -30,8 +31,9 @@ export function nextDueAfterCompletion(task: Task, now: number): number {
 
 /** Complete a recurring task: the original is closed for history, a fresh instance carries the series on. */
 export function rollRecurring(task: Task, now: number): { done: Task; next: Task } {
-  const done: Task = { ...task, status: 'done', doneAt: now, touched: now };
+  const done: Task = withHistory(task, { ...task, status: 'done', doneAt: now, touched: now }, now);
   const next = newTask({
+    history: [createdEntry(now, 'recur')],
     title: task.title, proj: task.proj, pr: task.pr, status: task.status === 'done' ? 'inbox' : task.status,
     due: nextDueAfterCompletion(task, now), recur: task.recur, tags: task.tags, note: task.note, chat: task.chat,
     remindDays: task.remindDays, created: now, touched: now,

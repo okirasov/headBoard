@@ -100,7 +100,11 @@ public class CalendarSyncService(AppDb db, GoogleCalendarClient google, ILogger<
 
             if (EventMapper.IsCancelled(ev))
             {
-                if (task is not null && task.CalendarEventId == eventId) { task.Due = null; task.CalendarEventId = null; task.CalendarHash = null; task.Touched = now; }
+                if (task is not null && task.CalendarEventId == eventId)
+                {
+                    TaskMapper.AppendHistory(task, "due", now, task.Due?.ToString(), null);
+                    task.Due = null; task.CalendarEventId = null; task.CalendarHash = null; task.Touched = now;
+                }
                 continue;
             }
             if (task is null)
@@ -114,6 +118,7 @@ public class CalendarSyncService(AppDb db, GoogleCalendarClient google, ILogger<
                     Id = Wire.NewId('g'), UserId = link.UserId, Title = title.Length > 90 ? title[..90] : title, Status = "inbox", Priority = 1,
                     Touched = now, Created = now, Due = due, TagsJson = "[]", Note = "", CalendarEventId = eventId,
                 };
+                TaskMapper.AppendHistory(fresh, "created", now);
                 fresh.CalendarHash = EventMapper.Hash(fresh, tz);
                 db.Tasks.Add(fresh); tasks.Add(fresh); byEvent[eventId] = fresh; byId[fresh.Id] = fresh;
                 // link the event back so later listings resolve it by task id
@@ -125,8 +130,11 @@ public class CalendarSyncService(AppDb db, GoogleCalendarClient google, ILogger<
             // Our own push comes back in the next incremental listing: same fingerprint → nothing to apply.
             if (EventMapper.HashOfEvent(ev) == task.CalendarHash) continue;
             // Otherwise last writer wins: apply the event only when it changed after the task was last touched.
+            var (prevDue, prevTitle) = (task.Due, task.Title);
             if (EventMapper.UpdatedMs(ev) >= task.Touched && EventMapper.ApplyInbound(task, ev, tz))
             {
+                if (task.Due != prevDue) TaskMapper.AppendHistory(task, "due", now, prevDue?.ToString(), task.Due?.ToString());
+                if (task.Title != prevTitle) TaskMapper.AppendHistory(task, "title", now, prevTitle, task.Title);
                 task.Touched = now;
                 task.CalendarHash = EventMapper.Hash(task, tz);
             }

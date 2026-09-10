@@ -178,8 +178,12 @@ public class CalendarTests
         var t = tasks!.Single(x => x.Id == "c2");
         Assert.Equal("Pay taxes (accountant)", t.Title);
         Assert.Equal("2026-09-20", EventMapper.LocalDate(t.Due!.Value, TimeZoneInfo.Utc));
+        Assert.Equal(["due", "title"], t.History.Select(h => h.Kind)); // server-side edits are logged with source = calendar
+        Assert.All(t.History, h => Assert.Equal("calendar", h.Source));
+        Assert.Equal("Pay taxes", t.History[1].From);
         var created = Assert.Single(tasks, x => x.Title == "Book flights");
         Assert.Equal("inbox", created.Status);
+        Assert.Equal("created", Assert.Single(created.History).Kind);
         Assert.Equal("2026-10-01", EventMapper.LocalDate(created.Due!.Value, TimeZoneInfo.Utc));
         Assert.Equal(created.Id, EventMapper.TaskIdOf(google.Events[foreign])); // event tagged back
 
@@ -188,6 +192,8 @@ public class CalendarTests
         await scheduler.ReconcileAsync(uid, CancellationToken.None);
         var after = (await c.GetFromJsonAsync<List<TaskDto>>("/tasks", ApiFactory.Json))!.Single(x => x.Id == "c2");
         Assert.Null(after.Due);
+        Assert.Equal("due", after.History.Last().Kind);
+        Assert.Null(after.History.Last().To);
     }
 
     [Fact]

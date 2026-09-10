@@ -128,6 +128,23 @@ describe('store', () => {
     useStore.getState().removeFile('a', 'f1');
     expect(useStore.getState().tasks[0].files.length).toBe(0);
   });
+  it('history: every mutation appends a diff entry, capture marks its source', () => {
+    reset();
+    const t = newTask({ id: 'h1', title: 'Log me', pr: 1 }, Date.now() - DAY_MS);
+    useStore.setState({ tasks: [t] });
+    const st = useStore.getState();
+    st.setPriority('h1', 0);
+    st.moveTask('h1', 'focus');
+    st.setTags('h1', ['a']);
+    st.addComment('h1', 'note to self');
+    st.complete('h1');
+    const kinds = useStore.getState().tasks[0].history.map(h => h.kind);
+    expect(kinds).toEqual(['created', 'priority', 'status', 'tags', 'comment', 'done']);
+    expect(useStore.getState().tasks[0].history[1]).toMatchObject({ from: '1', to: '0' });
+    st.addTasks([{ title: 'Captured', proj: null, pr: 1, tags: [] }]);
+    expect(useStore.getState().tasks[0].history[0]).toMatchObject({ kind: 'created', source: 'capture' });
+  });
+
   it('signIn/signOut', () => {
     useStore.getState().signIn('Apple');
     expect(useStore.getState().user).toMatchObject({ provider: 'Apple', initials: 'SK', email: 'sam.kern@icloud.com' });

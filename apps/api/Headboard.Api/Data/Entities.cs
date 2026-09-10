@@ -42,6 +42,8 @@ public class TaskRow
     public string? CalendarHash { get; set; }
     /// <summary>Due reminder: 0 = on the due day, 1 = the day before, null = none.</summary>
     public int? RemindDays { get; set; }
+    /// <summary>Change log (core <c>HistoryEntry[]</c>, oldest first, capped at 200). Stored as JSON; the API appends its own entries for server-side edits.</summary>
+    public string HistoryJson { get; set; } = "[]";
 }
 
 public class CommentRow

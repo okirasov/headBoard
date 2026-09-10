@@ -26,7 +26,30 @@ public static class TaskMapper
         DoneAt = t.DoneAt,
         ArchivedAt = t.ArchivedAt,
         RemindDays = t.RemindDays,
+        History = ParseHistory(t.HistoryJson),
     };
+
+    public static List<HistoryEntryDto> ParseHistory(string json)
+    {
+        try { return JsonSerializer.Deserialize<List<HistoryEntryDto>>(json, JsonSerializerOptions.Web) ?? []; }
+        catch (JsonException) { return []; }
+    }
+
+    /// <summary>Serializes a history list, keeping only known kinds and the newest <see cref="Wire.HistoryCap"/> entries.</summary>
+    public static string HistoryJson(IEnumerable<HistoryEntryDto> history)
+    {
+        var list = history.Where(h => Wire.HistoryKinds.Contains(h.Kind) && !string.IsNullOrEmpty(h.Id)).ToList();
+        if (list.Count > Wire.HistoryCap) list = list.Skip(list.Count - Wire.HistoryCap).ToList();
+        return JsonSerializer.Serialize(list, JsonSerializerOptions.Web);
+    }
+
+    /// <summary>Appends a server-made entry (source = "calendar" etc.) to a row's log.</summary>
+    public static void AppendHistory(TaskRow t, string kind, long at, string? from = null, string? to = null, string source = "calendar")
+    {
+        var list = ParseHistory(t.HistoryJson);
+        list.Add(new HistoryEntryDto { Id = Wire.NewId('h'), At = at, Kind = kind, From = from, To = to, Source = source });
+        t.HistoryJson = HistoryJson(list);
+    }
 
     public static List<string> ParseTags(string json)
     {
@@ -68,6 +91,7 @@ public static class TaskMapper
             DoneAt = d.DoneAt,
             ArchivedAt = d.ArchivedAt,
             RemindDays = d.RemindDays is 0 or 1 ? d.RemindDays : null,
+            HistoryJson = HistoryJson(d.History ?? []),
         };
     }
 
@@ -149,6 +173,12 @@ public static class TaskMapper
                     if (v.ValueKind == JsonValueKind.Null) t.RemindDays = null;
                     else if (v.TryGetInt32(out var rd) && rd is 0 or 1) t.RemindDays = rd;
                     else return "invalid_remindDays";
+                    break;
+                case "history":
+                    if (v.ValueKind != JsonValueKind.Array) return "invalid_history";
+                    var hist = v.Deserialize<List<HistoryEntryDto>>(JsonSerializerOptions.Web);
+                    if (hist is null || hist.Any(h => string.IsNullOrEmpty(h.Id) || h.At <= 0 || !Wire.HistoryKinds.Contains(h.Kind))) return "invalid_history";
+                    t.HistoryJson = HistoryJson(hist);
                     break;
                 case "id":
                 case "files":

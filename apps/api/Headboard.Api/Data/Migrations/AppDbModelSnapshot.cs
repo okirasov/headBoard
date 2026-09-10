@@ -263,6 +263,10 @@ namespace Headboard.Api.Data.Migrations
                     b.Property<long?>("Due")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("HistoryJson")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Note")
                         .IsRequired()
                         .HasColumnType("TEXT");

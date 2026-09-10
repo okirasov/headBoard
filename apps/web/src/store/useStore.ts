@@ -2,8 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import {
   type CaptureItem, type FileRef, type Lang, type Priority, type Project, type Provider, type Status, type Task, type Theme,
-  type User, type View, type ColumnKey, type Recur, type Template, newTask, newProject, dict, statusLabel, phrases, fmtDate, rollRecurring, normalizeTags, renameTag, removeTag, applyTemplate, templateFromTask,
-} from '@headboard/core';
+  type User, type View, type ColumnKey, type Recur, type Template, newTask, newProject, dict, statusLabel, phrases, fmtDate, rollRecurring, normalizeTags, renameTag, removeTag, applyTemplate, templateFromTask, withHistory, createdEntry } from '@headboard/core';
 
 export const STORAGE_KEY = 'headboard-v1';
 export const TOAST_MS = 2400;
@@ -47,6 +46,8 @@ export interface UiSlice {
   zTask: string | null;
   zMonth: number;
   profOpen: boolean;
+  /** Task shown on the History view; null = pick from the recently-changed list. */
+  histId: string | null;
   dragId: string | null;
   dragCol: ColumnKey | null;
   cmText: string;
@@ -112,7 +113,7 @@ const initialPersisted: PersistedSlice = {
 const initialUi: UiSlice = {
   view: 'board', q: '', fPr: null, fProj: null, fTag: null, sel: null,
   capOpen: false, capText: '', capItems: null, capBusy: false,
-  calSel: null, snack: null, pv: null, zTask: null, zMonth: 0, profOpen: false,
+  calSel: null, snack: null, pv: null, zTask: null, zMonth: 0, profOpen: false, histId: null,
   dragId: null, dragCol: null, cmText: '', digestBusy: false, digestSeed: 0,
 };
 
@@ -141,7 +142,8 @@ export function systemTheme(): Theme {
 export const useStore = create<Store>()(
   persist(
     (set, get) => {
-      const patchTasks = (fn: (t: Task) => Task) => set(s => ({ tasks: s.tasks.map(fn) }));
+      // Every task mutation goes through here, so the change log is a by-product: diff prev → next and append.
+      const patchTasks = (fn: (t: Task) => Task) => set(s => { const now = Date.now(); return { tasks: s.tasks.map(t => { const n = fn(t); return n === t ? t : withHistory(t, n, now); }) }; });
       const patchTask: Actions['patchTask'] = (id, up) => patchTasks(t => (t.id === id ? { ...t, ...up } : t));
       const toast: Actions['toast'] = msg => {
         clearTimeout(toastTimer);
@@ -262,7 +264,7 @@ export const useStore = create<Store>()(
           set(s => ({ projFiles: { ...s.projFiles, [projId]: (s.projFiles[projId] ?? []).filter(f => f.id !== fileId) } })),
         addTasks: items => {
           const now = Date.now();
-          const fresh = items.map((x, i) => newTask({ id: 'n' + now + i, title: x.title, proj: x.proj, pr: x.pr, tags: normalizeTags(x.tags) }, now));
+          const fresh = items.map((x, i) => newTask({ id: 'n' + now + i, title: x.title, proj: x.proj, pr: x.pr, tags: normalizeTags(x.tags), history: [createdEntry(now, 'capture')] }, now));
           set(s => ({ tasks: [...fresh, ...s.tasks], capOpen: false, capText: '', capItems: null }));
           toast(phrases.addedToInbox(fresh.length, get().lang));
         },
@@ -323,7 +325,9 @@ export const useStore = create<Store>()(
         const p = (persisted ?? {}) as Partial<PersistedSlice>;
         // theme: persisted choice, else system
         const theme: Theme = p.theme ?? systemTheme();
-        return { ...current, ...p, theme };
+        // tasks persisted before the change log existed get an empty one
+        const tasks = (p.tasks ?? current.tasks).map(t => (t.history ? t : { ...t, history: [] }));
+        return { ...current, ...p, tasks, theme };
       },
     },
   ),

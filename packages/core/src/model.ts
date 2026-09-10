@@ -3,7 +3,7 @@ export type Status = 'inbox' | 'focus' | 'waiting' | 'done' | 'archived';
 export type ColumnKey = Exclude<Status, 'archived'>;
 export type Lang = 'en' | 'ru';
 export type Theme = 'light' | 'dark';
-export type View = 'board' | 'review' | 'digest' | 'calendar' | 'archive' | 'projects' | 'stats' | 'search' | 'due' | 'recurring' | 'tags' | 'templates';
+export type View = 'board' | 'review' | 'digest' | 'calendar' | 'archive' | 'projects' | 'stats' | 'search' | 'due' | 'recurring' | 'tags' | 'templates' | 'history';
 export type Provider = 'Google' | 'Apple';
 export type Recur = 'daily' | 'weekly' | 'monthly' | null;
 
@@ -20,6 +20,22 @@ export interface Comment {
   id: string;
   text: string;
   at: number;
+}
+
+export type HistoryKind =
+  | 'created' | 'status' | 'done' | 'reopened' | 'archived' | 'restored'
+  | 'priority' | 'due' | 'title' | 'note' | 'project' | 'tags' | 'recur' | 'remind'
+  | 'snoozed' | 'unsnoozed' | 'bumped' | 'comment' | 'comment_removed' | 'file' | 'file_removed';
+
+/** One change on a task. `from`/`to` are strings (ids, epoch ms, labels) so the log survives renames. */
+export interface HistoryEntry {
+  id: string;
+  at: number;
+  kind: HistoryKind;
+  from?: string | null;
+  to?: string | null;
+  /** Who made the change when it was not the user in a client. */
+  source?: 'calendar' | 'template' | 'recur' | 'capture' | 'sync';
 }
 
 export interface Task {
@@ -43,6 +59,8 @@ export interface Task {
   archivedAt: number | null;
   /** Due reminder: 0 = push on the due day, 1 = the day before, null = none. */
   remindDays: 0 | 1 | null;
+  /** Change log, oldest first, capped (see history.ts). */
+  history: HistoryEntry[];
 }
 
 export interface Project {
@@ -109,5 +127,6 @@ export function newTask(partial: Partial<Task> & { title: string }, now: number)
     doneAt: partial.doneAt ?? null,
     archivedAt: partial.archivedAt ?? null,
     remindDays: partial.remindDays ?? null,
+    history: partial.history ?? [{ id: 'h' + now.toString(36) + Math.random().toString(36).slice(2, 5), at: partial.created ?? now, kind: 'created' }],
   };
 }

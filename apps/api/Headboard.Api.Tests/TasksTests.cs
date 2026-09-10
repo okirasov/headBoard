@@ -91,7 +91,7 @@ public class TasksTests(ApiFactory f) : IClassFixture<ApiFactory>
         var res = await c.PostAsJsonAsync("/tasks", new TaskDto { Title = "Shape" }, J);
         using var doc = JsonDocument.Parse(await res.Content.ReadAsStringAsync());
         var names = doc.RootElement.EnumerateObject().Select(p => p.Name).ToArray();
-        string[] expected = ["id", "title", "proj", "pr", "status", "touched", "created", "due", "snoozedUntil", "recur", "tags", "note", "chat", "files", "comments", "doneAt", "archivedAt", "remindDays"];
+        string[] expected = ["id", "title", "proj", "pr", "status", "touched", "created", "due", "snoozedUntil", "recur", "tags", "note", "chat", "files", "comments", "doneAt", "archivedAt", "remindDays", "history"];
         Assert.Equal(expected, names);
         foreach (var nullable in new[] { "proj", "due", "recur", "chat", "doneAt" })
             Assert.Equal(JsonValueKind.Null, doc.RootElement.GetProperty(nullable).ValueKind);
@@ -177,6 +177,43 @@ public class TasksTests(ApiFactory f) : IClassFixture<ApiFactory>
 
         var bad = await c.PutAsJsonAsync("/settings", new { lang = "de", theme = "dark", showDone = true }, J);
         Assert.Equal(HttpStatusCode.BadRequest, bad.StatusCode);
+    }
+}
+
+public class HistoryTests
+{
+    [Fact]
+    public async Task History_RoundTrips_AndRejectsUnknownKinds()
+    {
+        using var f = new ApiFactory();
+        var (c, _) = await f.LoginAsync("history@example.com");
+        var created = new { id = "h1", at = 1_700_000_000_000L, kind = "created" };
+        var create = await c.PostAsJsonAsync("/tasks", new { id = "hs1", title = "Track me", pr = 1, status = "inbox", touched = 1L, created = 1L, tags = new string[0], note = "", files = new object[0], comments = new object[0], history = new[] { created } }, ApiFactory.Json);
+        create.EnsureSuccessStatusCode();
+        var t = await create.Content.ReadFromJsonAsync<Headboard.Api.Tasks.TaskDto>(ApiFactory.Json);
+        Assert.Single(t!.History);
+        Assert.Equal("created", t.History[0].Kind);
+
+        var patch = await c.PatchAsJsonAsync("/tasks/hs1", new { pr = 0, history = new object[] { created, new { id = "h2", at = 1_700_000_001_000L, kind = "priority", from = "1", to = "0" } } }, ApiFactory.Json);
+        patch.EnsureSuccessStatusCode();
+        var p = await patch.Content.ReadFromJsonAsync<Headboard.Api.Tasks.TaskDto>(ApiFactory.Json);
+        Assert.Equal(["created", "priority"], p!.History.Select(h => h.Kind));
+        Assert.Equal("0", p.History[1].To);
+
+        var list = await c.GetFromJsonAsync<List<Headboard.Api.Tasks.TaskDto>>("/tasks", ApiFactory.Json);
+        Assert.Equal(2, list!.Single(x => x.Id == "hs1").History.Count);
+
+        var bad = await c.PatchAsJsonAsync("/tasks/hs1", new { history = new[] { new { id = "h3", at = 1L, kind = "teleported" } } }, ApiFactory.Json);
+        Assert.Equal(HttpStatusCode.BadRequest, bad.StatusCode);
+    }
+
+    [Fact]
+    public void HistoryJson_KeepsOnlyTheNewest200()
+    {
+        var many = Enumerable.Range(0, 250).Select(i => new Headboard.Api.Tasks.HistoryEntryDto { Id = "h" + i, At = i + 1, Kind = "bumped" });
+        var kept = Headboard.Api.Tasks.TaskMapper.ParseHistory(Headboard.Api.Tasks.TaskMapper.HistoryJson(many));
+        Assert.Equal(200, kept.Count);
+        Assert.Equal("h50", kept[0].Id);
     }
 }
 
