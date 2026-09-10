@@ -10,7 +10,7 @@ namespace Headboard.Api.Push;
 /// notification listing tasks whose reminder fires today (due today with RemindDays 0, due tomorrow with 1, or overdue with a reminder).
 /// Mirrors core <c>dueReminderTargets</c>.
 /// </summary>
-public class DueNotifier(IServiceScopeFactory scopes, IConfiguration cfg, ILogger<DueNotifier> log) : BackgroundService
+public class DueNotifier(IServiceScopeFactory scopes, IConfiguration cfg, Headboard.Api.Jobs.LeaderLease lease, ILogger<DueNotifier> log) : BackgroundService
 {
     private const long Day = 86_400_000;
 
@@ -23,7 +23,7 @@ public class DueNotifier(IServiceScopeFactory scopes, IConfiguration cfg, ILogge
         using var timer = new PeriodicTimer(interval);
         do
         {
-            try { await RunOnceAsync(hour, Wire.Now(), ct); }
+            try { if (await lease.TryAcquireAsync(Headboard.Api.Jobs.LeaderLease.Jobs, lease.Ttl, ct)) await RunOnceAsync(hour, Wire.Now(), ct); }
             catch (Exception e) when (!ct.IsCancellationRequested) { log.LogError(e, "Due notifier tick failed"); }
         } while (await timer.WaitForNextTickAsync(ct));
     }

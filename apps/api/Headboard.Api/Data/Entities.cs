@@ -122,6 +122,15 @@ public class PushSubscriptionRow
     public int FailCount { get; set; }
 }
 
+/// <summary>A named lease held by one API instance (see Jobs/LeaderLease.cs). <see cref="Version"/> is the optimistic concurrency token.</summary>
+public class LeaseRow
+{
+    public string Name { get; set; } = "";
+    public string Owner { get; set; } = "";
+    public long ExpiresAt { get; set; }
+    public long Version { get; set; }
+}
+
 /// <summary>Saved task blueprint (core <c>Template</c>).</summary>
 public class TemplateRow
 {

@@ -1,4 +1,5 @@
 using Headboard.Api.Data;
+using Headboard.Api.Jobs;
 using Headboard.Api.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +9,7 @@ namespace Headboard.Api.Digest;
 /// Background loop: every <c>Digest:CheckIntervalSeconds</c> (60) finds users whose local clock passed
 /// <c>Digest:Hour</c> (8) without a digest today and generates one. Disabled with <c>Digest:Enabled=false</c>.
 /// </summary>
-public class DigestScheduler(IServiceScopeFactory scopes, IConfiguration cfg, ILogger<DigestScheduler> log) : BackgroundService
+public class DigestScheduler(IServiceScopeFactory scopes, IConfiguration cfg, LeaderLease lease, ILogger<DigestScheduler> log) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
@@ -19,7 +20,7 @@ public class DigestScheduler(IServiceScopeFactory scopes, IConfiguration cfg, IL
         using var timer = new PeriodicTimer(interval);
         do
         {
-            try { await RunOnceAsync(hour, Wire.Now(), ct); }
+            try { if (await lease.TryAcquireAsync(LeaderLease.Jobs, lease.Ttl, ct)) await RunOnceAsync(hour, Wire.Now(), ct); }
             catch (Exception e) when (!ct.IsCancellationRequested) { log.LogError(e, "Digest scheduler tick failed"); }
         } while (await timer.WaitForNextTickAsync(ct));
     }

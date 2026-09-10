@@ -9,7 +9,7 @@ namespace Headboard.Api.Calendar;
 /// Runs calendar reconciliation: a full pass over connected users every <c>Calendar:PollIntervalSeconds</c> (300),
 /// plus immediate passes for users nudged by task mutations or a manual "sync now".
 /// </summary>
-public class CalendarSyncScheduler(IServiceScopeFactory scopes, IConfiguration cfg, ILogger<CalendarSyncScheduler> log) : BackgroundService
+public class CalendarSyncScheduler(IServiceScopeFactory scopes, IConfiguration cfg, Headboard.Api.Jobs.LeaderLease lease, ILogger<CalendarSyncScheduler> log) : BackgroundService
 {
     private readonly Channel<Guid> nudges = Channel.CreateUnbounded<Guid>(new UnboundedChannelOptions { SingleReader = true });
 
@@ -45,7 +45,7 @@ public class CalendarSyncScheduler(IServiceScopeFactory scopes, IConfiguration c
                 }
                 catch (OperationCanceledException) when (!ct.IsCancellationRequested) { /* time for the full pass */ }
                 foreach (var uid in pending) await ReconcileAsync(uid, ct);
-                await RunAllAsync(ct);
+                if (await lease.TryAcquireAsync(Headboard.Api.Jobs.LeaderLease.Jobs, lease.Ttl, ct)) await RunAllAsync(ct);
                 next = DateTimeOffset.UtcNow + interval;
             }
             catch (Exception e) when (!ct.IsCancellationRequested) { log.LogError(e, "Calendar sync loop failed"); next = DateTimeOffset.UtcNow + interval; }
@@ -62,7 +62,14 @@ public class CalendarSyncScheduler(IServiceScopeFactory scopes, IConfiguration c
 
     public async Task<CalendarLinkRow?> ReconcileAsync(Guid uid, CancellationToken ct)
     {
-        using var scope = scopes.CreateScope();
-        return await scope.ServiceProvider.GetRequiredService<CalendarSyncService>().ReconcileUserAsync(uid, Wire.Now(), ct);
+        // One reconcile per user at a time across instances; a crashed holder frees the user after the TTL.
+        var name = "calendar:" + uid.ToString("n");
+        if (!await lease.TryAcquireAsync(name, TimeSpan.FromSeconds(60), ct)) { log.LogDebug("Calendar reconcile for {User} skipped: held elsewhere", uid); return null; }
+        try
+        {
+            using var scope = scopes.CreateScope();
+            return await scope.ServiceProvider.GetRequiredService<CalendarSyncService>().ReconcileUserAsync(uid, Wire.Now(), ct);
+        }
+        finally { await lease.ReleaseAsync(name, CancellationToken.None); }
     }
 }

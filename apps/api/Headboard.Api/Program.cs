@@ -62,6 +62,7 @@ builder.Services.AddHttpClient<AnthropicClient>(AnthropicClient.HttpClientName, 
 builder.Services.AddHttpClient(GoogleVerifier.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(15));
 builder.Services.AddScoped<Headboard.Api.Digest.DigestService>();
 builder.Services.AddHttpClient(Headboard.Api.Calendar.GoogleCalendarClient.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(30));
+builder.Services.AddSingleton<Headboard.Api.Jobs.LeaderLease>();
 builder.Services.AddSingleton<Headboard.Api.Calendar.GoogleCalendarClient>();
 builder.Services.AddSingleton<Headboard.Api.Calendar.CalendarState>();
 builder.Services.AddScoped<Headboard.Api.Calendar.CalendarSyncService>();
@@ -105,7 +106,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/health", () => Results.Ok(new { ok = true }));
+app.MapGet("/health", (Headboard.Api.Jobs.LeaderLease lease) => Results.Ok(new { ok = true, instance = lease.InstanceId, leader = !lease.Enabled || lease.IsLeader }));
 app.MapAuth();
 app.MapTasks();
 app.MapComments();

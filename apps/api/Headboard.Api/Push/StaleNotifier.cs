@@ -9,7 +9,7 @@ namespace Headboard.Api.Push;
 /// Once a day at <c>Notify:Hour</c> (9) local time, users who opted in and have forgotten tasks get a push on every registered device.
 /// Reuses <see cref="DigestSchedule.IsDue"/> with <c>Settings.LastStaleNotifyAt</c> as the daily marker.
 /// </summary>
-public class StaleNotifier(IServiceScopeFactory scopes, IConfiguration cfg, ILogger<StaleNotifier> log) : BackgroundService
+public class StaleNotifier(IServiceScopeFactory scopes, IConfiguration cfg, Headboard.Api.Jobs.LeaderLease lease, ILogger<StaleNotifier> log) : BackgroundService
 {
     public const int DefaultHour = 9;
 
@@ -22,7 +22,7 @@ public class StaleNotifier(IServiceScopeFactory scopes, IConfiguration cfg, ILog
         using var timer = new PeriodicTimer(interval);
         do
         {
-            try { await RunOnceAsync(hour, Wire.Now(), ct); }
+            try { if (await lease.TryAcquireAsync(Headboard.Api.Jobs.LeaderLease.Jobs, lease.Ttl, ct)) await RunOnceAsync(hour, Wire.Now(), ct); }
             catch (Exception e) when (!ct.IsCancellationRequested) { log.LogError(e, "Stale notifier tick failed"); }
         } while (await timer.WaitForNextTickAsync(ct));
     }

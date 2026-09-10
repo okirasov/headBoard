@@ -57,6 +57,10 @@ Every task carries `history: HistoryEntry[]` (`{id, at, kind, from?, to?, source
 
 `StaleNotifier` evaluates every opted-in user (`Settings.NotifyStale`, toggled from the profile menu) once a day after `Notify:Hour` in their time zone: if `digestStats` finds forgotten tasks (idle ≥ 7 days, not snoozed), every registered device gets one notification (`StaleMessage`: “N forgotten tasks — “title” has waited X days…”, EN/RU) with deep link `/?view=review`. Devices: `POST /push/subscribe` with `{kind:"webpush", endpoint, keys}` (browser, VAPID) or `{kind:"expo", token}` (mobile, Expo Push API); `DELETE /push/subscribe`, `GET /push/subscriptions`, `GET /push/config` (VAPID public key), `POST /push/test`. Subscriptions that push services report as gone (404/410, `DeviceNotRegistered`) or that fail 5 times are dropped.
 
+## Running several instances
+
+Every background loop (digest, stale and due notifiers, the calendar full pass) is a hosted service inside the API, so two replicas would run the same job twice. `Jobs/LeaderLease` prevents that with a database lease: on each tick a loop tries to take or renew the `jobs` row in `Leases` (owner + expiry, guarded by a `Version` concurrency token, so the update is atomic on SQLite and PostgreSQL alike); only the holder runs the tick, the others skip it. A leader that dies stops renewing and another instance takes over after `Leases:TtlSeconds`. Calendar reconciliation for one user (triggered by task edits on any instance) takes a short `calendar:{userId}` lease instead, so nudges stay safe without routing them to the leader. `GET /health` reports `instance` and whether it is the `leader`.
+
 ## Tests
 
 ```bash
@@ -97,6 +101,8 @@ Keys can be set in `appsettings*.json`, environment variables (`Jwt__Secret`, ..
 | `Push:VapidPublicKey`, `Push:VapidPrivateKey` | — | VAPID key pair for Web Push (generate once with `npx web-push generate-vapid-keys`). Without them `/push/subscribe` for `webpush` returns 503; Expo pushes need no keys. |
 | `Push:Subject` | `mailto:hello@headboard.app` | VAPID subject (contact) sent to push services. |
 | `Notify:Enabled` | `true` | Runs the daily forgotten-tasks notifier (`StaleNotifier`). |
+| `Leases:Enabled` | `true` | Background jobs run only on the instance holding the `jobs` lease in the `Leases` table (see *Running several instances*). `false` = every instance runs every job. |
+| `Leases:TtlSeconds` | `180` | How long a lease lasts without renewal; a crashed leader is replaced after this. |
 | `Notify:Hour` | `9` | Local hour after which the reminder is evaluated once per day. |
 | `Notify:CheckIntervalSeconds` | `60` | Notifier polling interval. |
 

@@ -49,6 +49,7 @@ public class ApiFactory : WebApplicationFactory<Program>
             ["Digest:Enabled"] = "false",
             ["Calendar:Enabled"] = "false",
             ["Notify:Enabled"] = "false",
+            ["Leases:Enabled"] = "false",
             ["Push:VapidPublicKey"] = VapidPublicKey,
             ["Push:VapidPrivateKey"] = VapidPublicKey.Length > 0 ? "test-private" : "",
         }));
