@@ -1,0 +1,73 @@
+README.md
+  s_2372cb08d633fa::t_07031368679a67 3
+apps/mobile/App.tsx
+  s_2372cb08d633fa::t_44b54321aaa62c 31,59,86-87,107
+apps/mobile/src/components/Icons.tsx
+  s_2372cb08d633fa::t_4e4ba52839e6dd 30-32
+apps/mobile/src/components/TagEditorM.tsx
+  s_2372cb08d633fa::t_5354c8f376febf 1-49
+apps/mobile/src/screens/BoardScreen.tsx
+  s_2372cb08d633fa::t_d6f6ef0ddc5409 1-5,12,15,19-20,25-29
+apps/mobile/src/screens/TagsScreen.tsx
+  s_2372cb08d633fa::t_8f8ccd7d9fb1f3 1-60
+apps/mobile/src/sheets/ProfileSheet.tsx
+  s_2372cb08d633fa::t_76c1f71eed1bf9 11,88-92
+apps/mobile/src/sheets/TaskSheet.tsx
+  s_2372cb08d633fa::t_6fd15e64e0ecdd 16,47
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_06f773ba95958e 7,22,44-46,70,125-137,148
+apps/web/src/App.tsx
+  s_2372cb08d633fa::t_e8a52e17e0d10c 23
+apps/web/src/components/layout/Shell.tsx
+  s_2372cb08d633fa::t_657a085057ead9 14,33
+apps/web/src/components/task/TagEditor.tsx
+  s_2372cb08d633fa::t_e408b148540926 1-40
+apps/web/src/components/task/TaskDrawer.tsx
+  s_2372cb08d633fa::t_e6e24fd5dcf182 12,98-99
+apps/web/src/components/ui/Icons.tsx
+  s_2372cb08d633fa::t_d27140dd1f4f37 73-75
+apps/web/src/store/useStore.test.ts
+  s_2372cb08d633fa::t_71a6b59d874070 63-75
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_f92613a2a17106 5,37,72-75,106,209-223,246
+apps/web/src/views/board/BoardView.tsx
+  s_2372cb08d633fa::t_351c20cc410e37 6,17,22,42-47
+apps/web/src/views/board/TaskCard.tsx
+  s_2372cb08d633fa::t_5d640b00e027e1 82-86
+apps/web/src/views/tags/TagsView.tsx
+  s_2372cb08d633fa::t_d2f2cee29d21a0 1-74
+docs/architecture.html
+  s_2372cb08d633fa::t_994fa14d94e6bc 93,177,221-222,419-421,446-448,464
+packages/core/src/capture.ts
+  s_2372cb08d633fa::t_8fd453033d2671 2,39,56
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_fab03d4be2805a 27,74,124,178
+packages/core/src/index.ts
+  s_2372cb08d633fa::t_96febde7a1a47a 16
+packages/core/src/model.ts
+  s_2372cb08d633fa::t_818cb65a612fb7 6
+packages/core/src/tags.test.ts
+  s_2372cb08d633fa::t_7c124a17602a0a 1-39
+packages/core/src/tags.ts
+  s_2372cb08d633fa::t_cd2d0f61106b39 1-55
+packages/core/src/tasks.test.ts
+  s_2372cb08d633fa::t_1a8835c83dc2e6 78-79
+packages/core/src/tasks.ts
+  s_2372cb08d633fa::t_72a696c3b78c63 70,74-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "f47f25cd6d96255195d85716934e16c5cbe56981",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
