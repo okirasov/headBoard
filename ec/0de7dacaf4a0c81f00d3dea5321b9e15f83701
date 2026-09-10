@@ -1,0 +1,19 @@
+docs/architecture.html
+  s_2372cb08d633fa::t_1bdbff97316d6e 101,104,147,217,219,469,471,493,508
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "ec0de7dacaf4a0c81f00d3dea5321b9e15f83701",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
