@@ -84,6 +84,12 @@ export interface Actions {
   /** Complete a task; a recurring one is closed for history and its next instance is created. */
   complete: (id: string) => void;
   addComment: (id: string, text: string) => void;
+  editComment: (id: string, cid: string, text: string) => void;
+  removeComment: (id: string, cid: string) => void;
+  setTitle: (id: string, title: string) => void;
+  setNote: (id: string, note: string) => void;
+  setProject: (id: string, proj: string | null) => void;
+  setChat: (id: string, url: string | null) => void;
   attachFiles: (id: string, files: FileRef[]) => void;
   removeFile: (id: string, fileId: string) => void;
   attachProjFiles: (projId: string, files: FileRef[]) => void;
@@ -243,6 +249,12 @@ export const useStore = create<Store>()(
           toast(T().tTagDeleted);
         },
         setRecur: (id, recur) => { const t = get().tasks.find(x => x.id === id); patchTask(id, { recur, ...(recur && t && t.due === null ? { due: Date.now() } : {}) }); },
+        editComment: (id, cid, text) => { const txt = text.trim(); if (!txt) return; patchTasks(t => (t.id === id ? { ...t, comments: t.comments.map(c => (c.id === cid ? { ...c, text: txt } : c)) } : t)); },
+        removeComment: (id, cid) => patchTasks(t => (t.id === id ? { ...t, comments: t.comments.filter(c => c.id !== cid) } : t)),
+        setTitle: (id, title) => { const v = title.trim().slice(0, 90); if (v) patchTask(id, { title: v }); },
+        setNote: (id, note) => patchTask(id, { note }),
+        setProject: (id, proj) => patchTask(id, { proj: proj && get().projects.some(p => p.id === proj) ? proj : null }),
+        setChat: (id, url) => patchTask(id, { chat: url && /^https?:\/\//i.test(url) ? url : null }),
         addComment: (id, text) => {
           const txt = text.trim();
           if (!txt) return;

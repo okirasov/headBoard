@@ -145,6 +145,29 @@ describe('store', () => {
     expect(useStore.getState().tasks[0].history[0]).toMatchObject({ kind: 'created', source: 'capture' });
   });
 
+  it('editing: title, note, project, chat link, comments', () => {
+    reset();
+    useStore.setState({ tasks: [newTask({ id: 'e1', title: 'Old', pr: 1 }, Date.now())], projects: [{ id: 'p1', name: 'P', color: '#000' }] });
+    const st = useStore.getState();
+    st.setTitle('e1', '  New title  ');
+    st.setTitle('e1', '   '); // ignored
+    st.setNote('e1', 'a note');
+    st.setProject('e1', 'p1');
+    st.setProject('e1', 'nope'); // unknown project → cleared
+    st.setChat('e1', 'https://claude.ai/chat/1');
+    st.setChat('e1', 'javascript:alert(1)'); // rejected → null
+    st.addComment('e1', 'first');
+    const cid = useStore.getState().tasks[0].comments[0].id;
+    st.editComment('e1', cid, 'first (edited)');
+    let t = useStore.getState().tasks[0];
+    expect(t).toMatchObject({ title: 'New title', note: 'a note', proj: null, chat: null });
+    expect(t.comments[0].text).toBe('first (edited)');
+    st.removeComment('e1', cid);
+    t = useStore.getState().tasks[0];
+    expect(t.comments).toEqual([]);
+    expect(t.history.map(h => h.kind)).toEqual(['created', 'title', 'note', 'project', 'project', 'chat', 'chat', 'comment', 'comment_edited', 'comment_removed']);
+  });
+
   it('signIn/signOut', () => {
     useStore.getState().signIn('Apple');
     expect(useStore.getState().user).toMatchObject({ provider: 'Apple', initials: 'SK', email: 'sam.kern@icloud.com' });

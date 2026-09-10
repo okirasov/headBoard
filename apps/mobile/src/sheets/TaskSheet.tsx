@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Linking, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { type ColumnKey, type Task, commentTime, fmtDate, resolveColor, historyText, historyTime } from '@headboard/core';
 import { useStore, selectSelectedTask } from '../store/useStore';
 import { useTheme } from '../theme/ThemeContext';
@@ -14,7 +14,8 @@ import { PriorityDots, StatusPicker } from '../components/StatusPriority';
 import { AttachButtonM, FileChipM } from '../components/FileChipM';
 import { DueButton, RecurChips, RemindChips } from '../components/DueControls';
 import { TagEditorM } from '../components/TagEditorM';
-import { IcArchive, IcLink, IcSend } from '../components/Icons';
+import { ChatLinkM, CommentRowM, NoteInputM, ProjectChipsM, TitleInputM } from '../components/TaskEditorM';
+import { IcArchive, IcSend } from '../components/Icons';
 
 function Body({ task }: { task: Task }) {
   const { t } = useTheme();
@@ -44,8 +45,10 @@ function Body({ task }: { task: Task }) {
         <IdleBadge task={task} now={now} />
         {p && <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}><Dot color={resolveColor(p.color, t)} /><Text style={txt(11.5, { color: t.mut })}>{p.name}</Text></View>}
       </View>
-      <Text style={txt(19, { w: 500, color: t.ink, ls: -0.2, lh: 1.3 })}>{task.title}</Text>
+      {isArchived ? <Text style={txt(19, { w: 500, color: t.ink, ls: -0.2, lh: 1.3 })}>{task.title}</Text> : <TitleInputM task={task} />}
+      {!isArchived && <ProjectChipsM task={task} />}
       {!isArchived && <TagEditorM task={task} />}
+      <NoteInputM task={task} readOnly={isArchived} />
       <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
         {isArchived ? (
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: t.card, borderWidth: 1, borderColor: t.goldBd, borderRadius: 10, paddingVertical: 11, paddingHorizontal: 12 }}>
@@ -89,12 +92,7 @@ function Body({ task }: { task: Task }) {
       </ScrollView>
       {task.comments.length > 0 && (
         <ScrollView style={{ maxHeight: 120 }} contentContainerStyle={{ gap: 5 }}>
-          {task.comments.map(c => (
-            <View key={c.id} style={{ backgroundColor: t.inset, borderRadius: 10, paddingVertical: 7, paddingHorizontal: 10 }}>
-              <Text style={txt(12, { color: t.ink, lh: 1.45 })}>{c.text}</Text>
-              <Text style={[txt(9, { mono: true, color: t.mut2 }), { marginTop: 2 }]}>{commentTime(c.at, lang, now)}</Text>
-            </View>
-          ))}
+          {task.comments.map(c => <CommentRowM key={c.id} task={task} c={c} now={now} />)}
         </ScrollView>
       )}
       <View style={{ flexDirection: 'row', gap: 6 }}>
@@ -128,9 +126,7 @@ function Body({ task }: { task: Task }) {
         })}
       </View>
       {!isArchived && <Btn variant="card" color={t.mut} label={T.saveAsTemplate} size={12} pad={9} onPress={() => saveAsTemplate(task.id)} />}
-      {task.chat && (
-        <Btn variant="card" label={T.openChat} icon={<IcLink size={11} color={t.ink} />} onPress={() => Linking.openURL(task.chat as string)} />
-      )}
+      <ChatLinkM task={task} readOnly={isArchived} />
     </>
   );
 }

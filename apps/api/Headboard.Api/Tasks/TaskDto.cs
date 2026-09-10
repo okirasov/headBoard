@@ -60,5 +60,5 @@ public static class Wire
     public static int ClampPriority(int n) => Math.Clamp(n, 0, 2);
 
     public const int HistoryCap = 200;
-    public static readonly string[] HistoryKinds = ["created", "status", "done", "reopened", "archived", "restored", "priority", "due", "title", "note", "project", "tags", "recur", "remind", "snoozed", "unsnoozed", "bumped", "comment", "comment_removed", "file", "file_removed"];
+    public static readonly string[] HistoryKinds = ["created", "status", "done", "reopened", "archived", "restored", "priority", "due", "title", "note", "project", "tags", "recur", "remind", "snoozed", "unsnoozed", "bumped", "comment", "comment_edited", "comment_removed", "file", "file_removed", "chat"];
 }

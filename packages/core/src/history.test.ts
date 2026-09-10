@@ -39,6 +39,16 @@ describe('history', () => {
     expect(historyText(diffTask(base, { ...base, status: 'done' }, now)[0], 'ru').label).toBe('Завершена');
   });
 
+  it('comment edits and chat link changes are logged', () => {
+    const withC = { ...base, comments: [{ id: 'c', text: 'v1', at: now }] };
+    const edited = diffTask(withC, { ...withC, comments: [{ id: 'c', text: 'v2', at: now }] }, now);
+    expect(edited.map(e => e.kind)).toEqual(['comment_edited']);
+    expect(historyText(edited[0], 'en').detail).toBe('comment edited: v2');
+    const chat = diffTask(base, { ...base, chat: 'https://claude.ai/x' }, now);
+    expect(chat[0]).toMatchObject({ kind: 'chat', to: 'https://claude.ai/x' });
+    expect(historyText(diffTask({ ...base, chat: 'https://claude.ai/x' }, base, now)[0], 'ru').detail).toBe('снято');
+  });
+
   it('withHistory appends, keeps a source, and caps the log', () => {
     const t = withHistory(base, { ...base, pr: 0 }, now + 10, 'calendar');
     expect(t.history.length).toBe(2);

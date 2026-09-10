@@ -25,7 +25,7 @@ export interface Comment {
 export type HistoryKind =
   | 'created' | 'status' | 'done' | 'reopened' | 'archived' | 'restored'
   | 'priority' | 'due' | 'title' | 'note' | 'project' | 'tags' | 'recur' | 'remind'
-  | 'snoozed' | 'unsnoozed' | 'bumped' | 'comment' | 'comment_removed' | 'file' | 'file_removed';
+  | 'snoozed' | 'unsnoozed' | 'bumped' | 'comment' | 'comment_edited' | 'comment_removed' | 'file' | 'file_removed' | 'chat';
 
 /** One change on a task. `from`/`to` are strings (ids, epoch ms, labels) so the log survives renames. */
 export interface HistoryEntry {

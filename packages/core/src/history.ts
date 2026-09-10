@@ -41,6 +41,11 @@ export function diffTask(prev: Task, next: Task, at: number, source?: HistoryEnt
   }
   if (prev.comments.length < next.comments.length) out.push(entry('comment', at, { to: next.comments[next.comments.length - 1]?.text ?? '', ...s }));
   if (prev.comments.length > next.comments.length) out.push(entry('comment_removed', at, { ...s }));
+  if (prev.comments.length === next.comments.length) {
+    const edited = next.comments.find(c => { const b = prev.comments.find(p => p.id === c.id); return b && b.text !== c.text; });
+    if (edited) out.push(entry('comment_edited', at, { to: edited.text, ...s }));
+  }
+  if ((prev.chat ?? null) !== (next.chat ?? null)) out.push(entry('chat', at, { from: prev.chat ?? null, to: next.chat ?? null, ...s }));
   if (next.files.some(f => !prev.files.some(p => p.id === f.id))) {
     out.push(entry('file', at, { to: next.files.filter(f => !prev.files.some(p => p.id === f.id)).map(f => f.name).join(', '), ...s }));
   }
@@ -108,6 +113,8 @@ export function historyText(e: HistoryEntry, lang: Lang, projects: Project[] = [
     case 'bumped': return { label: T.bump, detail: T.hBumped };
     case 'comment': return { label: T.comments, detail: e.to ?? '' };
     case 'comment_removed': return { label: T.comments, detail: T.hCommentRemoved };
+    case 'comment_edited': return { label: T.comments, detail: T.hCommentEdited + (e.to ? ': ' + e.to : '') };
+    case 'chat': return { label: T.claudeChat, detail: e.to ? e.to : T.hCleared };
     case 'file': return { label: T.attachments, detail: e.to ?? '' };
     case 'file_removed': return { label: T.attachments, detail: T.hRemoved + (e.from ?? '') };
     default: return { label: ru ? e.kind : e.kind, detail: '' };

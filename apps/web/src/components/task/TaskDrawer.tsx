@@ -1,4 +1,4 @@
-import { type Priority, type Task, type ColumnKey, COLUMN_KEYS, dueLabel, fmtDate, commentTime, priorityLabel, statusLabel, PRIORITY_BAR_TOKEN, historyText, historyTime } from '@headboard/core';
+import { type Priority, type Task, type ColumnKey, COLUMN_KEYS, dueLabel, fmtDate, priorityLabel, statusLabel, PRIORITY_BAR_TOKEN, historyText, historyTime } from '@headboard/core';
 import { useState } from 'react';
 import { useStore, selectSelectedTask } from '../../store/useStore';
 import { useT } from '../../lib/useT';
@@ -9,6 +9,7 @@ import { Button, Dot, IconButton, Kicker, Scrim } from '../ui/primitives';
 import { IcArchive, IcChevronDown, IcLink, IcSend, IcX } from '../ui/Icons';
 import { AttachButton, FileChip } from '../files/FileChip';
 import { DueDateInput, RecurPicker, RemindPicker } from './DueControls';
+import { ChatLinkEditor, CommentRow, EditableTitle, NoteEditor, ProjectSelect } from './TaskEditor';
 import { TagEditor } from './TagEditor';
 import { IdleBadge } from '../../views/board/TaskCard';
 
@@ -90,15 +91,11 @@ function DrawerBody({ task }: { task: Task }) {
         <IconButton onClick={close} aria-label="close"><IcX size={11} /></IconButton>
       </div>
       <div className="-mr-8 flex min-h-0 flex-1 flex-col gap-14 overflow-y-auto pr-8">
-        <div className="text-pretty font-sans text-22 font-medium leading-[1.25] tracking-tightSm">{task.title}</div>
-        {p && (
-          <div className="flex items-center gap-6 text-12.5 leading-normal text-mut">
-            <Dot color={p.color} size={8} />{p.name}
-          </div>
-        )}
+        <EditableTitle task={task} readOnly={isArchived} />
+        {isArchived ? (p && <div className="flex items-center gap-6 text-12.5 leading-normal text-mut"><Dot color={p.color} size={8} />{p.name}</div>) : <ProjectSelect task={task} className="-ml-8 self-start" />}
         {!isArchived && <TagEditor task={task} />}
         {isArchived && task.tags.length > 0 && <div className="font-mono text-10.5 text-mut2">{task.tags.map(x => '#' + x).join(' ')}</div>}
-        {task.note && <div className="rounded-10 bg-inset px-13 py-11 text-13 leading-[1.55] text-mut">{task.note}</div>}
+        <NoteEditor task={task} readOnly={isArchived} />
         <div className="flex items-end gap-14">
           <div className="min-w-0 flex-1">
             <Kicker className="mb-7">{T.status}</Kicker>
@@ -126,12 +123,7 @@ function DrawerBody({ task }: { task: Task }) {
           <Kicker className="mb-7">{T.comments} · {task.comments.length}</Kicker>
           <div className="flex flex-col gap-6">
             <div className="-mr-6 flex max-h-186 flex-col gap-6 overflow-y-auto pr-6">
-              {task.comments.map(c => (
-                <div key={c.id} className="rounded-10 bg-inset px-11 py-8">
-                  <div className="text-12.5 leading-[1.5]">{c.text}</div>
-                  <div className="mt-3 font-mono text-9.5 text-mut2">{commentTime(c.at, lang, now)}</div>
-                </div>
-              ))}
+              {task.comments.map(c => <CommentRow key={c.id} task={task} c={c} now={now} />)}
             </div>
             <div className="flex gap-6">
               <input
@@ -160,12 +152,15 @@ function DrawerBody({ task }: { task: Task }) {
               <button type="button" onClick={() => saveAsTemplate(task.id)} className="cursor-pointer font-mono text-10.5 text-mut hover:text-acc">{T.saveAsTemplate}</button>
             </div>
           )}
-          {task.chat && (
-            <div className="flex items-center text-12 leading-normal">
-              <span className="w-130 shrink-0 text-mut2">{T.claudeChat}</span>
-              <a href={task.chat} target="_blank" rel="noreferrer" className="flex items-center gap-5 text-12 font-semibold"><IcLink size={11} />{T.openChat}</a>
-            </div>
-          )}
+          <div className="flex items-center text-12 leading-normal">
+            <span className="w-130 shrink-0 text-mut2">{T.claudeChat}</span>
+            {isArchived ? (task.chat ? <a href={task.chat} target="_blank" rel="noreferrer" className="flex items-center gap-5 text-12 font-semibold"><IcLink size={11} />{T.openChat}</a> : <span className="text-mut2">—</span>) : (
+              <div className="flex min-w-0 flex-1 items-center gap-6">
+                <ChatLinkEditor task={task} />
+                {task.chat && <a href={task.chat} target="_blank" rel="noreferrer" aria-label={T.openChat} className="flex shrink-0 items-center text-mut hover:text-acc"><IcLink size={11} /></a>}
+              </div>
+            )}
+          </div>
         </div>
         <HistoryPeek task={task} />
       </div>
