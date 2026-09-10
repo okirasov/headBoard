@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { STALE_DAYS_OPTIONS } from '@headboard/core';
+import { STALE_DAYS_OPTIONS, fmtTime } from '@headboard/core';
 import { useStore } from '../../store/useStore';
 import { api } from '../../lib/api';
 import { type PushState, disablePush, enablePush, pushState } from '../../lib/push';
@@ -98,12 +98,19 @@ export function ProfileBlock() {
 
 export function SyncStatus() {
   const { T } = useT();
+  const sync = useStore(s => s.sync);
+  const dot = sync.state === 'synced' ? 'bg-ok animate-pulse' : sync.state === 'syncing' ? 'bg-goldInk animate-pulse' : sync.state === 'offline' ? 'bg-hi' : 'bg-lineStrong';
+  const head = sync.state === 'offline' ? T.syncHeadOff : sync.state === 'local' ? T.offline : T.syncHeadOk;
+  const detail = sync.state === 'local' ? T.syncLocal
+    : sync.state === 'syncing' ? T.syncSyncing
+    : sync.state === 'offline' ? T.syncOffline + (sync.pending ? T.syncPending + sync.pending : '')
+    : T.syncSynced + (sync.lastSyncAt ? fmtTime(sync.lastSyncAt) : '');
   return (
-    <div className="flex items-center gap-8 px-10 pt-10">
-      <span className="h-7 w-7 shrink-0 rounded-full bg-ok animate-pulse" />
-      <div className="flex-1">
-        <div className="text-12 font-semibold leading-normal">{T.offline}</div>
-        <div className="font-mono text-10 text-mut2">{T.synced}</div>
+    <div className="flex items-center gap-8 px-10 pt-10" title={detail}>
+      <span className={cx('h-7 w-7 shrink-0 rounded-full', dot)} />
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-12 font-semibold leading-normal">{head}</div>
+        <div className="truncate font-mono text-10 text-mut2">{detail}</div>
       </div>
     </div>
   );

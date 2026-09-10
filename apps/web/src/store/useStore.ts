@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import {
   type CaptureItem, type FileRef, type Lang, type Priority, type Project, type Provider, type Status, type Task, type Theme,
-  type User, type View, type ColumnKey, type Recur, type Template, newTask, newProject, dict, statusLabel, phrases, fmtDate, rollRecurring, normalizeTags, renameTag, removeTag, applyTemplate, templateFromTask, withHistory, createdEntry } from '@headboard/core';
+  type User, type View, type ColumnKey, type Recur, type Template, newTask, newProject, dict, statusLabel, phrases, fmtDate, rollRecurring, normalizeTags, renameTag, removeTag, applyTemplate, templateFromTask, withHistory, createdEntry, type SyncStatus } from '@headboard/core';
 
 export const STORAGE_KEY = 'headboard-v1';
 export const TOAST_MS = 2400;
@@ -45,6 +45,8 @@ export interface UiSlice {
   capItems: CaptureItem[] | null;
   capBusy: boolean;
   calSel: number | null;
+  /** Live sync state from the engine (see core/sync.ts). */
+  sync: SyncStatus;
   snack: string | null;
   /** Reverts the last undoable action while its toast is visible. */
   snackUndo: (() => void) | null;
@@ -127,7 +129,7 @@ const initialPersisted: PersistedSlice = {
 const initialUi: UiSlice = {
   view: 'board', q: '', fPr: null, fProj: null, fTag: null, sel: null,
   capOpen: false, capText: '', capItems: null, capBusy: false,
-  calSel: null, snack: null, snackUndo: null, pv: null, zTask: null, zMonth: 0, profOpen: false, histId: null,
+  calSel: null, sync: { state: 'local', pending: 0, lastSyncAt: null }, snack: null, snackUndo: null, pv: null, zTask: null, zMonth: 0, profOpen: false, histId: null,
   dragId: null, dragCol: null, cmText: '', digestBusy: false, digestSeed: 0,
 };
 

@@ -16,6 +16,7 @@ function getEngine(): SyncEngine | null {
       setState: patch => useStore.setState(patch),
       subscribe: fn => useStore.subscribe(fn),
       fileToPart: async f => (f.src && f.src.startsWith('data:') ? dataUrlToBlob(f.src) : null),
+      onStatus: s => useStore.setState({ sync: s }),
       onUnauthorized: () => useStore.getState().signOut(),
       onError: () => { const s = useStore.getState(); s.toast(s.lang === 'ru' ? 'Синхронизация недоступна' : 'Sync unavailable'); },
     });
@@ -23,8 +24,17 @@ function getEngine(): SyncEngine | null {
   return engine;
 }
 
+let netHooked = false;
 export async function startSync(): Promise<void> {
-  await getEngine()?.start();
+  const e = getEngine();
+  if (!e) return;
+  if (!netHooked && typeof window !== 'undefined') {
+    netHooked = true;
+    // Browser connectivity: retry immediately when the network is back, show offline as soon as it drops.
+    window.addEventListener('online', () => { void e.flush(); void e.refreshTasks(); });
+    window.addEventListener('offline', () => useStore.setState(st => ({ sync: { ...st.sync, state: 'offline' } })));
+  }
+  await e.start();
 }
 
 /** Pull a newer scheduled digest and server-side task changes (calendar sync); called on tab focus and every 15 minutes. */

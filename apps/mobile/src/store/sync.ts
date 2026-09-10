@@ -22,6 +22,7 @@ function getEngine(): SyncEngine | null {
       subscribe: fn => useStore.subscribe(fn),
       // Local picks carry file:// (or content://) uris; React Native FormData uploads them from a descriptor.
       fileToPart: async f => (f.src && /^(file|content):/.test(f.src) ? { uri: f.src, name: f.name, type: mimeOf(f.name) } : null),
+      onStatus: s => useStore.setState({ sync: s }),
       onUnauthorized: () => useStore.getState().signOut(),
       onError: () => { const s = useStore.getState(); s.toast(s.lang === 'ru' ? 'Синхронизация недоступна' : 'Sync unavailable'); },
     });

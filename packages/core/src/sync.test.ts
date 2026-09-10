@@ -179,6 +179,30 @@ describe('sync engine', () => {
     eng.stop();
   });
 
+  it('reports syncing → synced, and offline with a pending count while pushes fail', async () => {
+    const st = fakeStore({ tasks: [newTask({ id: 's1', title: 'A' }, now)] });
+    const server = { tasks: [] as any[], projects: [] };
+    const { api } = fakeApi(server);
+    const seen: string[] = [];
+    let down = false;
+    const patch = api.tasks.patch;
+    api.tasks.patch = async (id: string, up: any) => { if (down) throw new TypeError('Failed to fetch'); return patch(id, up); };
+    const eng = createSyncEngine({ api, ...st, onStatus: s => seen.push(s.state + ':' + s.pending), fileToPart: async () => null, onUnauthorized: () => undefined, onError: () => undefined, baseUrl: '' }, 50);
+    await eng.start();
+    await tick();
+    expect(seen).toContain('syncing:0');
+    expect(eng.status().state).toBe('synced');
+    expect(eng.status().lastSyncAt).not.toBeNull();
+    down = true;
+    st.setState({ tasks: [{ ...st.getState().tasks[0], note: 'offline edit' }] });
+    await tick();
+    expect(eng.status()).toMatchObject({ state: 'offline', pending: 1 });
+    down = false;
+    await new Promise(r => setTimeout(r, 80)); // retry timer
+    expect(eng.status()).toMatchObject({ state: 'synced', pending: 0 });
+    eng.stop();
+  });
+
   it('signs out on 401', async () => {
     const st = fakeStore({});
     const out: string[] = [];

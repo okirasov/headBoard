@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Appearance } from 'react-native';
 import {
   type CaptureItem, type ColumnKey, type FileRef, type Lang, type Priority, type Project, type Provider, type Task, type Theme,
-  type User, type View, type Recur, type Template, newTask, newProject, dict, statusLabel, phrases, fmtDate, sizeHuman, rollRecurring, normalizeTags, renameTag, removeTag, applyTemplate, templateFromTask, withHistory, createdEntry } from '@headboard/core';
+  type User, type View, type Recur, type Template, newTask, newProject, dict, statusLabel, phrases, fmtDate, sizeHuman, rollRecurring, normalizeTags, renameTag, removeTag, applyTemplate, templateFromTask, withHistory, createdEntry, type SyncStatus } from '@headboard/core';
 
 export const STORAGE_KEY = 'headboard-v1';
 export const TOAST_MS = 2400;
@@ -21,7 +21,7 @@ export interface PersistedSlice {
 export interface UiSlice {
   mView: View; mCol: ColumnKey; mSel: string | null; fTag: string | null; mCapOpen: boolean; mProfOpen: boolean; mPv: Preview | null;
   capText: string; capItems: CaptureItem[] | null; capBusy: boolean; q: string;
-  calSel: number | null; snack: string | null; snackUndo: (() => void) | null; zTask: string | null; zMonth: number; cmText: string;
+  calSel: number | null; sync: SyncStatus; snack: string | null; snackUndo: (() => void) | null; zTask: string | null; zMonth: number; cmText: string;
   /** Task whose due date is being picked in the date sheet. */
   dueTask: string | null; dueMonth: number;
   /** Task shown on the History screen; null = recently-changed list. */
@@ -83,7 +83,7 @@ export type Store = PersistedSlice & UiSlice & Actions;
 const initialPersisted: PersistedSlice = { tasks: [], projects: [], templates: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, staleDays: 7, user: null, lang: 'en', theme: 'light', showDone: true, token: null };
 const initialUi: UiSlice = {
   mView: 'board', mCol: 'focus', mSel: null, fTag: null, mCapOpen: false, mProfOpen: false, mPv: null,
-  capText: '', capItems: null, capBusy: false, q: '', calSel: null, snack: null, snackUndo: null, zTask: null, zMonth: 0, cmText: '', dueTask: null, dueMonth: 0, histId: null, digestBusy: false, digestSeed: 0,
+  capText: '', capItems: null, capBusy: false, q: '', calSel: null, sync: { state: 'local', pending: 0, lastSyncAt: null }, snack: null, snackUndo: null, zTask: null, zMonth: 0, cmText: '', dueTask: null, dueMonth: 0, histId: null, digestBusy: false, digestSeed: 0,
 };
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
 

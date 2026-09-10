@@ -21,8 +21,18 @@ export interface SyncState {
   staleDays: number;
 }
 
+/** What the UI shows about sync: local-only (no account), in flight, all pushed, or waiting for the network. */
+export interface SyncStatus {
+  state: 'local' | 'syncing' | 'synced' | 'offline';
+  /** Items that failed to push and will be retried. */
+  pending: number;
+  lastSyncAt: number | null;
+}
+
 export interface SyncAdapter {
   api: Api;
+  /** Called whenever the sync status changes. */
+  onStatus?: (s: SyncStatus) => void;
   getState: () => SyncState;
   /** Merge a partial state (server data on initial load, uploaded file refs). */
   setState: (patch: Partial<SyncState>) => void;
@@ -43,6 +53,7 @@ export interface SyncEngine {
   start: () => Promise<void>;
   /** Push any local changes now (normally driven by `subscribe`). */
   flush: () => Promise<void>;
+  status: () => SyncStatus;
   /** Re-read settings from the server and adopt a newer digest (call on focus / app foreground). */
   refreshSettings: () => Promise<void>;
   /** Pull tasks changed on the server (calendar sync, other devices) and merge the newer ones into the store. */
@@ -71,7 +82,17 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
   let unsub: (() => void) | null = null;
   let inflight: Promise<void> | null = null;
 
-  const enqueue = (fn: () => Promise<unknown>) => { queue = queue.then(fn, fn).catch(() => undefined); return queue; };
+  let status: SyncStatus = { state: 'local', pending: 0, lastSyncAt: null };
+  let active = 0;
+  let failed = 0;
+  const report = (patch: Partial<SyncStatus>) => { const next = { ...status, ...patch }; if (JSON.stringify(next) !== JSON.stringify(status)) { status = next; a.onStatus?.(status); } };
+  const settle = () => report(failed > 0 ? { state: 'offline', pending: failed } : { state: 'synced', pending: 0, lastSyncAt: Date.now() });
+  const enqueue = (fn: () => Promise<unknown>) => {
+    active++;
+    report({ state: 'syncing' });
+    queue = queue.then(fn, fn).catch(() => undefined).finally(() => { active--; if (active === 0) settle(); });
+    return queue;
+  };
   const absolute = (src: string) => (/^(https?:|data:|file:|content:)/.test(src) ? src : a.baseUrl.replace(/\/$/, '') + src);
   const code = (e: unknown) => (e as ApiError | undefined)?.code;
   const scheduleRetry = () => { clearTimeout(retryTimer); retryTimer = setTimeout(() => { void flush(); }, retryMs); };
@@ -97,7 +118,8 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
 
   async function flush(): Promise<void> {
     const s = a.getState();
-    if (!s.token) return;
+    if (!s.token) { report({ state: 'local', pending: 0 }); return; }
+    failed = 0;
 
     const seenP = new Set<string>();
     for (const p of s.projects) {
@@ -108,7 +130,7 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
       projSnap.set(p.id, json);
       await enqueue(() => (isNew ? api.projects.create(p) : api.projects.patch(p.id, p)).catch(e => {
         if (code(e) === 'id_exists') return;
-        projSnap.delete(p.id); scheduleRetry();
+        projSnap.delete(p.id); failed++; scheduleRetry();
       }));
     }
     for (const id of Array.from(projSnap.keys())) if (!seenP.has(id)) { projSnap.delete(id); await enqueue(() => api.projects.remove(id).catch(() => undefined)); }
@@ -122,7 +144,7 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
       tplSnap.set(t.id, json);
       await enqueue(() => (isNew ? api.templates.create(t) : api.templates.patch(t.id, t)).catch(e => {
         if (code(e) === 'id_exists') return;
-        tplSnap.delete(t.id); scheduleRetry();
+        tplSnap.delete(t.id); failed++; scheduleRetry();
       }));
     }
     for (const id of Array.from(tplSnap.keys())) if (!seenT.has(id)) { tplSnap.delete(id); await enqueue(() => api.templates.remove(id).catch(() => undefined)); }
@@ -146,7 +168,7 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
           if (Object.keys(patch).length) await api.tasks.patch(t.id, patch);
         } catch (e) {
           if (code(e) === 'id_exists') { await api.tasks.patch(t.id, t).catch(() => undefined); return; }
-          taskSnap.delete(t.id); scheduleRetry();
+          taskSnap.delete(t.id); failed++; scheduleRetry();
         }
       });
     }
@@ -165,7 +187,7 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
             a.setState({ digestAt: saved.digestAt ?? null, digestText: saved.digestText ?? cur.digestText });
             settingsKey = JSON.stringify(settingsOf(a.getState(), a.timeZone));
           }
-        } catch { settingsKey = ''; scheduleRetry(); }
+        } catch { settingsKey = ''; failed++; scheduleRetry(); }
       }), 500);
     }
   }
@@ -189,11 +211,22 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
         taskSnap = new Map();
         await flush();
       }
+      report({ state: 'synced', pending: 0, lastSyncAt: Date.now() });
     } catch (e) {
-      if ((e as ApiError | undefined)?.status === 401) { a.onUnauthorized(); return; }
+      if ((e as ApiError | undefined)?.status === 401) { a.onUnauthorized(); report({ state: 'local', pending: 0 }); return; }
       a.onError('sync_unavailable');
+      report({ state: 'offline' });
+      scheduleRetry();
     }
-    if (!unsub) unsub = a.subscribe(() => { void flush(); });
+    // Flush only when synced data changed. UI-only updates (including our own status reports) must not
+    // re-enter flush, otherwise a failing push would loop through report → setState → flush without yielding.
+    let seen = { tasks: a.getState().tasks, projects: a.getState().projects, templates: a.getState().templates, settings: JSON.stringify(settingsOf(a.getState(), a.timeZone)) };
+    if (!unsub) unsub = a.subscribe(s => {
+      const settings = JSON.stringify(settingsOf(s, a.timeZone));
+      if (s.tasks === seen.tasks && s.projects === seen.projects && s.templates === seen.templates && settings === seen.settings) return;
+      seen = { tasks: s.tasks, projects: s.projects, templates: s.templates, settings };
+      void flush();
+    });
   }
 
   async function refreshSettings(): Promise<void> {
@@ -238,7 +271,8 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
         if (JSON.stringify(m) !== JSON.stringify(mine)) { merged[merged.findIndex(x => x.id === t.id)] = m; changed = true; }
       }
       if (changed) a.setState({ tasks: merged });
-    } catch { /* offline: keep local */ }
+      if (active === 0) report({ state: failed > 0 ? 'offline' : 'synced', lastSyncAt: Date.now() });
+    } catch { report({ state: 'offline' }); }
   }
 
   return {
@@ -246,6 +280,7 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
     flush,
     refreshSettings,
     refreshTasks,
+    status: () => status,
     stop: () => { unsub?.(); unsub = null; clearTimeout(retryTimer); clearTimeout(settingsTimer); },
   };
 }
