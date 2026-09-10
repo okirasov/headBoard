@@ -1,0 +1,45 @@
+apps/api/Headboard.Api.Tests/ApiFactory.cs
+  s_2372cb08d633fa::t_393229a889cc27 52
+apps/api/Headboard.Api/Calendar/CalendarSyncScheduler.cs
+  s_2372cb08d633fa::t_af4fa01a0c56f0 12,48,65-73
+apps/api/Headboard.Api/Data/AppDb.cs
+  s_2372cb08d633fa::t_e0fbccdb8fe650 16,21
+apps/api/Headboard.Api/Data/Entities.cs
+  s_2372cb08d633fa::t_a3238fb894784c 125-133
+apps/api/Headboard.Api/Data/Migrations/20260910111625_Leases.Designer.cs
+  s_2372cb08d633fa::t_a108fd9ce4add4 1-428
+apps/api/Headboard.Api/Data/Migrations/20260910111625_Leases.cs
+  s_2372cb08d633fa::t_f3e04c6b69dce4 1-35
+apps/api/Headboard.Api/Data/Migrations/AppDbModelSnapshot.cs
+  s_2372cb08d633fa::t_e845fc3eb5f4b1 130-150
+apps/api/Headboard.Api/Digest/DigestScheduler.cs
+  s_2372cb08d633fa::t_9f6df03856d729 2,12,23
+apps/api/Headboard.Api/Jobs/LeaderLease.cs
+  s_2372cb08d633fa::t_cf98365f20df6d 1-90
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_7c0dc91daff283 65,109
+apps/api/Headboard.Api/Push/DueNotifier.cs
+  s_2372cb08d633fa::t_1db4cb9d4c58da 13,26
+apps/api/Headboard.Api/Push/StaleNotifier.cs
+  s_2372cb08d633fa::t_2d45da2072015c 12,25
+apps/api/README.md
+  s_2372cb08d633fa::t_f14138167616b8 60-63,104-105
+apps/api/Headboard.Api.Tests/LeaseTests.cs
+  s_2372cb08d633fa::t_c347232f00ebaf 1-78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "c53c8902ed9efa3ec3ff0112ee05fd0d7e527ab6",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
