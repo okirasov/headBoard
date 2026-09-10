@@ -1,0 +1,31 @@
+apps/mobile/App.tsx
+  s_2372cb08d633fa::t_bce6f2d5270fc1 60
+apps/mobile/src/screens/BoardScreen.tsx
+  s_2372cb08d633fa::t_95cd1d4059345e 8,10,34
+apps/web/src/views/board/BoardView.tsx
+  s_2372cb08d633fa::t_da26c9350f14aa 9,53
+apps/web/src/views/board/SeedHint.tsx
+  s_2372cb08d633fa::t_89c9d9f1ffba31 11
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_d869dd9945bd49 41,95,152
+apps/mobile/src/components/WelcomeM.tsx
+  s_2372cb08d633fa::t_6d2e4a62e250e0 1-39
+apps/web/src/views/board/Welcome.tsx
+  s_2372cb08d633fa::t_353e4e919f8658 1-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "662bda4ed767cb4d89649320c3bbe87b5c636986",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
