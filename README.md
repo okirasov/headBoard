@@ -26,6 +26,10 @@ Web talks to the API when `apps/web/.env` sets `VITE_API_URL` (see `.env.example
 
 Development helpers: an empty board shows a "Load sample data" button in dev builds (web and mobile). Mobile also accepts `EXPO_PUBLIC_DEV_AUTOLOGIN=1`, `EXPO_PUBLIC_DEV_RESET=1`, `EXPO_PUBLIC_DEV_VIEW`, `EXPO_PUBLIC_DEV_THEME`, `EXPO_PUBLIC_DEV_LANG`, `EXPO_PUBLIC_DEV_SHEET` for screenshot verification.
 
+## Architecture
+
+See `docs/architecture.html` for the technical architecture: layers, data model, sync, API contract, background jobs, design system and known limits.
+
 ## Design rules enforced in code
 
 - Colours only through tokens (`packages/core/src/tokens.ts`; web CSS variables in `apps/web/src/styles/tokens.css`, kept in sync by a test).
