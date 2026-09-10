@@ -20,7 +20,7 @@ export interface PersistedSlice {
 }
 export interface UiSlice {
   mView: View; mCol: ColumnKey; mSel: string | null; mCapOpen: boolean; mProfOpen: boolean; mPv: Preview | null;
-  capText: string; capItems: CaptureItem[] | null; capBusy: boolean;
+  capText: string; capItems: CaptureItem[] | null; capBusy: boolean; q: string;
   calSel: number | null; snack: string | null; zTask: string | null; zMonth: number; cmText: string;
   digestBusy: boolean; digestSeed: number;
 }
@@ -59,7 +59,7 @@ export type Store = PersistedSlice & UiSlice & Actions;
 const initialPersisted: PersistedSlice = { tasks: [], projects: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, user: null, lang: 'en', theme: 'light', showDone: true, token: null };
 const initialUi: UiSlice = {
   mView: 'board', mCol: 'focus', mSel: null, mCapOpen: false, mProfOpen: false, mPv: null,
-  capText: '', capItems: null, capBusy: false, calSel: null, snack: null, zTask: null, zMonth: 0, cmText: '', digestBusy: false, digestSeed: 0,
+  capText: '', capItems: null, capBusy: false, q: '', calSel: null, snack: null, zTask: null, zMonth: 0, cmText: '', digestBusy: false, digestSeed: 0,
 };
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
 

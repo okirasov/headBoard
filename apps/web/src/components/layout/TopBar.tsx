@@ -19,6 +19,7 @@ export function TopBar() {
         <input
           value={q}
           onChange={e => set({ q: e.target.value })}
+          onKeyDown={e => { if (e.key === 'Enter' && q.trim()) set({ view: 'search' }); }}
           placeholder={T.searchPh}
           className="w-250 rounded-10 border border-line bg-card py-8 pl-32 pr-12 font-sans text-13 leading-normal text-ink placeholder:text-faint"
         />

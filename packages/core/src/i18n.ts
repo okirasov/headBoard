@@ -24,6 +24,7 @@ export interface Dict {
   tDone: string; tBump: string; tSnooze: string; tArch: string; tKeep: string; tMoved: string; tReopen: string; tDoneS: string;
   showDone: string; zTomorrow: string; z3d: string; zWeek: string; zMonth: string;
   digestUpdated: string;
+  searchTitle: string; searchSub: string; searchBigPh: string; typeToSearch: string; noResults: string; inNote: string; inComment: string; inTags: string; inProject: string; allStatuses: string; sArchived: string;
   statsTitle: string; statsSub: string; closedThisWeek: string; vsLastWeek: string; openNow: string; forgottenNow: string; streakLbl: string; streakUnit: string; medianClose: string; daysUnit: string; closedPerWeek: string; createdSeries: string; closedSeries: string; priorityMixTitle: string; idleAgeTitle: string; openByProjectTitle: string; showTable: string; showChart: string; noStats: string; weekShort: string; nowLbl: string;
   idleFresh: string; idleWarm: string; idleStale: string; idleCold: string; openCol: string; doneCol: string;
   projectsTitle: string; manageProjects: string; newProject: string; projectNamePh: string; addProject: string; deleteProject: string; confirmDeleteProject: string; projectsHint: string; noProjects: string; tProjectAdded: string; tProjectDeleted: string; colorLabel: string;
@@ -67,6 +68,7 @@ export const EN: Dict = {
   tKeep: 'Kept — bumped to top of its column', tMoved: 'Moved to ', tReopen: 'Reopened into In focus', tDoneS: 'Done ✓',
   showDone: 'Done', zTomorrow: 'Tomorrow', z3d: '+3 days', zWeek: 'Next week', zMonth: 'Next month',
   digestUpdated: 'updated ',
+  searchTitle: 'Search', searchSub: 'across every task, including done and archived', searchBigPh: 'Title, note, tags, comments, project…', typeToSearch: 'Type to search. Words can match in different fields; #tags work too.', noResults: 'Nothing found for ', inNote: 'in note', inComment: 'in comment', inTags: 'in tags', inProject: 'in project', allStatuses: 'All', sArchived: 'Archived',
   statsTitle: 'Statistics', statsSub: 'how the board moves', closedThisWeek: 'Closed this week', vsLastWeek: 'vs last week', openNow: 'Open now', forgottenNow: 'Forgotten', streakLbl: 'Streak', streakUnit: 'days in a row', medianClose: 'Median time to close', daysUnit: 'days', closedPerWeek: 'Closed and created per week', createdSeries: 'created', closedSeries: 'closed', priorityMixTitle: 'Open tasks by priority', idleAgeTitle: 'Open tasks by idle time', openByProjectTitle: 'Load by project', showTable: 'Table', showChart: 'Chart', noStats: 'Nothing to show yet — close a task or two.', weekShort: 'wk', nowLbl: 'now',
   idleFresh: '0–1 d', idleWarm: '2–6 d', idleStale: '7–13 d', idleCold: '14+ d', openCol: 'open', doneCol: 'done',
   projectsTitle: 'Projects', manageProjects: 'Manage projects', newProject: 'New project', projectNamePh: 'Project name', addProject: 'Add project', deleteProject: 'Delete', confirmDeleteProject: 'Delete? Tasks stay, without a project', projectsHint: 'Projects colour the dots on cards and filter the board. Deleting one keeps its tasks.', noProjects: 'No projects yet — add the first one below.', tProjectAdded: 'Project added', tProjectDeleted: 'Project deleted — tasks kept', colorLabel: 'Colour',
@@ -113,6 +115,7 @@ export const RU: Dict = {
   tKeep: 'Оставлено — поднято наверх колонки', tMoved: 'Перемещено: ', tReopen: 'Возвращено в «В фокусе»', tDoneS: 'Готово ✓',
   showDone: 'Готово', zTomorrow: 'Завтра', z3d: '+3 дня', zWeek: 'Через неделю', zMonth: 'Через месяц',
   digestUpdated: 'обновлено ',
+  searchTitle: 'Поиск', searchSub: 'по всем задачам, включая готовые и архив', searchBigPh: 'Название, заметка, теги, комментарии, проект…', typeToSearch: 'Начните вводить. Слова могут совпасть в разных полях; #теги тоже работают.', noResults: 'Ничего не найдено по запросу ', inNote: 'в заметке', inComment: 'в комментарии', inTags: 'в тегах', inProject: 'в проекте', allStatuses: 'Все', sArchived: 'В архиве',
   statsTitle: 'Статистика', statsSub: 'как движется доска', closedThisWeek: 'Закрыто за неделю', vsLastWeek: 'к прошлой неделе', openNow: 'Открыто сейчас', forgottenNow: 'Забыто', streakLbl: 'Серия', streakUnit: 'дней подряд', medianClose: 'Медиана до закрытия', daysUnit: 'дней', closedPerWeek: 'Закрыто и создано по неделям', createdSeries: 'создано', closedSeries: 'закрыто', priorityMixTitle: 'Открытые задачи по приоритету', idleAgeTitle: 'Открытые задачи по простою', openByProjectTitle: 'Нагрузка по проектам', showTable: 'Таблица', showChart: 'График', noStats: 'Пока нечего показать — закройте пару задач.', weekShort: 'нед', nowLbl: 'сейчас',
   idleFresh: '0–1 д', idleWarm: '2–6 д', idleStale: '7–13 д', idleCold: '14+ д', openCol: 'открыто', doneCol: 'готово',
   projectsTitle: 'Проекты', manageProjects: 'Настроить проекты', newProject: 'Новый проект', projectNamePh: 'Название проекта', addProject: 'Добавить проект', deleteProject: 'Удалить', confirmDeleteProject: 'Удалить? Задачи останутся без проекта', projectsHint: 'Проекты задают цвет точек на карточках и фильтр доски. Удаление проекта не трогает задачи.', noProjects: 'Проектов пока нет — добавьте первый ниже.', tProjectAdded: 'Проект добавлен', tProjectDeleted: 'Проект удалён — задачи сохранены', colorLabel: 'Цвет',
@@ -154,6 +157,7 @@ export const phrases = {
   addN(n: number, lang: Lang) { return lang === 'ru' ? 'Добавить (' + n + ')' : 'Add ' + n + (n === 1 ? ' task' : ' tasks'); },
   openTasks(n: number, lang: Lang) { return lang === 'ru' ? 'открытых задач: ' + n : n + ' open tasks'; },
   forgottenN(n: number, lang: Lang) { return lang === 'ru' ? 'забытых: ' + n : n + ' forgotten'; },
+  resultsN(n: number, lang: Lang) { return lang === 'ru' ? 'найдено: ' + n : n + (n === 1 ? ' result' : ' results'); },
   projectsN(n: number, lang: Lang) { return lang === 'ru' ? 'проектов: ' + n : n + (n === 1 ? ' project' : ' projects'); },
   tasksN(n: number, lang: Lang) { return lang === 'ru' ? 'задач: ' + n : n + (n === 1 ? ' task' : ' tasks'); },
   archivedN(n: number, lang: Lang) { return lang === 'ru' ? 'в архиве: ' + n : n + ' archived'; },

@@ -4,7 +4,7 @@ import { useNow } from '../../lib/useNow';
 import { archived, digestStats } from '@headboard/core';
 import { Logo } from '../brand/Logo';
 import { Kicker } from '../ui/primitives';
-import { IcArchive, IcBoard, IcCalendar, IcDigest, IcReview, IcStats } from '../ui/Icons';
+import { IcArchive, IcBoard, IcCalendar, IcDigest, IcReview, IcSearch, IcStats } from '../ui/Icons';
 import { NavItem } from './NavItem';
 import { ProjectList } from './ProjectList';
 import { ProfileBlock, SyncStatus } from './ProfileMenu';
@@ -29,6 +29,7 @@ export function Sidebar() {
         <NavItem active={view === 'digest'} icon={<IcDigest size={15} />} label={T.digest} onClick={() => set({ view: 'digest' })} />
         <NavItem active={view === 'calendar'} icon={<IcCalendar size={15} />} label={T.calendar} onClick={() => set({ view: 'calendar' })} />
         <NavItem active={view === 'stats'} icon={<IcStats size={15} />} label={T.statsTitle} onClick={() => set({ view: 'stats' })} />
+        <NavItem active={view === 'search'} icon={<IcSearch size={15} />} label={T.searchTitle} onClick={() => set({ view: 'search' })} />
         <NavItem active={view === 'archive'} icon={<IcArchive size={15} />} label={T.archiveTitle} count={archivedN} onClick={() => set({ view: 'archive' })} />
       </nav>
       <ProjectList />

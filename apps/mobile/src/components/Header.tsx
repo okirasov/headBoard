@@ -6,6 +6,7 @@ import { useT } from '../lib/useT';
 import { txt } from '../theme/type';
 import { Logo } from './Logo';
 import { PulseDot } from './ui';
+import { IcSearch } from './Icons';
 
 export function Header({ title, sub }: { title: string; sub: string }) {
   const { t } = useTheme();
@@ -18,6 +19,9 @@ export function Header({ title, sub }: { title: string; sub: string }) {
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
         <Logo mark={20} word={20} gap={6} surface="bg" />
         <View style={{ flex: 1 }} />
+        <Pressable onPress={() => set({ mView: 'search' })} hitSlop={6} style={{ width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center', backgroundColor: t.card, borderWidth: 1, borderColor: t.line }}>
+          <IcSearch size={14} color={t.mut} />
+        </Pressable>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
           <PulseDot color={t.ok} />
           <Text style={txt(9, { mono: true, color: t.ok })}>{T.offlineM}</Text>

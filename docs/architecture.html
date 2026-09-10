@@ -174,6 +174,7 @@
 <tr><td><code>capture.ts</code></td><td><code>heuristicExtract, guessProject, extractPrompt, parseExtractResponse</code></td><td>Разбор текста в задачи: строки и «; », маркеры списков, <code>urgent / срочно</code> → High, <code>#теги</code> (≤ 2), проект по ключевым словам или по имени; парсинг JSON-ответа модели с клампом приоритета</td></tr>
 <tr><td><code>i18n.ts</code></td><td><code>EN, RU, dict, priorityLabel, statusLabel, phrases</code></td><td>Полные словари прототипа, тест на равенство наборов ключей</td></tr>
 <tr><td><code>tokens.ts</code></td><td><code>LIGHT, DARK, resolveColor</code></td><td>Значения дизайн-токенов, разбор <code>var(--acc)</code> в цветах проектов</td></tr>
+<tr><td><code>search.ts</code></td><td><code>searchTasks, tokenize, highlight, excerpt</code></td><td>Полнотекстовый поиск по названию, тегам, проекту, заметке и комментариям: все слова запроса должны встретиться (в разных полях допустимо), ранжирование по весу полей, фильтры статуса/приоритета/проекта, сниппет с первым совпадением и разбиение текста на подсвеченные фрагменты</td></tr>
 <tr><td><code>stats.ts</code></td><td><code>weeklyActivity, priorityMix, openByProject, idleBuckets, completionStreak, medianDaysToClose, statsSummary</code></td><td>Статистика продуктивности: закрыто и создано по неделям (недели с понедельника), открытые по приоритету, нагрузка по проектам, простой по корзинам 0–1 / 2–6 / 7–13 / 14+, серия дней с закрытиями, медиана времени до закрытия</td></tr>
 <tr><td><code>projects.ts</code></td><td><code>PROJECT_PALETTE, newProject, nextProjectColor</code></td><td>Палитра из 8 цветов проектов (два следуют теме через <code>var(--…)</code>), создание проекта с клиентским id, выбор следующего свободного цвета</td></tr>
 </table></div>
@@ -421,11 +422,12 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 ├─ components/
 │  ├─ brand/Logo.tsx           Mark + Wordmark, размеры sidebar/auth/title/mobile
 │  ├─ ui/{primitives,Icons,Snackbar}.tsx
-│  ├─ layout/{Shell,Sidebar,NavItem,ProjectList,ProfileMenu,TopBar}.tsx   6 нав-пунктов (+ Statistics, Archive); ProjectList: шестерёнка → настройки проектов; ProfileMenu: язык, тема, «Напоминания» Вкл/Выкл + тест
+│  ├─ layout/{Shell,Sidebar,NavItem,ProjectList,ProfileMenu,TopBar}.tsx   7 нав-пунктов (+ Statistics, Search, Archive); ProjectList: шестерёнка → настройки проектов; ProfileMenu: язык, тема, «Напоминания» Вкл/Выкл + тест
 │  ├─ task/TaskDrawer.tsx      StatusSelect, PriorityDots, вложения, комментарии, действия;
 │  │                           для архивной задачи бейдж «archived» и кнопки Restore / Delete
 │  ├─ capture/CaptureModal.tsx snooze/SnoozePicker.tsx  files/{FileChip,FilePreviewModal}.tsx
-└─ views/{board,review,digest,calendar,archive,projects,stats,auth}/
+└─ views/{board,review,digest,calendar,archive,projects,stats,search,auth}/
+   search/SearchView.tsx            большое поле, чипы статусов и приоритетов, строки результатов со статус-бейджем, подсветкой совпадений и сниппетом; Enter в верхнем поиске открывает эту вью
    stats/{StatsView,charts}.tsx     плитки, grouped bars по неделям, stacked bar приоритетов, HBars простоя и проектов, режим «Таблица»   archive: строки с датой, Restore, двухшаговый Delete
    projects/ProjectsView.tsx       переименование инлайн, палитра из core/projects.ts, счётчик задач → фильтр доски, удаление с подтверждением, форма нового проекта
    calendar/CalendarSyncChip.tsx   живой чип Google Calendar: подключить · synced HH:MM · Sync now · Disconnect</code></pre>
@@ -438,11 +440,12 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 ├─ src/store/{useStore,sync,devSeed}.ts
 ├─ src/lib/{api,auth,push,files,useT,useNow}.ts   push.ts: expo-notifications, токен → /push/subscribe, тап → mView
 ├─ src/components/{Header,TabBar,Sheet,TaskCardM,FileChipM,FilePreviewM,StatusPriority,Logo,Icons,ui,Snack,CalendarSyncCard}.tsx
-├─ src/screens/{SignIn,Board,Review,Digest,Calendar,Archive,Projects,Stats}Screen.tsx
+├─ src/screens/{SignIn,Board,Review,Digest,Calendar,Archive,Projects,Stats,Search}Screen.tsx
 └─ src/sheets/{Task,Capture,Snooze,Profile}Sheet.tsx</code></pre>
 <ul>
   <li>Навигации нет: один уровень экранов переключается полем <code>mView</code> в сторе, как в прототипе. Таб-бар с FAB «+» рисуется поверх контента, контент имеет нижний отступ 110. Экран архива открывается из профиль-шторки, в таб-бар не входит.</li>
   <li>Шторки это <code>Modal</code> с анимацией <code>translateY 40 → 0</code>, ручкой 40×4 и учётом safe-area снизу. Смена статуса реализована выпадающим списком в стиле select, потому что в RN нет нативного select.</li>
+  <li>Поиск: лупа в хедере открывает экран с полем, чипами фильтров и результатами с подсветкой; тап открывает шторку тикета.</li>
   <li>Статистика: строка в профиль-шторке открывает экран с плитками и графиками на react-native-svg (те же функции ядра, что и в web).</li>
   <li>Проекты: строка «Projects · N» в профиль-шторке открывает экран настроек проектов (имя, цвет из палитры, удаление, добавление).</li>
   <li>Архив: строка «Archive · N» в профиль-шторке переключает <code>mView</code> на <code>archive</code>; карточки с датой архивирования, Restore и двухшаговым Delete; шторка тикета показывает бейдж вместо статуса.</li>

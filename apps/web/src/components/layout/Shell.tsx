@@ -8,6 +8,7 @@ import { CalendarView } from '../../views/calendar/CalendarView';
 import { ArchiveView } from '../../views/archive/ArchiveView';
 import { ProjectsView } from '../../views/projects/ProjectsView';
 import { StatsView } from '../../views/stats/StatsView';
+import { SearchView } from '../../views/search/SearchView';
 
 export function Shell() {
   const view = useStore(s => s.view);
@@ -23,6 +24,7 @@ export function Shell() {
         {view === 'archive' && <ArchiveView />}
         {view === 'projects' && <ProjectsView />}
         {view === 'stats' && <StatsView />}
+        {view === 'search' && <SearchView />}
       </main>
     </div>
   );
