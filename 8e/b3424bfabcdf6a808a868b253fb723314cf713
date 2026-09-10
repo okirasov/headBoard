@@ -1,0 +1,45 @@
+apps/api/Headboard.Api.Tests/TasksTests.cs
+  s_2372cb08d633fa::t_e4156fcd6802c9 94,183-203
+apps/api/Headboard.Api/Data/Entities.cs
+  s_2372cb08d633fa::t_146fead6a8f6ce 47-48
+apps/api/Headboard.Api/Data/Migrations/20260910111015_SeriesId.Designer.cs
+  s_2372cb08d633fa::t_6dd80936f45605 1-407
+apps/api/Headboard.Api/Data/Migrations/20260910111015_SeriesId.cs
+  s_2372cb08d633fa::t_cecc2a3f918ae6 1-28
+apps/api/Headboard.Api/Data/Migrations/AppDbModelSnapshot.cs
+  s_2372cb08d633fa::t_3967a075706c09 286-288
+apps/api/Headboard.Api/Tasks/TaskDto.cs
+  s_2372cb08d633fa::t_470558a04a63fb 40
+apps/api/Headboard.Api/Tasks/TaskMapper.cs
+  s_2372cb08d633fa::t_22cc54df777d95 30,96,179-183
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_ae8885bc7cfc27 206
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_ca1e6bf9924858 329
+docs/architecture.html
+  s_2372cb08d633fa::t_b4a8032cbf9412 200
+graphify-out/cache/last_query_stamp
+  s_2372cb08d633fa::t_d80cbb6be06d87 1
+packages/core/src/model.ts
+  s_2372cb08d633fa::t_b77b6706754c2c 64-65,133
+packages/core/src/recurring.test.ts
+  s_2372cb08d633fa::t_046b3a587c8cdb 31-45
+packages/core/src/recurring.ts
+  s_2372cb08d633fa::t_727875b7d8b68d 34-35,38,51-54,56-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "8eb3424bfabcdf6a808a868b253fb723314cf713",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
