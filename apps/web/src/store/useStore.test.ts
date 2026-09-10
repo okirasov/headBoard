@@ -168,6 +168,32 @@ describe('store', () => {
     expect(t.history.map(h => h.kind)).toEqual(['created', 'title', 'note', 'project', 'project', 'chat', 'chat', 'comment', 'comment_edited', 'comment_removed']);
   });
 
+  it('undo puts back the exact previous task and drops what the action created', () => {
+    reset();
+    const t = newTask({ id: 'u1', title: 'Undo me', pr: 1, status: 'focus' }, Date.now() - DAY_MS);
+    const r = newTask({ id: 'u2', title: 'Weekly', pr: 1, status: 'focus', recur: 'weekly', due: Date.now() }, Date.now() - DAY_MS);
+    useStore.setState({ tasks: [t, r] });
+    const st = useStore.getState();
+    st.archive('u1');
+    expect(useStore.getState().tasks.find(x => x.id === 'u1')!.status).toBe('archived');
+    expect(useStore.getState().snackUndo).toBeTruthy();
+    st.undo();
+    expect(useStore.getState().tasks.find(x => x.id === 'u1')).toEqual(t); // same history, no archive entry
+    expect(useStore.getState().snack).toBe('Undone');
+    expect(useStore.getState().snackUndo).toBeNull();
+    st.deleteTask('u1');
+    expect(useStore.getState().tasks.map(x => x.id)).toEqual(['u2']);
+    st.undo();
+    expect(useStore.getState().tasks.map(x => x.id)).toEqual(['u1', 'u2']); // back in its place
+    st.complete('u2');
+    expect(useStore.getState().tasks).toHaveLength(3); // next instance created
+    st.undo();
+    expect(useStore.getState().tasks.map(x => x.id)).toEqual(['u1', 'u2']);
+    expect(useStore.getState().tasks.find(x => x.id === 'u2')!.status).toBe('focus');
+    st.toast('plain');
+    expect(useStore.getState().snackUndo).toBeNull();
+  });
+
   it('signIn/signOut', () => {
     useStore.getState().signIn('Apple');
     expect(useStore.getState().user).toMatchObject({ provider: 'Apple', initials: 'SK', email: 'sam.kern@icloud.com' });

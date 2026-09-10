@@ -6,6 +6,8 @@ import {
 
 export const STORAGE_KEY = 'headboard-v1';
 export const TOAST_MS = 2400;
+/** Toasts with an Undo button stay longer. */
+export const UNDO_MS = 6000;
 
 export interface Preview { name: string; sizeL: string; src: string | null; extL: string }
 
@@ -42,6 +44,8 @@ export interface UiSlice {
   capBusy: boolean;
   calSel: number | null;
   snack: string | null;
+  /** Reverts the last undoable action while its toast is visible. */
+  snackUndo: (() => void) | null;
   pv: Preview | null;
   zTask: string | null;
   zMonth: number;
@@ -103,7 +107,8 @@ export interface Actions {
   signIn: (provider: Provider, user?: Partial<User>) => void;
   setAuth: (token: string, user: User) => void;
   signOut: () => void;
-  toast: (msg: string) => void;
+  toast: (msg: string, undo?: () => void) => void;
+  undo: () => void;
   openSnooze: (id: string) => void;
   closeSnooze: () => void;
   openPreview: (f: FileRef) => void;
@@ -119,7 +124,7 @@ const initialPersisted: PersistedSlice = {
 const initialUi: UiSlice = {
   view: 'board', q: '', fPr: null, fProj: null, fTag: null, sel: null,
   capOpen: false, capText: '', capItems: null, capBusy: false,
-  calSel: null, snack: null, pv: null, zTask: null, zMonth: 0, profOpen: false, histId: null,
+  calSel: null, snack: null, snackUndo: null, pv: null, zTask: null, zMonth: 0, profOpen: false, histId: null,
   dragId: null, dragCol: null, cmText: '', digestBusy: false, digestSeed: 0,
 };
 
@@ -151,35 +156,53 @@ export const useStore = create<Store>()(
       // Every task mutation goes through here, so the change log is a by-product: diff prev → next and append.
       const patchTasks = (fn: (t: Task) => Task) => set(s => { const now = Date.now(); return { tasks: s.tasks.map(t => { const n = fn(t); return n === t ? t : withHistory(t, n, now); }) }; });
       const patchTask: Actions['patchTask'] = (id, up) => patchTasks(t => (t.id === id ? { ...t, ...up } : t));
-      const toast: Actions['toast'] = msg => {
+      const toast: Actions['toast'] = (msg, undo) => {
         clearTimeout(toastTimer);
-        set({ snack: msg });
-        toastTimer = setTimeout(() => set({ snack: null }), TOAST_MS);
+        set({ snack: msg, snackUndo: undo ?? null });
+        toastTimer = setTimeout(() => set({ snack: null, snackUndo: null }), undo ? UNDO_MS : TOAST_MS);
       };
       const T = () => dict(get().lang);
+      /**
+       * Undo support: remember the affected tasks before an action, then offer a toast whose Undo puts those
+       * exact versions back (and drops tasks the action created, e.g. the next recurring instance).
+       */
+      const snapshot = (ids: string[]) => { const before = get().tasks.filter(t => ids.includes(t.id)); const idx = new Map(get().tasks.map((t, i) => [t.id, i])); return { before, idx }; };
+      const restoreFn = (snap: { before: Task[]; idx: Map<string, number> }, createdIds: string[] = []) => () => {
+        set(s => {
+          const rest = s.tasks.filter(t => !createdIds.includes(t.id));
+          const merged = rest.map(t => snap.before.find(b => b.id === t.id) ?? t);
+          for (const b of snap.before) if (!merged.some(t => t.id === b.id)) merged.splice(Math.min(snap.idx.get(b.id) ?? 0, merged.length), 0, b);
+          return { tasks: merged };
+        });
+        toast(T().tUndone);
+      };
+
       return {
         ...initialPersisted,
         ...initialUi,
         set: patch => set(patch),
+        undo: () => { const u = get().snackUndo; clearTimeout(toastTimer); set({ snack: null, snackUndo: null }); u?.(); },
         patchTask,
         moveTask: (id, status) => {
           if (status === 'done') { get().complete(id); return; }
           const now = Date.now();
+          const snap = snapshot([id]);
           patchTask(id, { status, touched: now, doneAt: null });
-          toast(T().tMoved + statusLabel(status, get().lang));
+          toast(T().tMoved + statusLabel(status, get().lang), restoreFn(snap));
         },
         complete: id => {
           const t = get().tasks.find(x => x.id === id);
           if (!t) return;
           const now = Date.now();
+          const snap = snapshot([id]);
           if (t.recur) {
             const { done, next } = rollRecurring(t, now);
             set(s => ({ tasks: [next, ...s.tasks.map(x => (x.id === id ? done : x))] }));
-            toast(T().tRolled + fmtDate(next.due as number, get().lang));
+            toast(T().tRolled + fmtDate(next.due as number, get().lang), restoreFn(snap, [next.id]));
             return;
           }
           patchTask(id, { status: 'done', doneAt: now, touched: now });
-          toast(T().tDone);
+          toast(T().tDone, restoreFn(snap));
         },
         markDone: id => get().complete(id),
         toggleDone: id => {
@@ -188,8 +211,9 @@ export const useStore = create<Store>()(
           const now = Date.now();
           const done = t.status === 'done';
           if (!done) { get().complete(id); return; }
+          const snap = snapshot([id]);
           patchTask(id, { status: 'focus', doneAt: null, touched: now });
-          toast(T().tReopen);
+          toast(T().tReopen, restoreFn(snap));
         },
         bump: id => {
           patchTask(id, { touched: Date.now(), snoozedUntil: 0 });
@@ -200,14 +224,16 @@ export const useStore = create<Store>()(
           toast(T().tKeep);
         },
         snooze: (id, until) => {
+          const snap = snapshot([id]);
           patchTask(id, { snoozedUntil: until });
           set({ zTask: null, sel: null });
-          toast(T().zUntil + fmtDate(until, get().lang));
+          toast(T().zUntil + fmtDate(until, get().lang), restoreFn(snap));
         },
         archive: id => {
+          const snap = snapshot([id]);
           patchTask(id, { status: 'archived' as Status, archivedAt: Date.now() });
           set(s => ({ sel: s.sel === id ? null : s.sel }));
-          toast(T().tArch);
+          toast(T().tArch, restoreFn(snap));
         },
         restore: id => {
           patchTask(id, { status: 'inbox', archivedAt: null, touched: Date.now() });
@@ -215,8 +241,9 @@ export const useStore = create<Store>()(
           toast(T().tRestored);
         },
         deleteTask: id => {
+          const snap = snapshot([id]);
           set(s => ({ tasks: s.tasks.filter(t => t.id !== id), sel: s.sel === id ? null : s.sel }));
-          toast(T().tDeleted);
+          toast(T().tDeleted, restoreFn(snap));
         },
         setPriority: (id, pr) => patchTask(id, { pr }),
         setDue: (id, due) => patchTask(id, { due, touched: Date.now(), ...(due === null ? { remindDays: null } : {}) }),

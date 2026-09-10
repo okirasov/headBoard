@@ -35,6 +35,7 @@ export interface Dict {
   projectsTitle: string; manageProjects: string; newProject: string; projectNamePh: string; addProject: string; deleteProject: string; confirmDeleteProject: string; projectsHint: string; noProjects: string; tProjectAdded: string; tProjectDeleted: string; colorLabel: string;
   notifications: string; notifyOn: string; notifyOff: string; notifyDenied: string; notifyUnavailable: string; notifyTest: string; notifyTestSent: string; notifyHint: string;
   gcalConnect: string; gcalConnected: string; gcalSyncing: string; gcalSyncNow: string; gcalDisconnect: string; gcalError: string; gcalReauth: string; gcalUnavailable: string; gcalDenied: string; gcalHint: string; gcalSynced: string;
+  undo: string; tUndone: string;
   archiveTitle: string; restore: string; deleteForever: string; confirmDelete: string; archiveEmpty: string; archivedOn: string; archivedBadge: string; tRestored: string; tDeleted: string;
   seedDemo: string;
   DOW: string[]; DOWS: string[]; MON: string[]; MONF: string[];
@@ -84,6 +85,7 @@ export const EN: Dict = {
   projectsTitle: 'Projects', manageProjects: 'Manage projects', newProject: 'New project', projectNamePh: 'Project name', addProject: 'Add project', deleteProject: 'Delete', confirmDeleteProject: 'Delete? Tasks stay, without a project', projectsHint: 'Projects colour the dots on cards and filter the board. Deleting one keeps its tasks.', noProjects: 'No projects yet — add the first one below.', tProjectAdded: 'Project added', tProjectDeleted: 'Project deleted — tasks kept', colorLabel: 'Colour',
   notifications: 'Reminders', notifyOn: 'On', notifyOff: 'Off', notifyDenied: 'Notifications are blocked in the browser settings', notifyUnavailable: 'Push is not available here', notifyTest: 'Send test', notifyTestSent: 'Test notification sent', notifyHint: 'Once a day at 9:00: forgotten tasks, if any.',
   gcalConnect: 'Connect Google Calendar', gcalConnected: 'Google Calendar · two-way sync', gcalSyncing: 'syncing…', gcalSyncNow: 'Sync now', gcalDisconnect: 'Disconnect', gcalError: 'Google Calendar · sync error', gcalReauth: 'Google Calendar · reconnect needed', gcalUnavailable: 'Google Calendar · not configured', gcalDenied: 'Calendar access was not granted', gcalHint: 'Tasks with a due date appear as all-day events in a “Headboard” calendar. Moves, renames and new events sync back.', gcalSynced: 'synced ',
+  undo: 'Undo', tUndone: 'Undone',
   archiveTitle: 'Archive', restore: 'Restore to Inbox', deleteForever: 'Delete', confirmDelete: 'Delete for good?', archiveEmpty: 'Archive is empty — nothing dropped yet.', archivedOn: 'archived ', archivedBadge: 'archived', tRestored: 'Restored to Inbox', tDeleted: 'Deleted',
   seedDemo: 'Load sample data',
   DOW: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
@@ -136,6 +138,7 @@ export const RU: Dict = {
   projectsTitle: 'Проекты', manageProjects: 'Настроить проекты', newProject: 'Новый проект', projectNamePh: 'Название проекта', addProject: 'Добавить проект', deleteProject: 'Удалить', confirmDeleteProject: 'Удалить? Задачи останутся без проекта', projectsHint: 'Проекты задают цвет точек на карточках и фильтр доски. Удаление проекта не трогает задачи.', noProjects: 'Проектов пока нет — добавьте первый ниже.', tProjectAdded: 'Проект добавлен', tProjectDeleted: 'Проект удалён — задачи сохранены', colorLabel: 'Цвет',
   notifications: 'Напоминания', notifyOn: 'Вкл', notifyOff: 'Выкл', notifyDenied: 'Уведомления запрещены в настройках браузера', notifyUnavailable: 'Push здесь недоступен', notifyTest: 'Тест', notifyTestSent: 'Тестовое уведомление отправлено', notifyHint: 'Раз в день в 9:00: забытые задачи, если они есть.',
   gcalConnect: 'Подключить Google Calendar', gcalConnected: 'Google Calendar · двусторонняя синхронизация', gcalSyncing: 'синхронизация…', gcalSyncNow: 'Синхронизировать', gcalDisconnect: 'Отключить', gcalError: 'Google Calendar · ошибка синхронизации', gcalReauth: 'Google Calendar · нужно переподключить', gcalUnavailable: 'Google Calendar · не настроен', gcalDenied: 'Доступ к календарю не выдан', gcalHint: 'Задачи со сроком появляются событиями на весь день в календаре «Headboard». Переносы, переименования и новые события возвращаются на доску.', gcalSynced: 'синхронизировано ',
+  undo: 'Отменить', tUndone: 'Отменено',
   archiveTitle: 'Архив', restore: 'Вернуть в Инбокс', deleteForever: 'Удалить', confirmDelete: 'Удалить навсегда?', archiveEmpty: 'Архив пуст — ничего не отпущено.', archivedOn: 'в архиве с ', archivedBadge: 'в архиве', tRestored: 'Возвращено в Инбокс', tDeleted: 'Удалено',
   seedDemo: 'Загрузить пример',
   DOW: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
