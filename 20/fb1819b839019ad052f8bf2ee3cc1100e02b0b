@@ -1,0 +1,89 @@
+README.md
+  s_2372cb08d633fa::t_8f4632c7f4fb25 3
+apps/api/Headboard.Api.Tests/TemplatesTests.cs
+  s_2372cb08d633fa::t_49998aa46e9cc0 1-42
+apps/api/Headboard.Api/Data/AppDb.cs
+  s_2372cb08d633fa::t_a6f2d123be9c19 15,20
+apps/api/Headboard.Api/Data/Entities.cs
+  s_2372cb08d633fa::t_f7fd553b867ceb 120-135
+apps/api/Headboard.Api/Data/Migrations/20260910075741_Templates.Designer.cs
+  s_2372cb08d633fa::t_18cc0b0d1b3e73 1-400
+apps/api/Headboard.Api/Data/Migrations/20260910075741_Templates.cs
+  s_2372cb08d633fa::t_78c2fb3d33d3ea 1-48
+apps/api/Headboard.Api/Data/Migrations/AppDbModelSnapshot.cs
+  s_2372cb08d633fa::t_7a8b1f9c5530b4 312-357
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_e4ce7d3a41ef77 7,117
+apps/api/Headboard.Api/Templates/TemplateEndpoints.cs
+  s_2372cb08d633fa::t_c6ac2e9dd9d68f 1-120
+apps/api/README.md
+  s_2372cb08d633fa::t_f08fc558f1a89c 141-142
+apps/mobile/App.tsx
+  s_2372cb08d633fa::t_988c48a987d190 32,60,87-88,109
+apps/mobile/src/components/Icons.tsx
+  s_2372cb08d633fa::t_ed3576894ff0e8 30-32
+apps/mobile/src/screens/TemplatesScreen.tsx
+  s_2372cb08d633fa::t_b7d9c23fb8c89d 1-128
+apps/mobile/src/sheets/CaptureSheet.tsx
+  s_2372cb08d633fa::t_636adf09bddedd 10-11,21,38-43
+apps/mobile/src/sheets/ProfileSheet.tsx
+  s_2372cb08d633fa::t_c9ad76a5c652e3 11,26,89-94
+apps/mobile/src/sheets/TaskSheet.tsx
+  s_2372cb08d633fa::t_f52cc8b54fb9da 34,113
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_77841fc1132638 7,16,45-49,73,130-140,190,201
+apps/web/src/App.tsx
+  s_2372cb08d633fa::t_d4f3813922ea5c 23
+apps/web/src/components/capture/CaptureModal.tsx
+  s_2372cb08d633fa::t_e2aaea85bd7e8f 5-6,19,46-51
+apps/web/src/components/layout/ProfileMenu.tsx
+  s_2372cb08d633fa::t_5918fc9c32b987 7,63
+apps/web/src/components/layout/Shell.tsx
+  s_2372cb08d633fa::t_dbd6765653640c 15,35
+apps/web/src/components/task/TaskDrawer.tsx
+  s_2372cb08d633fa::t_f9894081a7e321 69,157-162
+apps/web/src/components/ui/Icons.tsx
+  s_2372cb08d633fa::t_d07de6cb1b6382 73-75
+apps/web/src/store/useStore.test.ts
+  s_2372cb08d633fa::t_73d73cc243a17c 63-79
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_592eed89162a11 5,16,74-79,109,216-227,307,319
+apps/web/src/views/templates/TemplatesView.tsx
+  s_2372cb08d633fa::t_7576eacf44a608 1-113
+apps/web/src/views/templates/UseTemplate.tsx
+  s_2372cb08d633fa::t_10fe99aac43c61 1-40
+docs/architecture.html
+  s_2372cb08d633fa::t_298ef3aae3007d 93,177,203-204,215,223,225,295,423-425,453-454,472
+packages/core/src/api.ts
+  s_2372cb08d633fa::t_1cc115f9a97663 1,69-74
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_f2bd2a9837acc2 27,75,126,181
+packages/core/src/index.ts
+  s_2372cb08d633fa::t_e71b11f9c1cf1f 17
+packages/core/src/model.ts
+  s_2372cb08d633fa::t_7d03fce3a7642c 6,62-76
+packages/core/src/sync.test.ts
+  s_2372cb08d633fa::t_34e76c96bfc07c 7,15,26,90-106
+packages/core/src/sync.ts
+  s_2372cb08d633fa::t_f4c1ff63756000 2,9,64,114-127,170,173,179
+packages/core/src/templates.test.ts
+  s_2372cb08d633fa::t_57594ccafe4da3 1-33
+packages/core/src/templates.ts
+  s_2372cb08d633fa::t_6bf07c62a0d3fa 1-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "20fb1819b839019ad052f8bf2ee3cc1100e02b0b",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
