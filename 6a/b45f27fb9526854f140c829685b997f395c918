@@ -1,0 +1,37 @@
+apps/api/Headboard.Api.Tests/TasksTests.cs
+  s_2372cb08d633fa::t_69edb4530da27f 183-220
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_32b130b9e07df1 8,119
+apps/api/README.md
+  s_2372cb08d633fa::t_37bab0f35f84af 148-149
+apps/mobile/src/screens/TagsScreen.tsx
+  s_2372cb08d633fa::t_9f3658751b27aa 5,19,29,54
+apps/mobile/src/store/sync.ts
+  s_2372cb08d633fa::t_437a17c25363b7 43-58
+apps/web/src/store/sync.ts
+  s_2372cb08d633fa::t_4169f1ba1c034c 37-52
+apps/web/src/views/tags/TagsView.tsx
+  s_2372cb08d633fa::t_e4f84acdf6c69f 4,19,35,67
+graphify-out/cache/last_query_stamp
+  s_2372cb08d633fa::t_d245d32565fe68 1
+packages/core/src/api.ts
+  s_2372cb08d633fa::t_f469f8a242dde7 16,76-80
+apps/api/Headboard.Api/Tags/TagEndpoints.cs
+  s_2372cb08d633fa::t_9500903ce69117 1-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "6ab45f27fb9526854f140c829685b997f395c918",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
