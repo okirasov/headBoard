@@ -1,0 +1,31 @@
+apps/api/Headboard.Api.Tests/CalendarTests.cs
+  s_2372cb08d633fa::t_0fde4cc1f01556 184
+apps/api/Headboard.Api.Tests/TasksTests.cs
+  s_2372cb08d633fa::t_b68ce6dd6aea5b 231-264
+apps/api/Headboard.Api/Comments/CommentEndpoints.cs
+  s_2372cb08d633fa::t_2adf3371a2ca54 32,43-44
+apps/api/Headboard.Api/Tasks/TaskEndpoints.cs
+  s_2372cb08d633fa::t_1feec5709995e8 68-70,90-94,96
+apps/api/Headboard.Api/Tasks/TaskMapper.cs
+  s_2372cb08d633fa::t_3d33a2fa635c48 47-79
+apps/api/README.md
+  s_2372cb08d633fa::t_eee29dbaa52947 54
+packages/core/src/model.ts
+  s_2372cb08d633fa::t_1fd2f89e19a491 38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "18b2e89c66b617a5b32adfcf9cd49dfba981d291",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
