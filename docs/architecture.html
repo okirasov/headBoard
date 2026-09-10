@@ -90,7 +90,7 @@
   <h1>Headboard: web, mobile, API и общее ядро</h1>
   <p class="lead">Персональная канбан-доска «разгрузки головы». Один монорепозиторий, четыре пакета, одна доменная логика. Документ описывает границы слоёв, модель данных, синхронизацию, контракт API, авторизацию, AI-контур, дизайн-систему, тесты и известные ограничения.</p>
   <nav class="toc">
-    <a href="#overview">Обзор</a><a href="#layers">Слои</a><a href="#core">Ядро</a><a href="#model">Модель данных</a><a href="#state">Состояние</a><a href="#sync">Синхронизация</a><a href="#api">API</a><a href="#auth">Авторизация</a><a href="#ai">AI</a><a href="#stats">Статистика</a><a href="#search">Поиск</a><a href="#design">Дизайн-система</a><a href="#web">Web</a><a href="#mobile">Mobile</a><a href="#testing">Тесты и инструменты</a><a href="#config">Конфигурация</a><a href="#decisions">Решения</a><a href="#limits">Ограничения</a>
+    <a href="#overview">Обзор</a><a href="#layers">Слои</a><a href="#core">Ядро</a><a href="#model">Модель данных</a><a href="#state">Состояние</a><a href="#sync">Синхронизация</a><a href="#api">API</a><a href="#auth">Авторизация</a><a href="#ai">AI</a><a href="#stats">Статистика</a><a href="#search">Поиск</a><a href="#due">Сроки</a><a href="#design">Дизайн-система</a><a href="#web">Web</a><a href="#mobile">Mobile</a><a href="#testing">Тесты и инструменты</a><a href="#config">Конфигурация</a><a href="#decisions">Решения</a><a href="#limits">Ограничения</a>
   </nav>
 </header>
 
@@ -174,6 +174,7 @@
 <tr><td><code>capture.ts</code></td><td><code>heuristicExtract, guessProject, extractPrompt, parseExtractResponse</code></td><td>Разбор текста в задачи: строки и «; », маркеры списков, <code>urgent / срочно</code> → High, <code>#теги</code> (≤ 2), проект по ключевым словам или по имени; парсинг JSON-ответа модели с клампом приоритета</td></tr>
 <tr><td><code>i18n.ts</code></td><td><code>EN, RU, dict, priorityLabel, statusLabel, phrases</code></td><td>Полные словари прототипа, тест на равенство наборов ключей</td></tr>
 <tr><td><code>tokens.ts</code></td><td><code>LIGHT, DARK, resolveColor</code></td><td>Значения дизайн-токенов, разбор <code>var(--acc)</code> в цветах проектов</td></tr>
+<tr><td><code>due.ts</code></td><td><code>dueGroups, undated, dueReminderTargets, daysUntil</code></td><td>Сроки: группы просрочено / сегодня / завтра / на неделе / позже, задачи без даты, цели утреннего напоминания (в день срока или за день, просроченные с включённым напоминанием)</td></tr>
 <tr><td><code>search.ts</code></td><td><code>searchTasks, tokenize, highlight, excerpt</code></td><td>Полнотекстовый поиск по названию, тегам, проекту, заметке и комментариям: все слова запроса должны встретиться (в разных полях допустимо), ранжирование по весу полей, фильтры статуса/приоритета/проекта, сниппет с первым совпадением и разбиение текста на подсвеченные фрагменты</td></tr>
 <tr><td><code>stats.ts</code></td><td><code>weeklyActivity, priorityMix, openByProject, idleBuckets, completionStreak, medianDaysToClose, statsSummary</code></td><td>Статистика продуктивности: закрыто и создано по неделям (недели с понедельника), открытые по приоритету, нагрузка по проектам, простой по корзинам 0–1 / 2–6 / 7–13 / 14+, серия дней с закрытиями, медиана времени до закрытия</td></tr>
 <tr><td><code>projects.ts</code></td><td><code>PROJECT_PALETTE, newProject, nextProjectColor</code></td><td>Палитра из 8 цветов проектов (два следуют теме через <code>var(--…)</code>), создание проекта с клиентским id, выбор следующего свободного цвета</td></tr>
@@ -189,6 +190,7 @@ interface Task {
   touched: number; created: number; due: number | null; snoozedUntil: number;
   recur: 'weekly' | null; tags: string[]; note: string; chat: string | null;
   files: FileRef[]; comments: Comment[]; doneAt: number | null; archivedAt: number | null;
+  remindDays: 0 | 1 | null;   // напоминание: в день срока / за день / нет
 }
 interface FileRef  { id; name; kind: 'img' | 'file'; size?: number; src?: string }
 interface Comment  { id; text; at: number }
@@ -200,10 +202,10 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <tr><th>Таблица</th><th>Ключ</th><th>Поля</th></tr>
 <tr><td>Users</td><td>Id (Guid)</td><td>Provider, Subject (id у провайдера), Email, Name, Initials, CreatedAt. Уникальность по (Provider, Subject)</td></tr>
 <tr><td>Projects</td><td>Id (string)</td><td>UserId, Name, Color</td></tr>
-<tr><td>Tasks</td><td>Id (string)</td><td>UserId, Title, ProjectId?, Priority, Status, Touched, Created, Due?, SnoozedUntil, Recur?, TagsJson, Note, Chat?, DoneAt?, ArchivedAt?, CalendarEventId?, CalendarHash?. Индекс по UserId</td></tr>
+<tr><td>Tasks</td><td>Id (string)</td><td>UserId, Title, ProjectId?, Priority, Status, Touched, Created, Due?, SnoozedUntil, Recur?, TagsJson, Note, Chat?, DoneAt?, ArchivedAt?, CalendarEventId?, CalendarHash?, RemindDays?. Индекс по UserId</td></tr>
 <tr><td>Comments</td><td>Id</td><td>TaskId, UserId, Text, At</td></tr>
 <tr><td>Files</td><td>Id</td><td>UserId, TaskId?, ProjectId?, Name, Kind, Size?, StoragePath?, ContentType?</td></tr>
-<tr><td>Settings</td><td>UserId</td><td>Lang, Theme, ShowDone, DigestText?, DigestAt?, TimeZone?, NotifyStale, LastStaleNotifyAt?</td></tr>
+<tr><td>Settings</td><td>UserId</td><td>Lang, Theme, ShowDone, DigestText?, DigestAt?, TimeZone?, NotifyStale, LastStaleNotifyAt?, NotifyDue, LastDueNotifyAt?</td></tr>
 <tr><td>PushSubscriptions</td><td>Id</td><td>UserId, Kind (webpush | expo), Endpoint (URL или Expo-токен), P256dh?, Auth?, Label?, CreatedAt, LastSentAt?, FailCount. Уникальность (UserId, Endpoint)</td></tr>
 <tr><td>CalendarLinks</td><td>UserId</td><td>RefreshToken, AccessToken?, AccessTokenExpiresAt?, CalendarId?, SyncToken?, LastSyncAt?, LastError?, ConnectedAt, PendingDeletesJson</td></tr>
 </table></div>
@@ -282,7 +284,7 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <tr><td><code>GET /projects</code> · <code>POST /projects</code> · <code>PATCH /projects/{id}</code> · <code>DELETE /projects/{id}</code></td><td><code>Project</code></td><td>GET включает <code>files[]</code> проекта</td><td>409 <code>id_exists</code></td></tr>
 <tr><td><code>POST /files?taskId=|projectId=</code></td><td>multipart <code>file</code></td><td><code>FileRef</code>, для картинок <code>src=/files/{id}/content</code></td><td>400 без цели</td></tr>
 <tr><td><code>GET /files/{id}/content</code> · <code>DELETE /files/{id}</code></td><td></td><td>поток с content type / 204</td><td>404</td></tr>
-<tr><td><code>GET /settings</code> · <code>PUT /settings</code></td><td><code>{lang, theme, showDone, digestText, timeZone, notifyStale}</code></td><td><code>Settings</code> с серверным <code>digestAt</code></td><td>400 <code>invalid_timeZone</code></td></tr>
+<tr><td><code>GET /settings</code> · <code>PUT /settings</code></td><td><code>{lang, theme, showDone, digestText, timeZone, notifyStale, notifyDue}</code></td><td><code>Settings</code> с серверным <code>digestAt</code></td><td>400 <code>invalid_timeZone</code></td></tr>
 <tr><td><code>GET /calendar</code> · <code>POST /calendar/connect</code> · <code>GET /calendar/oauth/callback</code> · <code>POST /calendar/sync</code> · <code>DELETE /calendar</code></td><td><code>{returnUrl}</code></td><td>статус <code>{available, connected, calendarId, lastSyncAt, lastError}</code> / <code>{url}</code> / redirect</td><td>503 <code>calendar_unavailable</code>, 400 <code>invalid_returnUrl</code> / <code>invalid_state</code></td></tr>
 <tr><td><code>GET /push/config</code> · <code>GET /push/subscriptions</code> · <code>POST /push/subscribe</code> · <code>DELETE /push/subscribe</code> · <code>POST /push/test</code></td><td><code>{kind, endpoint, keys}</code> или <code>{kind:'expo', token}</code></td><td>VAPID public key / список устройств / подписка / <code>{sent}</code></td><td>503 <code>push_unavailable</code>, 400 <code>keys_required</code></td></tr>
 <tr><td><code>POST /ai/extract</code></td><td><code>{text, projects:[{id,name}]}</code></td><td><code>CaptureItem[]</code></td><td>503 <code>ai_unavailable</code>, 502 <code>ai_failed</code></td></tr>
@@ -411,6 +413,9 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 <h3 id="stats">Экран статистики</h3>
 <p>Все числа считает ядро (<code>core/stats.ts</code>), клиенты только рисуют. Графики рукописные (SVG в web, react-native-svg в mobile), без библиотек, по правилам dataviz: тонкие столбики со скруглённым верхом, 2px зазоры между соседними метками и сегментами, рецессивная сетка, подписи и легенда текстовыми токенами, тултип при наведении на каждую метку (web), переключатель «График / Таблица» для доступности. Цвета серий: закрыто <code>--acc</code>, создано <code>--mut2</code>; приоритеты повторяют полосы карточек (<code>--hi</code>, <code>--med</code>, <code>--lineStrong</code>) и снабжены прямыми подписями и легендой, потому что как категориальная палитра они не проходят проверку контраста и хромы; цвета проектов это данные пользователя, каждая строка подписана именем.</p>
 
+<h3 id="due">Экран сроков и напоминания о них</h3>
+<p>Экран «Сроки» группирует открытые задачи с датой по расстоянию от сегодня (<code>core/due.ts</code>) и даёт редактировать срок и напоминание прямо в строке: web через нативный <code>&lt;input type=date&gt;</code> в стиле select и чипы «Нет / В день срока / За день», mobile через шторку с месячной сеткой (<code>DueSheet</code>) и те же чипы. Те же контролы добавлены в тикет. Напоминание хранится в задаче (<code>remindDays</code>), глобальный тумблер <code>notifyDue</code> в настройках. На сервере <code>DueNotifier</code> раз в день после <code>Notify:Hour</code> собирает для пользователя цели по тому же правилу, что <code>dueReminderTargets</code> (в день срока при 0, за день при 1, просроченные с напоминанием всегда), и шлёт один push «Сроки — просрочено: 1 · сегодня: 2» с deep link <code>/?view=due</code> через тот же <code>PushDispatcher</code>. Дедупликация по <code>LastDueNotifyAt</code>.</p>
+
 <h3 id="search">Экран поиска</h3>
 <p>Поиск считается на клиенте по локальному стору (<code>core/search.ts</code>), поэтому работает офлайн и мгновенно: обычная база пользователя это десятки-сотни задач, индекс не нужен. Запрос разбивается на слова, каждое слово должно встретиться хотя бы в одном из полей задачи (название, теги, имя проекта, заметка, комментарии), совпадения могут быть в разных полях; счёт складывается из весов полей, при равенстве новее сверху. Фильтры статуса (включая готовые и архив) и приоритета применяются до ранжирования. Результат несёт список полей совпадения и сниппет из первого совпавшего некорневого поля, а <code>highlight()</code> отдаёт фрагменты для подсветки в обоих клиентах. Web: пункт навигации «Поиск» и Enter в верхнем поле, одно значение <code>q</code> в сторе для обоих полей; mobile: лупа в хедере и собственный экран. Клик по результату открывает тикет, для архивных и готовых тоже.</p>
 
@@ -425,11 +430,12 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 ├─ components/
 │  ├─ brand/Logo.tsx           Mark + Wordmark, размеры sidebar/auth/title/mobile
 │  ├─ ui/{primitives,Icons,Snackbar}.tsx
-│  ├─ layout/{Shell,Sidebar,NavItem,ProjectList,ProfileMenu,TopBar}.tsx   7 нав-пунктов (+ Statistics, Search, Archive); ProjectList: шестерёнка → настройки проектов; ProfileMenu: язык, тема, «Напоминания» Вкл/Выкл + тест
+│  ├─ layout/{Shell,Sidebar,NavItem,ProjectList,ProfileMenu,TopBar}.tsx   8 нав-пунктов (+ Deadlines со счётчиком просроченных и сегодняшних, Statistics, Search, Archive); ProjectList: шестерёнка → настройки проектов; ProfileMenu: язык, тема, «Напоминания» Вкл/Выкл + тест
 │  ├─ task/TaskDrawer.tsx      StatusSelect, PriorityDots, вложения, комментарии, действия;
 │  │                           для архивной задачи бейдж «archived» и кнопки Restore / Delete
 │  ├─ capture/CaptureModal.tsx snooze/SnoozePicker.tsx  files/{FileChip,FilePreviewModal}.tsx
-└─ views/{board,review,digest,calendar,archive,projects,stats,search,auth}/
+└─ views/{board,review,digest,calendar,archive,projects,stats,search,due,auth}/
+   due/DueView.tsx                  группы сроков, строки с датой, DueDateInput и RemindPicker (components/task/DueControls.tsx), тумблер утреннего push
    search/SearchView.tsx            большое поле, чипы статусов и приоритетов, строки результатов со статус-бейджем, подсветкой совпадений и сниппетом; Enter в верхнем поиске открывает эту вью
    stats/{StatsView,charts}.tsx     плитки, grouped bars по неделям, stacked bar приоритетов, HBars простоя и проектов, режим «Таблица»   archive: строки с датой, Restore, двухшаговый Delete
    projects/ProjectsView.tsx       переименование инлайн, палитра из core/projects.ts, счётчик задач → фильтр доски, удаление с подтверждением, форма нового проекта
@@ -443,8 +449,8 @@ interface CaptureItem { title; pr; tags; proj: string | null }</code></pre>
 ├─ src/store/{useStore,sync,devSeed}.ts
 ├─ src/lib/{api,auth,push,files,useT,useNow}.ts   push.ts: expo-notifications, токен → /push/subscribe, тап → mView
 ├─ src/components/{Header,TabBar,Sheet,TaskCardM,FileChipM,FilePreviewM,StatusPriority,Logo,Icons,ui,Snack,CalendarSyncCard}.tsx
-├─ src/screens/{SignIn,Board,Review,Digest,Calendar,Archive,Projects,Stats,Search}Screen.tsx
-└─ src/sheets/{Task,Capture,Snooze,Profile}Sheet.tsx</code></pre>
+├─ src/screens/{SignIn,Board,Review,Digest,Calendar,Archive,Projects,Stats,Search,Due}Screen.tsx
+└─ src/sheets/{Task,Capture,Snooze,Due,Profile}Sheet.tsx   DueSheet: выбор срока по месячной сетке, прошлые дни разрешены</code></pre>
 <ul>
   <li>Навигации нет: один уровень экранов переключается полем <code>mView</code> в сторе, как в прототипе. Таб-бар с FAB «+» рисуется поверх контента, контент имеет нижний отступ 110. Экран архива открывается из профиль-шторки, в таб-бар не входит.</li>
   <li>Шторки это <code>Modal</code> с анимацией <code>translateY 40 → 0</code>, ручкой 40×4 и учётом safe-area снизу. Смена статуса реализована выпадающим списком в стиле select, потому что в RN нет нативного select.</li>

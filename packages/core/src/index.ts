@@ -11,3 +11,4 @@ export * from './sync';
 export * from './projects';
 export * from './stats';
 export * from './search';
+export * from './due';

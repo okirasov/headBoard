@@ -72,6 +72,8 @@ builder.Services.AddSingleton<Headboard.Api.Push.IPushSender, Headboard.Api.Push
 builder.Services.AddScoped<Headboard.Api.Push.PushDispatcher>();
 builder.Services.AddSingleton<Headboard.Api.Push.StaleNotifier>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<Headboard.Api.Push.StaleNotifier>());
+builder.Services.AddSingleton<Headboard.Api.Push.DueNotifier>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<Headboard.Api.Push.DueNotifier>());
 builder.Services.AddSingleton<Headboard.Api.Digest.DigestScheduler>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<Headboard.Api.Digest.DigestScheduler>());
 

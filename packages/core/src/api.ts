@@ -10,6 +10,8 @@ export interface Settings {
   timeZone?: string | null;
   /** Daily push about forgotten tasks. */
   notifyStale?: boolean;
+  /** Morning push about tasks due today / tomorrow (per-task `remindDays`). */
+  notifyDue?: boolean;
 }
 export interface PushConfig { webPush: boolean; vapidPublicKey: string | null; expo: boolean }
 export interface PushSubscriptionInfo { id: string; kind: 'webpush' | 'expo'; label: string | null; createdAt: number; lastSentAt: number | null }

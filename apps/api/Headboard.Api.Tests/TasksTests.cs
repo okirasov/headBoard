@@ -91,7 +91,7 @@ public class TasksTests(ApiFactory f) : IClassFixture<ApiFactory>
         var res = await c.PostAsJsonAsync("/tasks", new TaskDto { Title = "Shape" }, J);
         using var doc = JsonDocument.Parse(await res.Content.ReadAsStringAsync());
         var names = doc.RootElement.EnumerateObject().Select(p => p.Name).ToArray();
-        string[] expected = ["id", "title", "proj", "pr", "status", "touched", "created", "due", "snoozedUntil", "recur", "tags", "note", "chat", "files", "comments", "doneAt", "archivedAt"];
+        string[] expected = ["id", "title", "proj", "pr", "status", "touched", "created", "due", "snoozedUntil", "recur", "tags", "note", "chat", "files", "comments", "doneAt", "archivedAt", "remindDays"];
         Assert.Equal(expected, names);
         foreach (var nullable in new[] { "proj", "due", "recur", "chat", "doneAt" })
             Assert.Equal(JsonValueKind.Null, doc.RootElement.GetProperty(nullable).ValueKind);
@@ -167,7 +167,7 @@ public class TasksTests(ApiFactory f) : IClassFixture<ApiFactory>
     {
         var (c, _) = await f.LoginAsync("settings@example.com");
         var defaults = (await c.GetFromJsonAsync<Headboard.Api.Settings.SettingsDto>("/settings", J))!;
-        Assert.Equal(new Headboard.Api.Settings.SettingsDto("en", "light", true, null, null, null, true), defaults);
+        Assert.Equal(new Headboard.Api.Settings.SettingsDto("en", "light", true, null, null, null, true, true), defaults);
 
         var put = await c.PutAsJsonAsync("/settings", new { lang = "ru", theme = "dark", showDone = false, digestText = "Спокойный день" }, J);
         Assert.Equal(HttpStatusCode.OK, put.StatusCode);

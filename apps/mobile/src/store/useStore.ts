@@ -13,7 +13,7 @@ export const TOAST_MS = 2400;
 export interface Preview { name: string; sizeL: string; src: string | null; extL: string }
 
 export interface PersistedSlice {
-  tasks: Task[]; projects: Project[]; projFiles: Record<string, FileRef[]>; digestText: string | null; digestAt: number | null; notifyStale: boolean;
+  tasks: Task[]; projects: Project[]; projFiles: Record<string, FileRef[]>; digestText: string | null; digestAt: number | null; notifyStale: boolean; notifyDue: boolean;
   user: User | null; lang: Lang; theme: Theme; showDone: boolean;
   /** API JWT when signed in through apps/api; null in local-only mode. */
   token: string | null;
@@ -22,6 +22,8 @@ export interface UiSlice {
   mView: View; mCol: ColumnKey; mSel: string | null; mCapOpen: boolean; mProfOpen: boolean; mPv: Preview | null;
   capText: string; capItems: CaptureItem[] | null; capBusy: boolean; q: string;
   calSel: number | null; snack: string | null; zTask: string | null; zMonth: number; cmText: string;
+  /** Task whose due date is being picked in the date sheet. */
+  dueTask: string | null; dueMonth: number;
   digestBusy: boolean; digestSeed: number;
 }
 export interface Actions {
@@ -36,6 +38,8 @@ export interface Actions {
   restore: (id: string) => void;
   deleteTask: (id: string) => void;
   setPriority: (id: string, pr: Priority) => void;
+  setDue: (id: string, due: number | null) => void;
+  setRemind: (id: string, remindDays: 0 | 1 | null) => void;
   addComment: (id: string, text: string) => void;
   attachFiles: (id: string, files: FileRef[]) => void;
   removeFile: (id: string, fileId: string) => void;
@@ -56,10 +60,10 @@ export interface Actions {
 }
 export type Store = PersistedSlice & UiSlice & Actions;
 
-const initialPersisted: PersistedSlice = { tasks: [], projects: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, user: null, lang: 'en', theme: 'light', showDone: true, token: null };
+const initialPersisted: PersistedSlice = { tasks: [], projects: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, user: null, lang: 'en', theme: 'light', showDone: true, token: null };
 const initialUi: UiSlice = {
   mView: 'board', mCol: 'focus', mSel: null, mCapOpen: false, mProfOpen: false, mPv: null,
-  capText: '', capItems: null, capBusy: false, q: '', calSel: null, snack: null, zTask: null, zMonth: 0, cmText: '', digestBusy: false, digestSeed: 0,
+  capText: '', capItems: null, capBusy: false, q: '', calSel: null, snack: null, zTask: null, zMonth: 0, cmText: '', dueTask: null, dueMonth: 0, digestBusy: false, digestSeed: 0,
 };
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -98,6 +102,8 @@ export const useStore = create<Store>()(
         restore: id => { patchTask(id, { status: 'inbox', archivedAt: null, touched: Date.now() }); set(s => ({ mSel: s.mSel === id ? null : s.mSel })); toast(T().tRestored); },
         deleteTask: id => { set(s => ({ tasks: s.tasks.filter(t => t.id !== id), mSel: s.mSel === id ? null : s.mSel })); toast(T().tDeleted); },
         setPriority: (id, pr) => patchTask(id, { pr }),
+        setDue: (id, due) => { patchTask(id, { due, touched: Date.now(), ...(due === null ? { remindDays: null } : {}) }); set({ dueTask: null }); },
+        setRemind: (id, remindDays) => patchTask(id, { remindDays }),
         addComment: (id, text) => {
           const txt = text.trim(); if (!txt) return;
           patchTask(id, { comments: [...(get().tasks.find(t => t.id === id)?.comments ?? []), { id: 'c' + Date.now(), text: txt, at: Date.now() }] });
@@ -144,7 +150,7 @@ export const useStore = create<Store>()(
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: s => ({ tasks: s.tasks, projects: s.projects, projFiles: s.projFiles, digestText: s.digestText, digestAt: s.digestAt, notifyStale: s.notifyStale, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token }),
+      partialize: s => ({ tasks: s.tasks, projects: s.projects, projFiles: s.projFiles, digestText: s.digestText, digestAt: s.digestAt, notifyStale: s.notifyStale, notifyDue: s.notifyDue, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<PersistedSlice>;
         return { ...current, ...p, theme: p.theme ?? systemTheme() };

@@ -44,6 +44,10 @@ Uses the same Google web client as sign-in (`Auth:GoogleWebClientId` + `Auth:Goo
 - Inbound uses incremental listing (`syncToken`, 410 → full resync): date moves and renames update the task when the event changed after the task was last touched, cancelled events clear the task's date, events created directly in the Headboard calendar become Inbox tasks (and are tagged back). Our own pushes are recognised by fingerprint and ignored.
 - Deleted tasks leave their event id in `CalendarLinks.PendingDeletesJson`; the next pass removes the event.
 
+## Push reminders about deadlines
+
+`DueNotifier` runs alongside the stale notifier at `Notify:Hour` for users with `Settings.NotifyDue`: tasks whose reminder fires that day (`Task.remindDays` 0 = on the due day, 1 = the day before; overdue tasks with a reminder are included) are summarised in one push (“Deadlines — 1 overdue · 2 due today”) with deep link `/?view=due`. `remindDays` is part of the task wire model (`PATCH /tasks/{id} {remindDays: 0|1|null}`).
+
 ## Push reminders about forgotten tasks
 
 `StaleNotifier` evaluates every opted-in user (`Settings.NotifyStale`, toggled from the profile menu) once a day after `Notify:Hour` in their time zone: if `digestStats` finds forgotten tasks (idle ≥ 7 days, not snoozed), every registered device gets one notification (`StaleMessage`: “N forgotten tasks — “title” has waited X days…”, EN/RU) with deep link `/?view=review`. Devices: `POST /push/subscribe` with `{kind:"webpush", endpoint, keys}` (browser, VAPID) or `{kind:"expo", token}` (mobile, Expo Push API); `DELETE /push/subscribe`, `GET /push/subscriptions`, `GET /push/config` (VAPID public key), `POST /push/test`. Subscriptions that push services report as gone (404/410, `DeviceNotRegistered`) or that fail 5 times are dropped.

@@ -15,6 +15,7 @@ export interface SyncState {
   digestAt: number | null;
   /** Daily push about forgotten tasks. */
   notifyStale: boolean;
+  notifyDue: boolean;
 }
 
 export interface SyncAdapter {
@@ -47,7 +48,7 @@ export interface SyncEngine {
 }
 
 function settingsOf(s: SyncState, timeZone?: string) {
-  return { lang: s.lang, theme: s.theme, showDone: s.showDone, digestText: s.digestText, timeZone: timeZone ?? null, notifyStale: s.notifyStale };
+  return { lang: s.lang, theme: s.theme, showDone: s.showDone, digestText: s.digestText, timeZone: timeZone ?? null, notifyStale: s.notifyStale, notifyDue: s.notifyDue };
 }
 
 /**
@@ -158,7 +159,7 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
         taskSnap = new Map(fixed.map(t => [t.id, JSON.stringify(t)]));
         const projFiles: Record<string, FileRef[]> = {};
         for (const p of projects) if (p.files?.length) projFiles[p.id] = p.files.map(f => ({ ...f, src: f.src ? absolute(f.src) : undefined }));
-        a.setState({ tasks: fixed, projects: plain, projFiles, lang: settings.lang, theme: settings.theme, showDone: settings.showDone, digestText: settings.digestText, digestAt: settings.digestAt ?? null, notifyStale: settings.notifyStale ?? true });
+        a.setState({ tasks: fixed, projects: plain, projFiles, lang: settings.lang, theme: settings.theme, showDone: settings.showDone, digestText: settings.digestText, digestAt: settings.digestAt ?? null, notifyStale: settings.notifyStale ?? true, notifyDue: settings.notifyDue ?? true });
         settingsKey = JSON.stringify(settingsOf(a.getState(), a.timeZone));
       } else {
         taskSnap = new Map();

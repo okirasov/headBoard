@@ -8,7 +8,7 @@ import { useT } from '../lib/useT';
 import { kicker, txt } from '../theme/type';
 import { Sheet } from '../components/Sheet';
 import { Segmented } from '../components/ui';
-import { IcArchive, IcChevronRightSm, IcFolder, IcStats } from '../components/Icons';
+import { IcArchive, IcBell, IcChevronRightSm, IcFolder, IcStats } from '../components/Icons';
 import { archived } from '@headboard/core';
 
 export function ProfileSheet() {
@@ -64,6 +64,11 @@ export function ProfileSheet() {
           <Text style={[txt(9.5, { mono: true, color: t.mut2 }), { marginTop: 5 }]}>{T.notifyHint}</Text>
         </View>
       )}
+      <Pressable onPress={() => set({ mProfOpen: false, mView: 'due' })} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 13, paddingHorizontal: 14, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.card }}>
+        <IcBell size={15} color={t.mut} />
+        <Text style={[txt(13.5, { w: 600, color: t.ink }), { flex: 1 }]}>{T.dueTitle}</Text>
+        <IcChevronRightSm size={12} color={t.mut2} />
+      </Pressable>
       <Pressable onPress={() => set({ mProfOpen: false, mView: 'stats' })} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 13, paddingHorizontal: 14, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.card }}>
         <IcStats size={15} color={t.mut} />
         <Text style={[txt(13.5, { w: 600, color: t.ink }), { flex: 1 }]}>{T.statsTitle}</Text>

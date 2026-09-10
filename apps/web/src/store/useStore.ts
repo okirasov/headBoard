@@ -19,6 +19,8 @@ export interface PersistedSlice {
   digestAt: number | null;
   /** Daily push about forgotten tasks. */
   notifyStale: boolean;
+  /** Morning push about due tasks. */
+  notifyDue: boolean;
   user: User | null;
   lang: Lang;
   theme: Theme;
@@ -63,6 +65,8 @@ export interface Actions {
   deleteTask: (id: string) => void;
   keep: (id: string) => void;
   setPriority: (id: string, pr: Priority) => void;
+  setDue: (id: string, due: number | null) => void;
+  setRemind: (id: string, remindDays: 0 | 1 | null) => void;
   addComment: (id: string, text: string) => void;
   attachFiles: (id: string, files: FileRef[]) => void;
   removeFile: (id: string, fileId: string) => void;
@@ -87,7 +91,7 @@ export interface Actions {
 export type Store = PersistedSlice & UiSlice & Actions;
 
 const initialPersisted: PersistedSlice = {
-  tasks: [], projects: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, user: null, lang: 'en', theme: 'light', showDone: true, token: null,
+  tasks: [], projects: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, user: null, lang: 'en', theme: 'light', showDone: true, token: null,
 };
 
 const initialUi: UiSlice = {
@@ -181,6 +185,8 @@ export const useStore = create<Store>()(
           toast(T().tDeleted);
         },
         setPriority: (id, pr) => patchTask(id, { pr }),
+        setDue: (id, due) => patchTask(id, { due, touched: Date.now(), ...(due === null ? { remindDays: null } : {}) }),
+        setRemind: (id, remindDays) => patchTask(id, { remindDays }),
         addComment: (id, text) => {
           const txt = text.trim();
           if (!txt) return;
@@ -257,7 +263,7 @@ export const useStore = create<Store>()(
       storage: createJSONStorage(() => safeStorage()),
       partialize: s => ({
         tasks: s.tasks, projects: s.projects, projFiles: s.projFiles, digestText: s.digestText,
-        digestAt: s.digestAt, notifyStale: s.notifyStale, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token,
+        digestAt: s.digestAt, notifyStale: s.notifyStale, notifyDue: s.notifyDue, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token,
       }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<PersistedSlice>;

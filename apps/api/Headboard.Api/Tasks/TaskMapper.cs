@@ -25,6 +25,7 @@ public static class TaskMapper
         Comments = comments.OrderBy(c => c.At).Select(c => new CommentDto(c.Id, c.Text, c.At)).ToList(),
         DoneAt = t.DoneAt,
         ArchivedAt = t.ArchivedAt,
+        RemindDays = t.RemindDays,
     };
 
     public static List<string> ParseTags(string json)
@@ -66,6 +67,7 @@ public static class TaskMapper
             Chat = d.Chat,
             DoneAt = d.DoneAt,
             ArchivedAt = d.ArchivedAt,
+            RemindDays = d.RemindDays is 0 or 1 ? d.RemindDays : null,
         };
     }
 
@@ -142,6 +144,11 @@ public static class TaskMapper
                     if (v.ValueKind == JsonValueKind.Null) t.ArchivedAt = null;
                     else if (TryLong(v, out var archivedAt)) t.ArchivedAt = archivedAt;
                     else return "invalid_archivedAt";
+                    break;
+                case "remindDays":
+                    if (v.ValueKind == JsonValueKind.Null) t.RemindDays = null;
+                    else if (v.TryGetInt32(out var rd) && rd is 0 or 1) t.RemindDays = rd;
+                    else return "invalid_remindDays";
                     break;
                 case "id":
                 case "files":

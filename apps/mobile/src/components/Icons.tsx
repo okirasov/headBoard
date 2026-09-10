@@ -27,6 +27,9 @@ export const IcPlus = ({ size = 16, color }: P) => (
 export const IcArchive = ({ size = 16, color }: P) => (
   <Svg width={size} height={size} viewBox="0 0 16 16" fill="none"><Rect x="1.5" y="2.5" width="13" height="3.5" rx="1" stroke={color} strokeWidth="1.5" /><Path d="M2.5 6v6.5A1.5 1.5 0 0 0 4 14h8a1.5 1.5 0 0 0 1.5-1.5V6M6.3 9h3.4" stroke={color} strokeWidth="1.5" {...R} /></Svg>
 );
+export const IcBell = ({ size = 16, color }: P) => (
+  <Svg width={size} height={size} viewBox="0 0 16 16" fill="none"><Path d="M4 11V7.5a4 4 0 0 1 8 0V11l1 1.5H3z" stroke={color} strokeWidth="1.5" {...R} /><Path d="M6.5 14a1.5 1.5 0 0 0 3 0" stroke={color} strokeWidth="1.5" {...R} /></Svg>
+);
 export const IcSearch = ({ size = 16, color }: P) => (
   <Svg width={size} height={size} viewBox="0 0 16 16" fill="none"><Circle cx="7" cy="7" r="5" stroke={color} strokeWidth="1.6" /><Path d="M11 11l3.4 3.4" stroke={color} strokeWidth="1.6" {...R} /></Svg>
 );

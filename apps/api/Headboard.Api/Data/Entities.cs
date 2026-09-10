@@ -40,6 +40,8 @@ public class TaskRow
     /// <summary>Google Calendar event id when the task is mirrored, and the hash of what was last pushed.</summary>
     public string? CalendarEventId { get; set; }
     public string? CalendarHash { get; set; }
+    /// <summary>Due reminder: 0 = on the due day, 1 = the day before, null = none.</summary>
+    public int? RemindDays { get; set; }
 }
 
 public class CommentRow
@@ -78,6 +80,9 @@ public class SettingsRow
     /// <summary>Daily push about forgotten tasks (default on).</summary>
     public bool NotifyStale { get; set; } = true;
     public long? LastStaleNotifyAt { get; set; }
+    /// <summary>Morning push about tasks due today / tomorrow (default on).</summary>
+    public bool NotifyDue { get; set; } = true;
+    public long? LastDueNotifyAt { get; set; }
 }
 
 /// <summary>Per-user Google Calendar connection: offline refresh token, the dedicated calendar and the incremental sync cursor.</summary>
