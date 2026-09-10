@@ -44,6 +44,8 @@ public class TaskRow
     public int? RemindDays { get; set; }
     /// <summary>Change log (core <c>HistoryEntry[]</c>, oldest first, capped at 200). Stored as JSON; the API appends its own entries for server-side edits.</summary>
     public string HistoryJson { get; set; } = "[]";
+    /// <summary>Recurring series (id of the first instance); null for one-off tasks.</summary>
+    public string? SeriesId { get; set; }
 }
 
 public class CommentRow

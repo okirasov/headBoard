@@ -61,6 +61,8 @@ export interface Task {
   remindDays: 0 | 1 | null;
   /** Change log, oldest first, capped (see history.ts). */
   history: HistoryEntry[];
+  /** Recurring series this instance belongs to (id of the first instance); null for one-off tasks. */
+  seriesId: string | null;
 }
 
 export interface Project {
@@ -128,5 +130,6 @@ export function newTask(partial: Partial<Task> & { title: string }, now: number)
     archivedAt: partial.archivedAt ?? null,
     remindDays: partial.remindDays ?? null,
     history: partial.history ?? [{ id: 'h' + now.toString(36) + Math.random().toString(36).slice(2, 5), at: partial.created ?? now, kind: 'created' }],
+    seriesId: partial.seriesId ?? null,
   };
 }

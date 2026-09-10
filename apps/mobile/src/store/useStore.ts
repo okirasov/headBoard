@@ -203,7 +203,7 @@ export const useStore = create<Store>()(
       partialize: s => ({ tasks: s.tasks, projects: s.projects, templates: s.templates, projFiles: s.projFiles, digestText: s.digestText, digestAt: s.digestAt, notifyStale: s.notifyStale, notifyDue: s.notifyDue, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<PersistedSlice>;
-        const tasks = (p.tasks ?? current.tasks).map(t => (t.history ? t : { ...t, history: [] }));
+        const tasks = (p.tasks ?? current.tasks).map(t => (t.history && t.seriesId !== undefined ? t : { ...t, history: t.history ?? [], seriesId: t.seriesId ?? null }));
         return { ...current, ...p, tasks, theme: p.theme ?? systemTheme() };
       },
     },

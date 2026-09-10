@@ -91,7 +91,7 @@ public class TasksTests(ApiFactory f) : IClassFixture<ApiFactory>
         var res = await c.PostAsJsonAsync("/tasks", new TaskDto { Title = "Shape" }, J);
         using var doc = JsonDocument.Parse(await res.Content.ReadAsStringAsync());
         var names = doc.RootElement.EnumerateObject().Select(p => p.Name).ToArray();
-        string[] expected = ["id", "title", "proj", "pr", "status", "touched", "created", "due", "snoozedUntil", "recur", "tags", "note", "chat", "files", "comments", "doneAt", "archivedAt", "remindDays", "history"];
+        string[] expected = ["id", "title", "proj", "pr", "status", "touched", "created", "due", "snoozedUntil", "recur", "tags", "note", "chat", "files", "comments", "doneAt", "archivedAt", "remindDays", "history", "seriesId"];
         Assert.Equal(expected, names);
         foreach (var nullable in new[] { "proj", "due", "recur", "chat", "doneAt" })
             Assert.Equal(JsonValueKind.Null, doc.RootElement.GetProperty(nullable).ValueKind);
@@ -177,6 +177,27 @@ public class TasksTests(ApiFactory f) : IClassFixture<ApiFactory>
 
         var bad = await c.PutAsJsonAsync("/settings", new { lang = "de", theme = "dark", showDone = true }, J);
         Assert.Equal(HttpStatusCode.BadRequest, bad.StatusCode);
+    }
+}
+
+public class SeriesTests
+{
+    [Fact]
+    public async Task SeriesId_RoundTrips_AndCanBeCleared()
+    {
+        using var f = new ApiFactory();
+        var (c, _) = await f.LoginAsync("series@example.com");
+        var create = await c.PostAsJsonAsync("/tasks", new { id = "sr1", title = "Standup", pr = 1, status = "inbox", touched = 1L, created = 1L, recur = "daily", tags = new string[0], note = "", files = new object[0], comments = new object[0], seriesId = "sr1" }, ApiFactory.Json);
+        create.EnsureSuccessStatusCode();
+        var t = await create.Content.ReadFromJsonAsync<Headboard.Api.Tasks.TaskDto>(ApiFactory.Json);
+        Assert.Equal("sr1", t!.SeriesId);
+        var next = await c.PostAsJsonAsync("/tasks", new { id = "sr2", title = "Standup", pr = 1, status = "inbox", touched = 2L, created = 2L, recur = "daily", tags = new string[0], note = "", files = new object[0], comments = new object[0], seriesId = "sr1" }, ApiFactory.Json);
+        next.EnsureSuccessStatusCode();
+        var list = await c.GetFromJsonAsync<List<Headboard.Api.Tasks.TaskDto>>("/tasks", ApiFactory.Json);
+        Assert.Equal(2, list!.Count(x => x.SeriesId == "sr1"));
+        var clear = await c.PatchAsJsonAsync("/tasks/sr2", new { seriesId = (string?)null }, ApiFactory.Json);
+        clear.EnsureSuccessStatusCode();
+        Assert.Null((await clear.Content.ReadFromJsonAsync<Headboard.Api.Tasks.TaskDto>(ApiFactory.Json))!.SeriesId);
     }
 }
 

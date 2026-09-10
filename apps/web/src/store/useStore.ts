@@ -326,7 +326,7 @@ export const useStore = create<Store>()(
         // theme: persisted choice, else system
         const theme: Theme = p.theme ?? systemTheme();
         // tasks persisted before the change log existed get an empty one
-        const tasks = (p.tasks ?? current.tasks).map(t => (t.history ? t : { ...t, history: [] }));
+        const tasks = (p.tasks ?? current.tasks).map(t => (t.history && t.seriesId !== undefined ? t : { ...t, history: t.history ?? [], seriesId: t.seriesId ?? null }));
         return { ...current, ...p, tasks, theme };
       },
     },

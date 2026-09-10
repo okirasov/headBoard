@@ -197,6 +197,7 @@ interface Task {
   files: FileRef[]; comments: Comment[]; doneAt: number | null; archivedAt: number | null;
   remindDays: 0 | 1 | null;   // напоминание: в день срока / за день / нет
   history: HistoryEntry[];    // журнал изменений, старые первыми, ≤ 200
+  seriesId: string | null;    // серия повторов: id первого экземпляра
 }
 interface HistoryEntry { id; at: number; kind: HistoryKind; from?: string | null; to?: string | null; source?: 'calendar' | 'template' | 'recur' | 'capture' | 'sync' }
 interface FileRef  { id; name; kind: 'img' | 'file'; size?: number; src?: string }

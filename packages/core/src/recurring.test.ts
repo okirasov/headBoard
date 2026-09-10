@@ -28,5 +28,20 @@ describe('recurring', () => {
     expect(new Date(next.due!).getDate()).toBe(16);
     expect(recurringTasks([done, next]).map(x => x.id)).toEqual([next.id]);
     expect(seriesHistory([done, next], next).map(x => x.id)).toEqual(['r']);
+    expect(done.seriesId).toBe('r');
+    expect(next.seriesId).toBe('r');
+  });
+  it('series survive renames and stay apart from same-titled tasks', () => {
+    const t = newTask({ id: 's', title: 'Standup', recur: 'daily', due: now }, now);
+    const first = rollRecurring(t, now);
+    const renamed = { ...first.next, title: 'Daily standup' };
+    const second = rollRecurring(renamed, now + 864e5);
+    const other = newTask({ id: 'o', title: 'Daily standup', recur: 'daily', status: 'done', doneAt: now }, now);
+    const all = [first.done, second.done, second.next, other];
+    expect(seriesHistory(all, second.next).map(x => x.id)).toEqual([second.done.id, 's']);
+    // legacy instances without seriesId still match by title + recurrence
+    const legacyDone = { ...newTask({ id: 'l1', title: 'Old', recur: 'weekly', status: 'done', doneAt: now }, now), seriesId: null };
+    const legacyOpen = { ...newTask({ id: 'l2', title: 'Old', recur: 'weekly' }, now), seriesId: null };
+    expect(seriesHistory([legacyDone, legacyOpen, other], legacyOpen).map(x => x.id)).toEqual(['l1']);
   });
 });

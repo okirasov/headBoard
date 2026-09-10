@@ -27,6 +27,7 @@ public static class TaskMapper
         ArchivedAt = t.ArchivedAt,
         RemindDays = t.RemindDays,
         History = ParseHistory(t.HistoryJson),
+        SeriesId = t.SeriesId,
     };
 
     public static List<HistoryEntryDto> ParseHistory(string json)
@@ -92,6 +93,7 @@ public static class TaskMapper
             ArchivedAt = d.ArchivedAt,
             RemindDays = d.RemindDays is 0 or 1 ? d.RemindDays : null,
             HistoryJson = HistoryJson(d.History ?? []),
+            SeriesId = string.IsNullOrWhiteSpace(d.SeriesId) ? null : d.SeriesId.Trim(),
         };
     }
 
@@ -173,6 +175,11 @@ public static class TaskMapper
                     if (v.ValueKind == JsonValueKind.Null) t.RemindDays = null;
                     else if (v.TryGetInt32(out var rd) && rd is 0 or 1) t.RemindDays = rd;
                     else return "invalid_remindDays";
+                    break;
+                case "seriesId":
+                    if (v.ValueKind == JsonValueKind.Null) t.SeriesId = null;
+                    else if (v.ValueKind == JsonValueKind.String) t.SeriesId = v.GetString();
+                    else return "invalid_seriesId";
                     break;
                 case "history":
                     if (v.ValueKind != JsonValueKind.Array) return "invalid_history";

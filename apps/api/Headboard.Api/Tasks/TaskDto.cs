@@ -37,6 +37,7 @@ public class TaskDto
     public long? ArchivedAt { get; set; }
     public int? RemindDays { get; set; }
     public List<HistoryEntryDto> History { get; set; } = [];
+    public string? SeriesId { get; set; }
 }
 
 public static class Wire

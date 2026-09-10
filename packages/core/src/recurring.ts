@@ -31,9 +31,11 @@ export function nextDueAfterCompletion(task: Task, now: number): number {
 
 /** Complete a recurring task: the original is closed for history, a fresh instance carries the series on. */
 export function rollRecurring(task: Task, now: number): { done: Task; next: Task } {
-  const done: Task = withHistory(task, { ...task, status: 'done', doneAt: now, touched: now }, now);
+  const seriesId = task.seriesId ?? task.id;
+  const done: Task = withHistory(task, { ...task, seriesId, status: 'done', doneAt: now, touched: now }, now);
   const next = newTask({
     history: [createdEntry(now, 'recur')],
+    seriesId,
     title: task.title, proj: task.proj, pr: task.pr, status: task.status === 'done' ? 'inbox' : task.status,
     due: nextDueAfterCompletion(task, now), recur: task.recur, tags: task.tags, note: task.note, chat: task.chat,
     remindDays: task.remindDays, created: now, touched: now,
@@ -46,7 +48,12 @@ export function recurringTasks(tasks: Task[]): Task[] {
   return live(tasks).filter(t => t.recur !== null && t.status !== 'done').sort((a, b) => (a.due ?? Infinity) - (b.due ?? Infinity) || a.pr - b.pr);
 }
 
-/** Completed instances of a series (same title + recur), newest first. */
+/**
+ * Completed instances of a series, newest first. Linked by `seriesId`; instances created before
+ * series ids existed fall back to the old rule (same title + recurrence).
+ */
 export function seriesHistory(tasks: Task[], task: Task): Task[] {
-  return tasks.filter(t => t.id !== task.id && t.status === 'done' && t.recur === task.recur && t.title === task.title).sort((a, b) => (b.doneAt ?? 0) - (a.doneAt ?? 0));
+  const sid = task.seriesId ?? null;
+  const same = (t: Task) => (sid ? t.seriesId === sid : !t.seriesId && t.recur === task.recur && t.title === task.title);
+  return tasks.filter(t => t.id !== task.id && t.status === 'done' && same(t)).sort((a, b) => (b.doneAt ?? 0) - (a.doneAt ?? 0));
 }
