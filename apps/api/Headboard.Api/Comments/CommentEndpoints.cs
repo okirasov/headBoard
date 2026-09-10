@@ -29,6 +29,7 @@ public static class CommentEndpoints
             };
             if (await db.Comments.AnyAsync(c => c.Id == row.Id)) return Results.Conflict(new { error = "id_exists" });
             db.Comments.Add(row);
+            TaskMapper.AppendHistory(task, "comment", row.At, null, row.Text, "api");
             await db.SaveChangesAsync();
             return Results.Created($"/tasks/{id}/comments/{row.Id}", new CommentDto(row.Id, row.Text, row.At));
         });
@@ -39,6 +40,8 @@ public static class CommentEndpoints
             var row = await db.Comments.SingleOrDefaultAsync(c => c.Id == cid && c.TaskId == id && c.UserId == uid);
             if (row is null) return Results.NotFound();
             db.Comments.Remove(row);
+            var task = await db.Tasks.SingleAsync(t => t.Id == id && t.UserId == uid);
+            TaskMapper.AppendHistory(task, "comment_removed", Wire.Now(), null, null, "api");
             await db.SaveChangesAsync();
             return Results.NoContent();
         });

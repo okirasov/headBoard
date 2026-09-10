@@ -65,6 +65,9 @@ public static class TaskEndpoints
             var uid = CurrentUser.Id(ctx);
             var t = await db.Tasks.SingleOrDefaultAsync(x => x.Id == id && x.UserId == uid);
             if (t is null) return Results.NotFound();
+            // Clients ship the change log inside the body; a bare API edit gets its entries computed here.
+            var clientLog = body.ValueKind == JsonValueKind.Object && body.TryGetProperty("history", out _);
+            var before = TaskMapper.Snapshot.Of(t);
             if (TaskMapper.ApplyPatch(t, body) is { } err) return Results.BadRequest(new { error = err });
             if (t.ProjectId is not null && !await db.Projects.AnyAsync(p => p.Id == t.ProjectId && p.UserId == uid))
                 return Results.BadRequest(new { error = "invalid_proj" });
@@ -84,7 +87,13 @@ public static class TaskEndpoints
                     else { row.Text = c.Text; if (c.At > 0) row.At = c.At; }
                 }
                 db.Comments.RemoveRange(existing.Where(e => !keep.Contains(e.Id)));
+                if (!clientLog)
+                {
+                    foreach (var added in incoming.Where(c => !string.IsNullOrWhiteSpace(c.Text) && !existing.Any(e => e.Id == c.Id))) TaskMapper.AppendHistory(t, "comment", Wire.Now(), null, added.Text, "api");
+                    if (existing.Any(e => !keep.Contains(e.Id))) TaskMapper.AppendHistory(t, "comment_removed", Wire.Now(), null, null, "api");
+                }
             }
+            if (!clientLog) TaskMapper.AppendDiff(t, before, Wire.Now());
             if (body.TryGetProperty("files", out var files) && files.ValueKind == JsonValueKind.Array)
                 await LinkFiles(db, uid, t.Id, files.Deserialize<List<FileRefDto>>(JsonSerializerOptions.Web));
 

@@ -35,7 +35,7 @@ export interface HistoryEntry {
   from?: string | null;
   to?: string | null;
   /** Who made the change when it was not the user in a client. */
-  source?: 'calendar' | 'template' | 'recur' | 'capture' | 'sync';
+  source?: 'calendar' | 'template' | 'recur' | 'capture' | 'sync' | 'api';
 }
 
 export interface Task {

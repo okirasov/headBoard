@@ -181,7 +181,7 @@ public class CalendarTests
         Assert.Equal(["due", "title"], t.History.Select(h => h.Kind)); // server-side edits are logged with source = calendar
         Assert.All(t.History, h => Assert.Equal("calendar", h.Source));
         Assert.Equal("Pay taxes", t.History[1].From);
-        var created = Assert.Single(tasks, x => x.Title == "Book flights");
+        var created = Assert.Single(tasks!, x => x.Title == "Book flights");
         Assert.Equal("inbox", created.Status);
         Assert.Equal("created", Assert.Single(created.History).Kind);
         Assert.Equal("2026-10-01", EventMapper.LocalDate(created.Due!.Value, TimeZoneInfo.Utc));

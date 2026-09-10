@@ -51,7 +51,7 @@ Uses the same Google web client as sign-in (`Auth:GoogleWebClientId` + `Auth:Goo
 
 ## Task change history
 
-Every task carries `history: HistoryEntry[]` (`{id, at, kind, from?, to?, source?}`, oldest first, capped at 200). Clients build it: each store mutation diffs the previous and next task (`core/history.ts`) and appends entries, so the log travels with the task through `POST/PATCH /tasks` like any other field (the server validates `kind` against the known list and keeps only the newest 200). The API appends its own entries with `source: "calendar"` when Google Calendar sync changes a task's title or date, creates a task from a foreign event, or clears the date after an event is deleted. Stored as JSON in `Tasks.HistoryJson`.
+Every task carries `history: HistoryEntry[]` (`{id, at, kind, from?, to?, source?}`, oldest first, capped at 200). Clients build it: each store mutation diffs the previous and next task (`core/history.ts`) and appends entries, so the log travels with the task through `POST/PATCH /tasks` like any other field (the server validates `kind` against the known list and keeps only the newest 200). The API appends its own entries with `source: "calendar"` when Google Calendar sync changes a task's title or date, creates a task from a foreign event, or clears the date after an event is deleted. A `PATCH /tasks/{id}` that carries no `history` field (curl, integrations) is diffed on the server and logged with `source: "api"`, as are `POST/DELETE /tasks/{id}/comments`; a body with `history` is taken as the client's authoritative log. Stored as JSON in `Tasks.HistoryJson`.
 
 ## Push reminders about forgotten tasks
 

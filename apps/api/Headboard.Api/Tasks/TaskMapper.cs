@@ -44,6 +44,39 @@ public static class TaskMapper
         return JsonSerializer.Serialize(list, JsonSerializerOptions.Web);
     }
 
+    /// <summary>Fields the change log tracks; captured before a patch so the server can diff when the client sent no <c>history</c>.</summary>
+    public readonly record struct Snapshot(string Title, string? ProjectId, int Priority, string Status, long Touched, long? Due, long SnoozedUntil, string? Recur, string TagsJson, string Note, int? RemindDays)
+    {
+        public static Snapshot Of(TaskRow t) => new(t.Title, t.ProjectId, t.Priority, t.Status, t.Touched, t.Due, t.SnoozedUntil, t.Recur, t.TagsJson, t.Note, t.RemindDays);
+    }
+
+    /// <summary>
+    /// Mirrors core <c>diffTask</c>: one entry per changed field between <paramref name="before"/> and the row now,
+    /// tagged with <paramref name="source"/>. Used for edits made straight through the API (no client-side log).
+    /// </summary>
+    public static void AppendDiff(TaskRow t, Snapshot before, long at, string source = "api")
+    {
+        var list = ParseHistory(t.HistoryJson);
+        var n = list.Count;
+        void Add(string kind, string? from = null, string? to = null) => list.Add(new HistoryEntryDto { Id = Wire.NewId('h'), At = at, Kind = kind, From = from, To = to, Source = source });
+        if (before.Status != t.Status)
+        {
+            var kind = t.Status == "done" ? "done" : t.Status == "archived" ? "archived" : before.Status == "archived" ? "restored" : before.Status == "done" ? "reopened" : "status";
+            Add(kind, before.Status, t.Status);
+        }
+        if (before.Priority != t.Priority) Add("priority", before.Priority.ToString(), t.Priority.ToString());
+        if (before.Due != t.Due) Add("due", before.Due?.ToString(), t.Due?.ToString());
+        if (before.Title != t.Title) Add("title", before.Title, t.Title);
+        if (before.Note != t.Note) Add("note");
+        if (before.ProjectId != t.ProjectId) Add("project", before.ProjectId, t.ProjectId);
+        if (before.TagsJson != t.TagsJson) Add("tags", string.Join(' ', ParseTags(before.TagsJson)), string.Join(' ', ParseTags(t.TagsJson)));
+        if (before.Recur != t.Recur) Add("recur", before.Recur, t.Recur);
+        if (before.RemindDays != t.RemindDays) Add("remind", before.RemindDays?.ToString(), t.RemindDays?.ToString());
+        if (before.SnoozedUntil != t.SnoozedUntil) Add(t.SnoozedUntil > 0 ? "snoozed" : "unsnoozed", null, t.SnoozedUntil > 0 ? t.SnoozedUntil.ToString() : null);
+        if (list.Count == n && t.Touched > before.Touched) Add("bumped");
+        if (list.Count != n) t.HistoryJson = HistoryJson(list);
+    }
+
     /// <summary>Appends a server-made entry (source = "calendar" etc.) to a row's log.</summary>
     public static void AppendHistory(TaskRow t, string kind, long at, string? from = null, string? to = null, string source = "calendar")
     {

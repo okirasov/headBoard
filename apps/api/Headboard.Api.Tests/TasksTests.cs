@@ -229,6 +229,40 @@ public class HistoryTests
     }
 
     [Fact]
+    public async Task BareApiEdits_AreLoggedServerSide_ButClientLogsAreTrusted()
+    {
+        using var f = new ApiFactory();
+        var (c, _) = await f.LoginAsync("apihist@example.com");
+        (await c.PostAsJsonAsync("/tasks", new { id = "ah1", title = "Plain", pr = 1, status = "inbox", touched = 1L, created = 1L, tags = new string[0], note = "", files = new object[0], comments = new object[0] }, ApiFactory.Json)).EnsureSuccessStatusCode();
+
+        // curl-style patch without a history field → the server diffs
+        var p1 = await c.PatchAsJsonAsync("/tasks/ah1", new { status = "focus", pr = 0, title = "Plain v2", touched = 5L }, ApiFactory.Json);
+        p1.EnsureSuccessStatusCode();
+        var t1 = await p1.Content.ReadFromJsonAsync<Headboard.Api.Tasks.TaskDto>(ApiFactory.Json);
+        Assert.Equal(["status", "priority", "title"], t1!.History.Select(h => h.Kind));
+        Assert.All(t1.History, h => Assert.Equal("api", h.Source));
+        Assert.Equal("Plain", t1.History[2].From);
+
+        // only touched moved → bumped
+        var p2 = await c.PatchAsJsonAsync("/tasks/ah1", new { touched = 9L }, ApiFactory.Json);
+        Assert.Equal("bumped", (await p2.Content.ReadFromJsonAsync<Headboard.Api.Tasks.TaskDto>(ApiFactory.Json))!.History.Last().Kind);
+
+        // comment endpoints log too
+        (await c.PostAsJsonAsync("/tasks/ah1/comments", new { text = "hi there" }, ApiFactory.Json)).EnsureSuccessStatusCode();
+        var t3 = await c.GetFromJsonAsync<Headboard.Api.Tasks.TaskDto>("/tasks/ah1", ApiFactory.Json);
+        Assert.Equal("comment", t3!.History.Last().Kind);
+        Assert.Equal("hi there", t3.History.Last().To);
+        (await c.DeleteAsync($"/tasks/ah1/comments/{t3.Comments.Single().Id}")).EnsureSuccessStatusCode();
+        Assert.Equal("comment_removed", (await c.GetFromJsonAsync<Headboard.Api.Tasks.TaskDto>("/tasks/ah1", ApiFactory.Json))!.History.Last().Kind);
+
+        // a client patch carrying its own log is stored as-is, no extra server entries
+        var own = new object[] { new { id = "h1", at = 1L, kind = "created" } };
+        var p4 = await c.PatchAsJsonAsync("/tasks/ah1", new { pr = 2, history = own }, ApiFactory.Json);
+        var t4 = await p4.Content.ReadFromJsonAsync<Headboard.Api.Tasks.TaskDto>(ApiFactory.Json);
+        Assert.Equal(["created"], t4!.History.Select(h => h.Kind));
+    }
+
+    [Fact]
     public void HistoryJson_KeepsOnlyTheNewest200()
     {
         var many = Enumerable.Range(0, 250).Select(i => new Headboard.Api.Tasks.HistoryEntryDto { Id = "h" + i, At = i + 1, Kind = "bumped" });
