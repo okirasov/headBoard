@@ -1,0 +1,43 @@
+apps/api/Headboard.Api/Tasks/TaskDto.cs
+  s_2372cb08d633fa::t_545ca7e935cc1c 63
+apps/mobile/src/components/Sheet.tsx
+  s_2372cb08d633fa::t_c9c7bb85883d88 2,10,22,27-31
+apps/mobile/src/sheets/TaskSheet.tsx
+  s_2372cb08d633fa::t_98fcf5973b246e 2,17-18,48-49,51,95,129
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_34bee6663d18fe 55-60,163-168
+apps/web/src/components/task/TaskDrawer.tsx
+  s_2372cb08d633fa::t_fedbb0c10f63b0 1,12,94-95,98,126,155-163
+apps/web/src/components/task/TaskEditor.tsx
+  s_2372cb08d633fa::t_4b5854796ec5df 1-146
+apps/web/src/store/useStore.test.ts
+  s_2372cb08d633fa::t_fda4431e3a10d9 148-170
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_9665d1868768ce 87-92,252-257
+packages/core/src/history.test.ts
+  s_2372cb08d633fa::t_3e8708f0c350a9 42-51
+packages/core/src/history.ts
+  s_2372cb08d633fa::t_23e2768defa460 44-48,116-117
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_a503efb28b2821 27,76,128
+packages/core/src/model.ts
+  s_2372cb08d633fa::t_6a16fdb4bb5361 28
+apps/mobile/src/components/TaskEditorM.tsx
+  s_2372cb08d633fa::t_7d67dcc9e661e7 1-135
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "b342f865cd87f7e31fe3c5c484cb6b9eb5b54c81",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
