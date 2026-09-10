@@ -180,6 +180,44 @@ public class TasksTests(ApiFactory f) : IClassFixture<ApiFactory>
     }
 }
 
+public class TagOpTests
+{
+    [Fact]
+    public async Task RenameMergesAcrossAllTasks_RemoveStrips_AndUsersAreIsolated()
+    {
+        using var f = new ApiFactory();
+        var (c, _) = await f.LoginAsync("tags@example.com");
+        var (other, _) = await f.LoginAsync("other-tags@example.com");
+        object Body(string id, string status, params string[] tags) => new { id, title = id, pr = 1, status, touched = 1L, created = 1L, tags, note = "", files = new object[0], comments = new object[0] };
+        (await c.PostAsJsonAsync("/tasks", Body("tg1", "inbox", "ux", "infra"), ApiFactory.Json)).EnsureSuccessStatusCode();
+        (await c.PostAsJsonAsync("/tasks", Body("tg2", "archived", "ux"), ApiFactory.Json)).EnsureSuccessStatusCode();
+        (await c.PostAsJsonAsync("/tasks", Body("tg3", "done", "design", "ux"), ApiFactory.Json)).EnsureSuccessStatusCode();
+        (await c.PostAsJsonAsync("/tasks", Body("tg4", "inbox", "uxr"), ApiFactory.Json)).EnsureSuccessStatusCode();
+        (await other.PostAsJsonAsync("/tasks", Body("tg9", "inbox", "ux"), ApiFactory.Json)).EnsureSuccessStatusCode();
+
+        var r = await c.PostAsJsonAsync("/tags/rename", new { from = "#UX", to = "Design" }, ApiFactory.Json);
+        r.EnsureSuccessStatusCode();
+        var res = await r.Content.ReadFromJsonAsync<Headboard.Api.Tags.TagOpResult>(ApiFactory.Json);
+        Assert.Equal(3, res!.Changed);
+        Assert.Equal(["tg1", "tg2", "tg3"], res.Tasks.Select(t => t.Id).OrderBy(x => x));
+        Assert.Equal(["design", "infra"], res.Tasks.Single(t => t.Id == "tg1").Tags);
+        Assert.Equal(["design"], res.Tasks.Single(t => t.Id == "tg3").Tags); // merged, no duplicate
+        Assert.Equal("tags", res.Tasks.Single(t => t.Id == "tg1").History.Last().Kind);
+        Assert.Equal("api", res.Tasks.Single(t => t.Id == "tg1").History.Last().Source);
+        Assert.Equal(["uxr"], (await c.GetFromJsonAsync<Headboard.Api.Tasks.TaskDto>("/tasks/tg4", ApiFactory.Json))!.Tags); // substring untouched
+        Assert.Equal(["ux"], (await other.GetFromJsonAsync<Headboard.Api.Tasks.TaskDto>("/tasks/tg9", ApiFactory.Json))!.Tags); // other user untouched
+
+        var rm = await c.PostAsJsonAsync("/tags/remove", new { tag = "design" }, ApiFactory.Json);
+        var rmRes = await rm.Content.ReadFromJsonAsync<Headboard.Api.Tags.TagOpResult>(ApiFactory.Json);
+        Assert.Equal(3, rmRes!.Changed);
+        Assert.Empty(rmRes.Tasks.Single(t => t.Id == "tg3").Tags);
+
+        Assert.Equal(HttpStatusCode.BadRequest, (await c.PostAsJsonAsync("/tags/rename", new { from = "", to = "x" }, ApiFactory.Json)).StatusCode);
+        var noop = await (await c.PostAsJsonAsync("/tags/rename", new { from = "a", to = "A" }, ApiFactory.Json)).Content.ReadFromJsonAsync<Headboard.Api.Tags.TagOpResult>(ApiFactory.Json);
+        Assert.Equal(0, noop!.Changed);
+    }
+}
+
 public class SeriesTests
 {
     [Fact]

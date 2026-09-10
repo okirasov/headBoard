@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { type TagStat, fmtDate, phrases, tagStats, unusedTags } from '@headboard/core';
 import { useStore } from '../store/useStore';
+import { syncTagOp } from '../store/sync';
 import { useTheme } from '../theme/ThemeContext';
 import { useT } from '../lib/useT';
 import { kicker, txt } from '../theme/type';
@@ -15,7 +16,7 @@ function Row({ s }: { s: TagStat }) {
   const deleteTag = useStore(x => x.deleteTag);
   const [name, setName] = useState(s.tag);
   const [confirm, setConfirm] = useState(false);
-  const commit = () => { const target = name.trim().toLowerCase().replace(/^#/, ''); if (target && target !== s.tag) renameTag(s.tag, name); else setName(s.tag); };
+  const commit = () => { const target = name.trim().toLowerCase().replace(/^#/, ''); if (target && target !== s.tag) { renameTag(s.tag, name); void syncTagOp({ rename: [s.tag, name] }); } else setName(s.tag); };
   return (
     <Card style={{ paddingVertical: 10, paddingHorizontal: 12, gap: 8 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -25,7 +26,7 @@ function Row({ s }: { s: TagStat }) {
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
         <Text style={[txt(9.5, { mono: true, color: t.faint }), { flex: 1 }]}>{s.done + s.archived > 0 ? `${s.done} ${T.doneCol} · ${s.archived} ${T.archivedBadge}` : ''}{s.lastUsed ? '  ' + T.lastUsed + fmtDate(s.lastUsed, lang) : ''}</Text>
-        <Pressable onPress={() => (confirm ? deleteTag(s.tag) : setConfirm(true))} style={{ paddingVertical: 5, paddingHorizontal: 10, borderRadius: 9, borderWidth: 1, borderColor: confirm ? t.hi : t.line, backgroundColor: t.card }}>
+        <Pressable onPress={() => { if (confirm) { deleteTag(s.tag); void syncTagOp({ remove: s.tag }); } else setConfirm(true); }} style={{ paddingVertical: 5, paddingHorizontal: 10, borderRadius: 9, borderWidth: 1, borderColor: confirm ? t.hi : t.line, backgroundColor: t.card }}>
           <Text style={txt(10.5, { w: 600, color: confirm ? t.hi : t.mut2 })}>{confirm ? T.confirmDeleteTag : T.deleteTag}</Text>
         </Pressable>
       </View>
@@ -50,7 +51,7 @@ export function TagsScreen() {
         <View style={{ gap: 8, marginTop: 8 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <Text style={[kicker(9.5, t.mut2), { flex: 1 }]}>{T.unusedTags} · {unused.length}</Text>
-            <Btn variant="outline" color={t.mut2} label={T.clearUnused} size={11} pad={7} radius={9} onPress={() => unused.forEach(u => deleteTag(u.tag))} />
+            <Btn variant="outline" color={t.mut2} label={T.clearUnused} size={11} pad={7} radius={9} onPress={() => unused.forEach(u => { deleteTag(u.tag); void syncTagOp({ remove: u.tag }); })} />
           </View>
           {unused.map(s => <Row key={s.tag} s={s} />)}
         </View>

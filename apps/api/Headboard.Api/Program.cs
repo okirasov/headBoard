@@ -5,6 +5,7 @@ using Headboard.Api.Auth;
 using Headboard.Api.Calendar;
 using Headboard.Api.Push;
 using Headboard.Api.Templates;
+using Headboard.Api.Tags;
 using Headboard.Api.Comments;
 using Headboard.Api.Files;
 using Headboard.Api.Projects;
@@ -115,6 +116,7 @@ app.MapAi();
 app.MapCalendar();
 app.MapPush();
 app.MapTemplates();
+app.MapTags();
 
 app.Run();
 

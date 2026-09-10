@@ -145,6 +145,8 @@ scoped to the authenticated user.
 | GET/POST | `/templates` | task blueprints `{id, name, title, proj, pr, tags, note, dueInDays, remindDays, usedCount}` → list / `201 Template` |
 | PATCH/DELETE | `/templates/{id}` | partial patch (`proj` must exist, `remindDays` 0/1/null) → `Template` / `204` |
 | DELETE | `/projects/{id}` | → 204 (tasks keep existing with `proj: null`) |
+| POST | `/tags/rename` | `{from, to}` → `{changed, tasks: Task[]}`: renames (or merges into `to`) across all the user's tasks, archived included, in one transaction; each changed task gets a `tags` history entry with `source: "api"` |
+| POST | `/tags/remove` | `{tag}` → `{changed, tasks}` |
 | GET | `/settings` | → `{lang, theme, showDone, digestText}` |
 | PUT | `/settings` | `{lang, theme, showDone, digestText}` → same |
 | POST | `/files?taskId=` or `?projectId=` | multipart (first file part) → `201 FileRef` (`kind` `img` for `image/*`, `src` = `/files/{id}/content`) |

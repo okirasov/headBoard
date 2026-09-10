@@ -13,6 +13,7 @@ export interface Settings {
   /** Morning push about tasks due today / tomorrow (per-task `remindDays`). */
   notifyDue?: boolean;
 }
+export interface TagOpResult { changed: number; tasks: Task[] }
 export interface PushConfig { webPush: boolean; vapidPublicKey: string | null; expo: boolean }
 export interface PushSubscriptionInfo { id: string; kind: 'webpush' | 'expo'; label: string | null; createdAt: number; lastSentAt: number | null }
 export interface ProjectWithFiles extends Project { files?: FileRef[] }
@@ -71,6 +72,11 @@ export function createApi(baseUrl: string, getToken: () => string | null) {
       create: (t: Template) => req<Template>('POST', '/templates', t),
       patch: (id: string, up: Partial<Template>) => req<Template>('PATCH', '/templates/' + encodeURIComponent(id), up),
       remove: (id: string) => req<void>('DELETE', '/templates/' + encodeURIComponent(id)),
+    },
+    tags: {
+      /** Rename or merge a tag across every task of the user (server sweep after the local change). */
+      rename: (from: string, to: string) => req<TagOpResult>('POST', '/tags/rename', { from, to }),
+      remove: (tag: string) => req<TagOpResult>('POST', '/tags/remove', { tag }),
     },
     files: {
       /** `part` is a Blob on web or a `{uri, name, type}` descriptor in React Native. */

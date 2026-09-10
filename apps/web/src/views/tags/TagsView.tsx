@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { type TagStat, fmtDate, phrases, tagStats, unusedTags } from '@headboard/core';
 import { useStore } from '../../store/useStore';
+import { syncTagOp } from '../../store/sync';
 import { useT } from '../../lib/useT';
 import { cx } from '../../lib/cx';
 import { Button, Empty, Kicker } from '../../components/ui/primitives';
@@ -15,7 +16,7 @@ function Row({ s, muted }: { s: TagStat; muted?: boolean }) {
   const [confirm, setConfirm] = useState(false);
   const target = name.trim().toLowerCase().replace(/^#/, '');
   const willMerge = target !== s.tag && existing.includes(target);
-  const commit = () => { if (target && target !== s.tag) renameTag(s.tag, name); else setName(s.tag); };
+  const commit = () => { if (target && target !== s.tag) { renameTag(s.tag, name); void syncTagOp({ rename: [s.tag, name] }); } else setName(s.tag); };
   return (
     <div className={cx('flex items-center gap-12 rounded-12 border border-line bg-card py-9 pl-14 pr-12 hover:border-lineStrong', muted && 'opacity-80')}>
       <span className="font-mono text-12 text-mut2">#</span>
@@ -31,7 +32,7 @@ function Row({ s, muted }: { s: TagStat; muted?: boolean }) {
       <button type="button" onClick={() => set({ view: 'board', fTag: s.tag })} className="w-90 cursor-pointer text-right font-mono text-10.5 text-mut2 hover:text-acc">{phrases.tasksN(s.open, lang)}</button>
       <span className="w-150 whitespace-nowrap text-right font-mono text-9.5 text-faint">{s.done + s.archived > 0 ? `${s.done} ${T.doneCol} · ${s.archived} ${T.archivedBadge}` : ''}</span>
       <span className="w-130 text-right font-mono text-9.5 text-mut2">{s.lastUsed ? T.lastUsed + fmtDate(s.lastUsed, lang) : ''}</span>
-      <Button variant="outline" tone="mut2" hoverTone="hi" className={cx('rounded-9 px-10 py-6 text-11.5', confirm && '!border-hi !text-hi')} onClick={() => (confirm ? deleteTag(s.tag) : setConfirm(true))} onBlur={() => setConfirm(false)}>
+      <Button variant="outline" tone="mut2" hoverTone="hi" className={cx('rounded-9 px-10 py-6 text-11.5', confirm && '!border-hi !text-hi')} onClick={() => { if (confirm) { deleteTag(s.tag); void syncTagOp({ remove: s.tag }); } else setConfirm(true); }} onBlur={() => setConfirm(false)}>
         {confirm ? T.confirmDeleteTag : T.deleteTag}
       </Button>
     </div>
@@ -63,7 +64,7 @@ export function TagsView() {
               <Kicker size={10}>{T.unusedTags}</Kicker>
               <span className="font-mono text-10.5 text-mut2">{unused.length}</span>
               <span className="flex-1" />
-              <Button variant="outline" tone="mut2" hoverTone="hi" className="rounded-9 px-10 py-5 text-11.5" onClick={() => unused.forEach(u => deleteTag(u.tag))}>{T.clearUnused}</Button>
+              <Button variant="outline" tone="mut2" hoverTone="hi" className="rounded-9 px-10 py-5 text-11.5" onClick={() => unused.forEach(u => { deleteTag(u.tag); void syncTagOp({ remove: u.tag }); })}>{T.clearUnused}</Button>
             </div>
             {unused.map(s => <Row key={s.tag} s={s} muted />)}
           </>

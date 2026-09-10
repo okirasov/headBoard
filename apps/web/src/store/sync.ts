@@ -34,6 +34,22 @@ export async function refreshSettings(): Promise<void> {
   await Promise.all([e.refreshSettings(), e.refreshTasks()]);
 }
 
+/**
+ * Server sweep for a bulk tag operation: push local edits first, then let the API rewrite whatever
+ * this device did not have loaded, and adopt the result. No-op offline; the per-task diff covers it.
+ */
+export async function syncTagOp(op: { rename: [string, string] } | { remove: string }): Promise<void> {
+  const e = getEngine();
+  if (!e || !api || !useStore.getState().token) return;
+  try {
+    await e.flush();
+    const r = 'rename' in op ? await api.tags.rename(op.rename[0], op.rename[1]) : await api.tags.remove(op.remove);
+    if (r.changed > 0) await e.refreshTasks();
+  } catch {
+    // offline or server error: local change already applied and will be pushed by the engine
+  }
+}
+
 export async function refreshTasks(): Promise<void> {
   await getEngine()?.refreshTasks();
 }
