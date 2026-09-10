@@ -60,6 +60,19 @@ describe('store', () => {
     expect(useStore.getState().tasks.find(t => t.id === 'a')).toBeUndefined();
     expect(useStore.getState().snack).toBe('Deleted');
   });
+  it('tags: set normalizes, rename merges, delete strips and clears the filter', () => {
+    useStore.getState().setTags('a', ['#Infra', 'infra', 'Deep Work']);
+    expect(useStore.getState().tasks.find(t => t.id === 'a')!.tags).toEqual(['infra', 'deep-work']);
+    useStore.getState().setTags('b', ['ops']);
+    useStore.setState({ fTag: 'infra' });
+    useStore.getState().renameTag('infra', 'ops');
+    expect(useStore.getState().tasks.find(t => t.id === 'a')!.tags).toEqual(['ops', 'deep-work']);
+    expect(useStore.getState().fTag).toBe('ops');
+    expect(useStore.getState().snack).toBe('Tags merged');
+    useStore.getState().deleteTag('ops');
+    expect(useStore.getState().tasks.every(t => !t.tags.includes('ops'))).toBe(true);
+    expect(useStore.getState().fTag).toBeNull();
+  });
   it('completing a recurring task rolls it forward', () => {
     useStore.getState().setRecur('a', 'weekly');
     let t = useStore.getState().tasks.find(x => x.id === 'a')!;

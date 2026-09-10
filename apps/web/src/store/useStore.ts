@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import {
   type CaptureItem, type FileRef, type Lang, type Priority, type Project, type Provider, type Status, type Task, type Theme,
-  type User, type View, type ColumnKey, type Recur, newTask, newProject, dict, statusLabel, phrases, fmtDate, rollRecurring,
+  type User, type View, type ColumnKey, type Recur, newTask, newProject, dict, statusLabel, phrases, fmtDate, rollRecurring, normalizeTags, renameTag, removeTag,
 } from '@headboard/core';
 
 export const STORAGE_KEY = 'headboard-v1';
@@ -34,6 +34,7 @@ export interface UiSlice {
   q: string;
   fPr: Priority | null;
   fProj: string | null;
+  fTag: string | null;
   sel: string | null;
   capOpen: boolean;
   capText: string;
@@ -68,6 +69,10 @@ export interface Actions {
   setDue: (id: string, due: number | null) => void;
   setRemind: (id: string, remindDays: 0 | 1 | null) => void;
   setRecur: (id: string, recur: Recur) => void;
+  setTags: (id: string, tags: string[]) => void;
+  /** Rename everywhere; renaming into an existing tag merges. */
+  renameTag: (from: string, to: string) => void;
+  deleteTag: (tag: string) => void;
   /** Complete a task; a recurring one is closed for history and its next instance is created. */
   complete: (id: string) => void;
   addComment: (id: string, text: string) => void;
@@ -98,7 +103,7 @@ const initialPersisted: PersistedSlice = {
 };
 
 const initialUi: UiSlice = {
-  view: 'board', q: '', fPr: null, fProj: null, sel: null,
+  view: 'board', q: '', fPr: null, fProj: null, fTag: null, sel: null,
   capOpen: false, capText: '', capItems: null, capBusy: false,
   calSel: null, snack: null, pv: null, zTask: null, zMonth: 0, profOpen: false,
   dragId: null, dragCol: null, cmText: '', digestBusy: false, digestSeed: 0,
@@ -201,6 +206,21 @@ export const useStore = create<Store>()(
         setPriority: (id, pr) => patchTask(id, { pr }),
         setDue: (id, due) => patchTask(id, { due, touched: Date.now(), ...(due === null ? { remindDays: null } : {}) }),
         setRemind: (id, remindDays) => patchTask(id, { remindDays }),
+        setTags: (id, tags) => patchTask(id, { tags: normalizeTags(tags) }),
+        renameTag: (from, to) => {
+          const changed = renameTag(get().tasks, from, to);
+          if (!changed.length) return;
+          const merged = get().tasks.some(t => t.tags.includes(normalizeTags([to])[0]) && !t.tags.includes(from));
+          const by = new Map(changed.map(t => [t.id, t]));
+          set(s => ({ tasks: s.tasks.map(t => by.get(t.id) ?? t), fTag: s.fTag === from ? normalizeTags([to])[0] : s.fTag }));
+          toast(merged ? T().tTagMerged : T().tTagRenamed);
+        },
+        deleteTag: tag => {
+          const changed = removeTag(get().tasks, tag);
+          const by = new Map(changed.map(t => [t.id, t]));
+          set(s => ({ tasks: s.tasks.map(t => by.get(t.id) ?? t), fTag: s.fTag === tag ? null : s.fTag }));
+          toast(T().tTagDeleted);
+        },
         setRecur: (id, recur) => { const t = get().tasks.find(x => x.id === id); patchTask(id, { recur, ...(recur && t && t.due === null ? { due: Date.now() } : {}) }); },
         addComment: (id, text) => {
           const txt = text.trim();
@@ -223,7 +243,7 @@ export const useStore = create<Store>()(
           set(s => ({ projFiles: { ...s.projFiles, [projId]: (s.projFiles[projId] ?? []).filter(f => f.id !== fileId) } })),
         addTasks: items => {
           const now = Date.now();
-          const fresh = items.map((x, i) => newTask({ id: 'n' + now + i, title: x.title, proj: x.proj, pr: x.pr, tags: x.tags }, now));
+          const fresh = items.map((x, i) => newTask({ id: 'n' + now + i, title: x.title, proj: x.proj, pr: x.pr, tags: normalizeTags(x.tags) }, now));
           set(s => ({ tasks: [...fresh, ...s.tasks], capOpen: false, capText: '', capItems: null }));
           toast(phrases.addedToInbox(fresh.length, get().lang));
         },

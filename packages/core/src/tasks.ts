@@ -67,9 +67,10 @@ export function sortDone(tasks: Task[], limit = 8): Task[] {
   return [...tasks].sort((a, b) => (b.doneAt || 0) - (a.doneAt || 0)).slice(0, limit);
 }
 
-export function matchesFilter(t: Task, q: string, fPr: Priority | null, fProj: string | null): boolean {
+export function matchesFilter(t: Task, q: string, fPr: Priority | null, fProj: string | null, fTag: string | null = null): boolean {
   const query = q.trim().toLowerCase();
   return (!query || (t.title + ' ' + t.tags.join(' ')).toLowerCase().includes(query))
     && (fPr === null || t.pr === fPr)
-    && (!fProj || t.proj === fProj);
+    && (!fProj || t.proj === fProj)
+    && (!fTag || t.tags.includes(fTag));
 }

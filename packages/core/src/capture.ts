@@ -1,4 +1,5 @@
 import { clampPriority, type CaptureItem, type Project } from './model';
+import { normalizeTags } from './tags';
 
 /** Keyword heuristics keyed by lowercase project-name fragments. */
 export const PROJECT_KEYWORDS: Array<{ nameMatch: RegExp; text: RegExp }> = [
@@ -35,7 +36,7 @@ export function heuristicExtract(text: string, projects: Project[]): CaptureItem
       const urgent = /urgent|asap|today|срочно|сегодня/i.test(title);
       title = title.replace(/^(urgent|asap|срочно)[:\s]+/i, '');
       title = title.charAt(0).toUpperCase() + title.slice(1);
-      return { title: title.slice(0, 90), pr: clampPriority(urgent ? 0 : 1), tags: tags.slice(0, 2), proj: guessProject(l, projects) };
+      return { title: title.slice(0, 90), pr: clampPriority(urgent ? 0 : 1), tags: normalizeTags(tags).slice(0, 2), proj: guessProject(l, projects) };
     });
 }
 
@@ -52,7 +53,7 @@ export function parseExtractResponse(raw: string, projects: Project[]): CaptureI
     return j.map(x => ({
       title: String(x.title || '').slice(0, 90),
       pr: clampPriority(Number(x.priority) || 0),
-      tags: Array.isArray(x.tags) ? x.tags.slice(0, 2).map(String) : [],
+      tags: Array.isArray(x.tags) ? normalizeTags(x.tags.map(String)).slice(0, 2) : [],
       proj: projects.find(p => p.name === x.project)?.id ?? null,
     })).filter(x => x.title);
   } catch {

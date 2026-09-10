@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Appearance } from 'react-native';
 import {
   type CaptureItem, type ColumnKey, type FileRef, type Lang, type Priority, type Project, type Provider, type Task, type Theme,
-  type User, type View, type Recur, newTask, newProject, dict, statusLabel, phrases, fmtDate, sizeHuman, rollRecurring,
+  type User, type View, type Recur, newTask, newProject, dict, statusLabel, phrases, fmtDate, sizeHuman, rollRecurring, normalizeTags, renameTag, removeTag,
 } from '@headboard/core';
 
 export const STORAGE_KEY = 'headboard-v1';
@@ -19,7 +19,7 @@ export interface PersistedSlice {
   token: string | null;
 }
 export interface UiSlice {
-  mView: View; mCol: ColumnKey; mSel: string | null; mCapOpen: boolean; mProfOpen: boolean; mPv: Preview | null;
+  mView: View; mCol: ColumnKey; mSel: string | null; fTag: string | null; mCapOpen: boolean; mProfOpen: boolean; mPv: Preview | null;
   capText: string; capItems: CaptureItem[] | null; capBusy: boolean; q: string;
   calSel: number | null; snack: string | null; zTask: string | null; zMonth: number; cmText: string;
   /** Task whose due date is being picked in the date sheet. */
@@ -41,6 +41,9 @@ export interface Actions {
   setDue: (id: string, due: number | null) => void;
   setRemind: (id: string, remindDays: 0 | 1 | null) => void;
   setRecur: (id: string, recur: Recur) => void;
+  setTags: (id: string, tags: string[]) => void;
+  renameTag: (from: string, to: string) => void;
+  deleteTag: (tag: string) => void;
   complete: (id: string) => void;
   addComment: (id: string, text: string) => void;
   attachFiles: (id: string, files: FileRef[]) => void;
@@ -64,7 +67,7 @@ export type Store = PersistedSlice & UiSlice & Actions;
 
 const initialPersisted: PersistedSlice = { tasks: [], projects: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, user: null, lang: 'en', theme: 'light', showDone: true, token: null };
 const initialUi: UiSlice = {
-  mView: 'board', mCol: 'focus', mSel: null, mCapOpen: false, mProfOpen: false, mPv: null,
+  mView: 'board', mCol: 'focus', mSel: null, fTag: null, mCapOpen: false, mProfOpen: false, mPv: null,
   capText: '', capItems: null, capBusy: false, q: '', calSel: null, snack: null, zTask: null, zMonth: 0, cmText: '', dueTask: null, dueMonth: 0, digestBusy: false, digestSeed: 0,
 };
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
@@ -119,6 +122,19 @@ export const useStore = create<Store>()(
         setPriority: (id, pr) => patchTask(id, { pr }),
         setDue: (id, due) => { patchTask(id, { due, touched: Date.now(), ...(due === null ? { remindDays: null } : {}) }); set({ dueTask: null }); },
         setRemind: (id, remindDays) => patchTask(id, { remindDays }),
+        setTags: (id, tags) => patchTask(id, { tags: normalizeTags(tags) }),
+        renameTag: (from, to) => {
+          const changed = renameTag(get().tasks, from, to); if (!changed.length) return;
+          const merged = get().tasks.some(t => t.tags.includes(normalizeTags([to])[0]) && !t.tags.includes(from));
+          const by = new Map(changed.map(t => [t.id, t]));
+          set(s => ({ tasks: s.tasks.map(t => by.get(t.id) ?? t), fTag: s.fTag === from ? normalizeTags([to])[0] : s.fTag }));
+          toast(merged ? T().tTagMerged : T().tTagRenamed);
+        },
+        deleteTag: tag => {
+          const changed = removeTag(get().tasks, tag); const by = new Map(changed.map(t => [t.id, t]));
+          set(s => ({ tasks: s.tasks.map(t => by.get(t.id) ?? t), fTag: s.fTag === tag ? null : s.fTag }));
+          toast(T().tTagDeleted);
+        },
         setRecur: (id, recur) => { const t = get().tasks.find(x => x.id === id); patchTask(id, { recur, ...(recur && t && t.due === null ? { due: Date.now() } : {}) }); },
         addComment: (id, text) => {
           const txt = text.trim(); if (!txt) return;
@@ -129,7 +145,7 @@ export const useStore = create<Store>()(
         removeFile: (id, fileId) => patchTasks(t => (t.id === id ? { ...t, files: t.files.filter(f => f.id !== fileId) } : t)),
         addTasks: items => {
           const now = Date.now();
-          const fresh = items.map((x, i) => newTask({ id: 'n' + now + i, title: x.title, proj: x.proj, pr: x.pr, tags: x.tags }, now));
+          const fresh = items.map((x, i) => newTask({ id: 'n' + now + i, title: x.title, proj: x.proj, pr: x.pr, tags: normalizeTags(x.tags) }, now));
           set(s => ({ tasks: [...fresh, ...s.tasks], mCapOpen: false, capText: '', capItems: null }));
           toast(phrases.addedToInbox(fresh.length, get().lang));
         },

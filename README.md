@@ -1,6 +1,6 @@
 # Headboard
 
-Personal thinking board: paste raw text, get tasks in Inbox / In focus / Waiting on, review forgotten ones, see load per day in a calendar, restore or delete what you archived, manage projects (name, colour) from the sidebar gear or the profile sheet, see productivity statistics (closed per week, priority mix, idle time, load by project, streak), search every task including done and archived ones with match highlighting, manage deadlines (due dates, per-task reminders, morning push about what is due), and run recurring tasks (daily / weekly / monthly series that roll forward on completion). Web + iOS/Android + API, built from the design handoff in `design_handoff_headboard/`.
+Personal thinking board: paste raw text, get tasks in Inbox / In focus / Waiting on, review forgotten ones, see load per day in a calendar, restore or delete what you archived, manage projects (name, colour) from the sidebar gear or the profile sheet, see productivity statistics (closed per week, priority mix, idle time, load by project, streak), search every task including done and archived ones with match highlighting, manage deadlines (due dates, per-task reminders, morning push about what is due), run recurring tasks (daily / weekly / monthly series that roll forward on completion), and keep tags tidy (rename, merge, remove, filter the board by tag). Web + iOS/Android + API, built from the design handoff in `design_handoff_headboard/`.
 
 ## Layout
 

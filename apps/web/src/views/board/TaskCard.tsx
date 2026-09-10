@@ -79,7 +79,11 @@ export function TaskCard({ task, now }: { task: Task; now: number }) {
         {p && (
           <span className="flex items-center gap-5 text-11.5 leading-normal text-mut"><Dot color={p.color} />{p.name}</span>
         )}
-        {task.tags.length > 0 && <span className="font-mono text-10.5 text-mut2">{task.tags.map(x => '#' + x).join(' ')}</span>}
+        {task.tags.length > 0 && (
+          <span className="flex flex-wrap gap-4 font-mono text-10.5 text-mut2">
+            {task.tags.map(x => <button key={x} type="button" onClick={e => { e.stopPropagation(); set({ fTag: x }); }} className="cursor-pointer rounded-4 hover:text-acc" title={T.tagFilter}>#{x}</button>)}
+          </span>
+        )}
         <span className="flex-1" />
         {task.comments.length > 0 && (
           <span className="flex items-center gap-3 font-mono text-10.5 text-mut2"><IcComment size={10} />{task.comments.length}</span>

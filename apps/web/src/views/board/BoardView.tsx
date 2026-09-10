@@ -3,6 +3,7 @@ import { useStore } from '../../store/useStore';
 import { useT } from '../../lib/useT';
 import { useNow } from '../../lib/useNow';
 import { Chip } from '../../components/ui/primitives';
+import { IcHash, IcX } from '../../components/ui/Icons';
 import { Column } from './Column';
 import { ProjectFilesBar } from './ProjectFilesBar';
 import { SeedHint } from './SeedHint';
@@ -13,11 +14,12 @@ export function BoardView() {
   const q = useStore(s => s.q);
   const fPr = useStore(s => s.fPr);
   const fProj = useStore(s => s.fProj);
+  const fTag = useStore(s => s.fTag);
   const showDone = useStore(s => s.showDone);
   const set = useStore(s => s.set);
   const now = useNow();
 
-  const lv = live(tasks).filter(t => matchesFilter(t, q, fPr, fProj));
+  const lv = live(tasks).filter(t => matchesFilter(t, q, fPr, fProj, fTag));
   const cols: ColumnKey[] = showDone ? ['inbox', 'focus', 'waiting', 'done'] : ['inbox', 'focus', 'waiting'];
   const cardsFor = (c: ColumnKey) => {
     const group = lv.filter(t => t.status === c);
@@ -37,6 +39,12 @@ export function BoardView() {
           ))}
           <span className="mx-3 w-px self-stretch bg-line" />
           <Chip active={showDone} onClick={() => set({ showDone: !showDone })}>{T.showDone}</Chip>
+          <span className="mx-3 w-px self-stretch bg-line" />
+          {fTag ? (
+            <button type="button" onClick={() => set({ fTag: null })} className="flex cursor-pointer items-center gap-5 rounded-7 border border-lineStrong bg-chipBg px-9 py-4 font-mono text-10.5 font-medium leading-normal text-chipInk">#{fTag}<IcX size={9} /></button>
+          ) : (
+            <button type="button" title={T.tagsTitle} onClick={() => set({ view: 'tags' })} className="flex cursor-pointer items-center gap-4 rounded-7 border border-line bg-card px-8 py-4 font-mono text-10.5 font-medium leading-normal text-mut hover:border-lineStrong hover:text-ink"><IcHash size={11} />{T.tagsTitle}</button>
+          )}
         </div>
       </div>
       {fProj && <ProjectFilesBar />}

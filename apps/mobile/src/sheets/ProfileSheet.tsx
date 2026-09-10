@@ -8,7 +8,7 @@ import { useT } from '../lib/useT';
 import { kicker, txt } from '../theme/type';
 import { Sheet } from '../components/Sheet';
 import { Segmented } from '../components/ui';
-import { IcArchive, IcBell, IcChevronRightSm, IcFolder, IcRepeat, IcStats } from '../components/Icons';
+import { IcArchive, IcBell, IcChevronRightSm, IcFolder, IcHash, IcRepeat, IcStats } from '../components/Icons';
 import { archived } from '@headboard/core';
 
 export function ProfileSheet() {
@@ -83,6 +83,11 @@ export function ProfileSheet() {
         <IcFolder size={15} color={t.mut} />
         <Text style={[txt(13.5, { w: 600, color: t.ink }), { flex: 1 }]}>{T.projectsTitle}</Text>
         <Text style={txt(10.5, { mono: true, color: t.mut2 })}>{projectsN}</Text>
+        <IcChevronRightSm size={12} color={t.mut2} />
+      </Pressable>
+      <Pressable onPress={() => set({ mProfOpen: false, mView: 'tags' })} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 13, paddingHorizontal: 14, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.card }}>
+        <IcHash size={15} color={t.mut} />
+        <Text style={[txt(13.5, { w: 600, color: t.ink }), { flex: 1 }]}>{T.tagsTitle}</Text>
         <IcChevronRightSm size={12} color={t.mut2} />
       </Pressable>
       <Pressable onPress={() => set({ mProfOpen: false, mView: 'archive' })} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 13, paddingHorizontal: 14, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.card }}>

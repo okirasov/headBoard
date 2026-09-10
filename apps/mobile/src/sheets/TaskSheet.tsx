@@ -13,6 +13,7 @@ import { IdleBadge } from '../components/TaskCardM';
 import { PriorityDots, StatusPicker } from '../components/StatusPriority';
 import { AttachButtonM, FileChipM } from '../components/FileChipM';
 import { DueButton, RecurChips, RemindChips } from '../components/DueControls';
+import { TagEditorM } from '../components/TagEditorM';
 import { IcArchive, IcLink, IcSend } from '../components/Icons';
 
 function Body({ task }: { task: Task }) {
@@ -43,6 +44,7 @@ function Body({ task }: { task: Task }) {
         {p && <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}><Dot color={resolveColor(p.color, t)} /><Text style={txt(11.5, { color: t.mut })}>{p.name}</Text></View>}
       </View>
       <Text style={txt(19, { w: 500, color: t.ink, ls: -0.2, lh: 1.3 })}>{task.title}</Text>
+      {!isArchived && <TagEditorM task={task} />}
       <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
         {isArchived ? (
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: t.card, borderWidth: 1, borderColor: t.goldBd, borderRadius: 10, paddingVertical: 11, paddingHorizontal: 12 }}>

@@ -3,7 +3,7 @@ export type Status = 'inbox' | 'focus' | 'waiting' | 'done' | 'archived';
 export type ColumnKey = Exclude<Status, 'archived'>;
 export type Lang = 'en' | 'ru';
 export type Theme = 'light' | 'dark';
-export type View = 'board' | 'review' | 'digest' | 'calendar' | 'archive' | 'projects' | 'stats' | 'search' | 'due' | 'recurring';
+export type View = 'board' | 'review' | 'digest' | 'calendar' | 'archive' | 'projects' | 'stats' | 'search' | 'due' | 'recurring' | 'tags';
 export type Provider = 'Google' | 'Apple';
 export type Recur = 'daily' | 'weekly' | 'monthly' | null;
 

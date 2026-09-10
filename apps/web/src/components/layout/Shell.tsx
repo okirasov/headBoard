@@ -11,6 +11,7 @@ import { StatsView } from '../../views/stats/StatsView';
 import { SearchView } from '../../views/search/SearchView';
 import { DueView } from '../../views/due/DueView';
 import { RecurringView } from '../../views/recurring/RecurringView';
+import { TagsView } from '../../views/tags/TagsView';
 
 export function Shell() {
   const view = useStore(s => s.view);
@@ -29,6 +30,7 @@ export function Shell() {
         {view === 'search' && <SearchView />}
         {view === 'due' && <DueView />}
         {view === 'recurring' && <RecurringView />}
+        {view === 'tags' && <TagsView />}
       </main>
     </div>
   );

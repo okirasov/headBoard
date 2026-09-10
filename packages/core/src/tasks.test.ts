@@ -75,5 +75,7 @@ describe('sorting & filtering', () => {
     expect(matchesFilter(t, '', 1, null)).toBe(false);
     expect(matchesFilter(t, '', null, 'p1')).toBe(false);
     expect(matchesFilter(t, 'vector', 0, 'p2')).toBe(true);
+    expect(matchesFilter(t, '', null, null, 'infra')).toBe(true);
+    expect(matchesFilter(t, '', null, null, 'ux')).toBe(false);
   });
 });

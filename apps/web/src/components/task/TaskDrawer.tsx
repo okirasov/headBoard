@@ -9,6 +9,7 @@ import { Button, Dot, IconButton, Kicker, Scrim } from '../ui/primitives';
 import { IcArchive, IcChevronDown, IcLink, IcSend, IcX } from '../ui/Icons';
 import { AttachButton, FileChip } from '../files/FileChip';
 import { DueDateInput, RecurPicker, RemindPicker } from './DueControls';
+import { TagEditor } from './TagEditor';
 import { IdleBadge } from '../../views/board/TaskCard';
 
 const BAR = { hi: 'bg-hi', med: 'bg-med', lineStrong: 'bg-lineStrong' } as const;
@@ -92,9 +93,10 @@ function DrawerBody({ task }: { task: Task }) {
         {p && (
           <div className="flex items-center gap-6 text-12.5 leading-normal text-mut">
             <Dot color={p.color} size={8} />{p.name}
-            {task.tags.length > 0 && <span className="ml-6 font-mono text-10.5 text-mut2">{task.tags.map(x => '#' + x).join(' ')}</span>}
           </div>
         )}
+        {!isArchived && <TagEditor task={task} />}
+        {isArchived && task.tags.length > 0 && <div className="font-mono text-10.5 text-mut2">{task.tags.map(x => '#' + x).join(' ')}</div>}
         {task.note && <div className="rounded-10 bg-inset px-13 py-11 text-13 leading-[1.55] text-mut">{task.note}</div>}
         <div className="flex items-end gap-14">
           <div className="min-w-0 flex-1">
