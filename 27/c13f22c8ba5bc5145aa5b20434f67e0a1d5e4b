@@ -1,0 +1,55 @@
+apps/mobile/App.tsx
+  s_2372cb08d633fa::t_4e5e2c798af1e7 19,64,118
+apps/mobile/src/components/BulkBarM.tsx
+  s_19bb7e04471060::t_9924c99a81f697 1-44
+apps/mobile/src/components/TaskCardM.tsx
+  s_2372cb08d633fa::t_fc00ac3e716500 30-32,39
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_d5d11cad11c1a7 7,24,75-80,92,132-168
+apps/web/src/App.tsx
+  s_2372cb08d633fa::t_5a80d43f3c0485 5-6,21,54
+apps/web/src/components/layout/ProfileMenu.tsx
+  s_2372cb08d633fa::t_2acc0bbc3e5860 71
+apps/web/src/components/layout/TopBar.tsx
+  s_2372cb08d633fa::t_248a63eaa7ba19 21
+apps/web/src/store/useStore.test.ts
+  s_2372cb08d633fa::t_96f6df48643517 197-219
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_994ff74c1a07b3 5,48-50,119-124,141,198-234
+apps/web/src/views/board/BoardView.tsx
+  s_2372cb08d633fa::t_330cea3a7e6753 10,57
+apps/web/src/views/board/BulkBar.tsx
+  s_2372cb08d633fa::t_a77fe34eb9c90a 1-42
+apps/web/src/views/board/TaskCard.tsx
+  s_2372cb08d633fa::t_f1844700c19a9a 33-35,47-57,60,65,68,72,75
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_48cee9298edca8 39-40,92-93,148-149,200
+apps/web/src/components/ui/ShortcutsHelp.tsx
+  s_2372cb08d633fa::t_72d672f21c0319 1-49
+apps/web/src/lib/useShortcuts.ts
+  s_2372cb08d633fa::t_ad09c2b51e708a 1-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "27c13f22c8ba5bc5145aa5b20434f67e0a1d5e4b",
+  "prompts": {},
+  "sessions": {
+    "s_19bb7e04471060": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f1ad9e0-0e04-4d6f-9d32-06340c42ea59",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    },
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "unknown"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
