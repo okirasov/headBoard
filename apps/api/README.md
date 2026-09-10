@@ -138,6 +138,8 @@ scoped to the authenticated user.
 | GET | `/projects` | → `(Project & {files: FileRef[]})[]` |
 | POST | `/projects` | `{id?, name, color}` → `201 Project` |
 | PATCH | `/projects/{id}` | `{name?, color?}` → `Project` |
+| GET/POST | `/templates` | task blueprints `{id, name, title, proj, pr, tags, note, dueInDays, remindDays, usedCount}` → list / `201 Template` |
+| PATCH/DELETE | `/templates/{id}` | partial patch (`proj` must exist, `remindDays` 0/1/null) → `Template` / `204` |
 | DELETE | `/projects/{id}` | → 204 (tasks keep existing with `proj: null`) |
 | GET | `/settings` | → `{lang, theme, showDone, digestText}` |
 | PUT | `/settings` | `{lang, theme, showDone, digestText}` → same |

@@ -66,6 +66,7 @@ function DrawerBody({ task }: { task: Task }) {
   const toggleDone = useStore(s => s.toggleDone);
   const bump = useStore(s => s.bump);
   const archive = useStore(s => s.archive);
+  const saveAsTemplate = useStore(s => s.saveAsTemplate);
   const restore = useStore(s => s.restore);
   const deleteTask = useStore(s => s.deleteTask);
   const [confirmDel, setConfirmDel] = useState(false);
@@ -153,6 +154,12 @@ function DrawerBody({ task }: { task: Task }) {
           {meta.map(([l, v]) => (
             <div key={l} className="flex text-12 leading-normal"><span className="w-130 shrink-0 text-mut2">{l}</span><span className="font-mono text-11 text-mut">{v}</span></div>
           ))}
+          {!isArchived && (
+            <div className="flex items-center text-12 leading-normal">
+              <span className="w-130 shrink-0 text-mut2">{T.templatesTitle}</span>
+              <button type="button" onClick={() => saveAsTemplate(task.id)} className="cursor-pointer font-mono text-10.5 text-mut hover:text-acc">{T.saveAsTemplate}</button>
+            </div>
+          )}
           {task.chat && (
             <div className="flex items-center text-12 leading-normal">
               <span className="w-130 shrink-0 text-mut2">{T.claudeChat}</span>

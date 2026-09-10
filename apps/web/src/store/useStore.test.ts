@@ -60,6 +60,23 @@ describe('store', () => {
     expect(useStore.getState().tasks.find(t => t.id === 'a')).toBeUndefined();
     expect(useStore.getState().snack).toBe('Deleted');
   });
+  it('templates: save from task, use with placeholders, delete', () => {
+    useStore.getState().patchTask('a', { title: 'Prep call with {client}', tags: ['sales'], note: 'Agenda: {client}' });
+    useStore.getState().saveAsTemplate('a');
+    const tpl = useStore.getState().templates[0];
+    expect(tpl).toMatchObject({ name: 'Prep call with {client}', tags: ['sales'] });
+    useStore.getState().updateTemplate(tpl.id, { dueInDays: 2 });
+    const task = useStore.getState().useTemplate(tpl.id, { client: 'Acme' })!;
+    expect(task.title).toBe('Prep call with Acme');
+    expect(task.note).toBe('Agenda: Acme');
+    expect(task.due).not.toBeNull();
+    const s = useStore.getState();
+    expect(s.templates[0].usedCount).toBe(1);
+    expect(s.sel).toBe(task.id);
+    expect(s.tasks[0].id).toBe(task.id);
+    useStore.getState().deleteTemplate(tpl.id);
+    expect(useStore.getState().templates).toEqual([]);
+  });
   it('tags: set normalizes, rename merges, delete strips and clears the filter', () => {
     useStore.getState().setTags('a', ['#Infra', 'infra', 'Deep Work']);
     expect(useStore.getState().tasks.find(t => t.id === 'a')!.tags).toEqual(['infra', 'deep-work']);

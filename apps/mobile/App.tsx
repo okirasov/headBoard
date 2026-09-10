@@ -29,6 +29,7 @@ import { SearchScreen } from './src/screens/SearchScreen';
 import { DueScreen } from './src/screens/DueScreen';
 import { RecurringScreen } from './src/screens/RecurringScreen';
 import { TagsScreen } from './src/screens/TagsScreen';
+import { TemplatesScreen } from './src/screens/TemplatesScreen';
 import { DueSheet } from './src/sheets/DueSheet';
 import { TaskSheet } from './src/sheets/TaskSheet';
 import { CaptureSheet } from './src/sheets/CaptureSheet';
@@ -56,7 +57,7 @@ function useDevAutologin() {
     if (!user) { void devOrMockSignIn('Google'); return; }
     if (tasks.length === 0 && !st.token) import('./src/store/devSeed').then(({ buildSeed }) => { const s = buildSeed(); st.loadSeed(s.tasks, s.projects, s.projFiles); });
     // Optional screen/theme/lang presets for screenshot verification.
-    const v = process.env.EXPO_PUBLIC_DEV_VIEW; if (v === 'board' || v === 'review' || v === 'digest' || v === 'calendar' || v === 'archive' || v === 'projects' || v === 'stats' || v === 'search' || v === 'due' || v === 'recurring' || v === 'tags') st.set({ mView: v, ...(v === 'search' ? { q: process.env.EXPO_PUBLIC_DEV_QUERY ?? '' } : {}) });
+    const v = process.env.EXPO_PUBLIC_DEV_VIEW; if (v === 'board' || v === 'review' || v === 'digest' || v === 'calendar' || v === 'archive' || v === 'projects' || v === 'stats' || v === 'search' || v === 'due' || v === 'recurring' || v === 'tags' || v === 'templates') st.set({ mView: v, ...(v === 'search' ? { q: process.env.EXPO_PUBLIC_DEV_QUERY ?? '' } : {}) });
     const th = process.env.EXPO_PUBLIC_DEV_THEME; if (th === 'dark' || th === 'light') st.set({ theme: th });
     const lg = process.env.EXPO_PUBLIC_DEV_LANG; if (lg === 'ru' || lg === 'en') st.set({ lang: lg });
     const sheet = process.env.EXPO_PUBLIC_DEV_SHEET;
@@ -83,8 +84,8 @@ function Root() {
   const tasks = useStore(s => s.tasks);
   const stats = digestStats(tasks, now);
   const openN = tasks.filter(x => x.status !== 'done' && x.status !== 'archived').length;
-  const titles = { board: T.board, review: T.resurface, digest: T.digTitle, calendar: T.calendar, archive: T.archiveTitle, projects: T.projectsTitle, stats: T.statsTitle, search: T.searchTitle, due: T.dueTitle, recurring: T.recurTitle, tags: T.tagsTitle };
-  const subs = { board: phrases.openTasks(openN, lang), review: phrases.forgottenN(stats.staleN, lang), digest: todayLabel(now, lang), calendar: T.gcal, archive: phrases.archivedN(tasks.filter(x => x.status === 'archived').length, lang), projects: phrases.projectsN(useStore.getState().projects.length, lang), stats: T.statsSub, search: T.searchSub, due: T.dueSub, recurring: T.recurSub, tags: T.tagsSub };
+  const titles = { board: T.board, review: T.resurface, digest: T.digTitle, calendar: T.calendar, archive: T.archiveTitle, projects: T.projectsTitle, stats: T.statsTitle, search: T.searchTitle, due: T.dueTitle, recurring: T.recurTitle, tags: T.tagsTitle, templates: T.templatesTitle };
+  const subs = { board: phrases.openTasks(openN, lang), review: phrases.forgottenN(stats.staleN, lang), digest: todayLabel(now, lang), calendar: T.gcal, archive: phrases.archivedN(tasks.filter(x => x.status === 'archived').length, lang), projects: phrases.projectsN(useStore.getState().projects.length, lang), stats: T.statsSub, search: T.searchSub, due: T.dueSub, recurring: T.recurSub, tags: T.tagsSub, templates: T.templatesSub };
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
       <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
@@ -105,6 +106,7 @@ function Root() {
             {mView === 'due' && <DueScreen now={now} />}
             {mView === 'recurring' && <RecurringScreen now={now} />}
             {mView === 'tags' && <TagsScreen />}
+            {mView === 'templates' && <TemplatesScreen />}
           </ScrollView>
           <TabBar reviewBadge={stats.staleN} />
           <TaskSheet />

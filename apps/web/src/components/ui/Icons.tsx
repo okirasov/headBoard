@@ -70,6 +70,9 @@ export const IcArchive = (p: P) => (
 export const IcRestore = (p: P) => (
   <svg {...base(p)}><path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9" {...S} strokeWidth="1.6" /><path d="M2.5 2.5V6h3.5" {...S} strokeWidth="1.6" /></svg>
 );
+export const IcTemplate = (p: P) => (
+  <svg {...base(p)}><rect x="2.5" y="2" width="11" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.5" /><path d="M5 5.5h6M5 8.5h6M5 11.5h3" {...S} strokeWidth="1.5" /><path d="M10.5 10.5l1 1 2-2" {...S} strokeWidth="1.5" /></svg>
+);
 export const IcHash = (p: P) => (
   <svg {...base(p)}><path d="M6 2.5l-1.5 11M11.5 2.5L10 13.5M2.5 6h11M2 10h11" {...S} strokeWidth="1.5" /></svg>
 );

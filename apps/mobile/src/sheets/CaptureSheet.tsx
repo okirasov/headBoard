@@ -7,7 +7,8 @@ import { useT } from '../lib/useT';
 import { txt } from '../theme/type';
 import { Sheet } from '../components/Sheet';
 import { Btn } from '../components/ui';
-import { IcSpark, IcX } from '../components/Icons';
+import { IcSpark, IcTemplate, IcX } from '../components/Icons';
+import { UseTemplateSheetButton } from '../screens/TemplatesScreen';
 
 export function CaptureSheet() {
   const { t } = useTheme();
@@ -17,6 +18,7 @@ export function CaptureSheet() {
   const capItems = useStore(s => s.capItems);
   const capBusy = useStore(s => s.capBusy);
   const projects = useStore(s => s.projects);
+  const templates = useStore(s => s.templates);
   const set = useStore(s => s.set);
   const addTasks = useStore(s => s.addTasks);
   const close = () => set({ mCapOpen: false, capItems: null });
@@ -33,6 +35,12 @@ export function CaptureSheet() {
   return (
     <Sheet open={open} onClose={close} gap={11}>
       <Text style={txt(19, { w: 500, color: t.ink, ls: -0.2 })}>{T.capture}</Text>
+      {templates.length > 0 && (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6, alignItems: 'center' }}>
+          <IcTemplate size={12} color={t.mut2} />
+          {templates.slice(0, 6).map(x => <UseTemplateSheetButton key={x.id} template={x} compact />)}
+        </ScrollView>
+      )}
       <TextInput
         multiline
         value={capText}

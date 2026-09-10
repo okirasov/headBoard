@@ -1,4 +1,4 @@
-import type { CaptureItem, Comment, FileRef, Lang, Project, Task, Theme, User } from './model';
+import type { CaptureItem, Comment, FileRef, Lang, Project, Task, Template, Theme, User } from './model';
 import type { DigestStats } from './digest';
 
 export interface AuthResponse { token: string; user: User }
@@ -65,6 +65,12 @@ export function createApi(baseUrl: string, getToken: () => string | null) {
       create: (p: Project) => req<Project>('POST', '/projects', p),
       patch: (id: string, up: Partial<Project>) => req<Project>('PATCH', '/projects/' + encodeURIComponent(id), up),
       remove: (id: string) => req<void>('DELETE', '/projects/' + encodeURIComponent(id)),
+    },
+    templates: {
+      list: () => req<Template[]>('GET', '/templates'),
+      create: (t: Template) => req<Template>('POST', '/templates', t),
+      patch: (id: string, up: Partial<Template>) => req<Template>('PATCH', '/templates/' + encodeURIComponent(id), up),
+      remove: (id: string) => req<void>('DELETE', '/templates/' + encodeURIComponent(id)),
     },
     files: {
       /** `part` is a Blob on web or a `{uri, name, type}` descriptor in React Native. */

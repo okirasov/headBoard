@@ -12,10 +12,12 @@ public class AppDb(DbContextOptions<AppDb> options) : DbContext(options)
     public DbSet<SettingsRow> Settings => Set<SettingsRow>();
     public DbSet<CalendarLinkRow> CalendarLinks => Set<CalendarLinkRow>();
     public DbSet<PushSubscriptionRow> PushSubscriptions => Set<PushSubscriptionRow>();
+    public DbSet<TemplateRow> Templates => Set<TemplateRow>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
         b.Entity<CalendarLinkRow>(e => e.HasKey(x => x.UserId));
+        b.Entity<TemplateRow>(e => { e.HasKey(x => x.Id); e.HasIndex(x => x.UserId); });
         b.Entity<PushSubscriptionRow>(e => { e.HasKey(x => x.Id); e.HasIndex(x => x.UserId); e.HasIndex(x => new { x.UserId, x.Endpoint }).IsUnique(); });
         b.Entity<UserRow>(e =>
         {

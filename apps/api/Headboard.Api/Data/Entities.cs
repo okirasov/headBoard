@@ -117,3 +117,19 @@ public class PushSubscriptionRow
     public long? LastSentAt { get; set; }
     public int FailCount { get; set; }
 }
+
+/// <summary>Saved task blueprint (core <c>Template</c>).</summary>
+public class TemplateRow
+{
+    public string Id { get; set; } = "";
+    public Guid UserId { get; set; }
+    public string Name { get; set; } = "";
+    public string Title { get; set; } = "";
+    public string? ProjectId { get; set; }
+    public int Priority { get; set; } = 1;
+    public string TagsJson { get; set; } = "[]";
+    public string Note { get; set; } = "";
+    public int? DueInDays { get; set; }
+    public int? RemindDays { get; set; }
+    public int UsedCount { get; set; }
+}

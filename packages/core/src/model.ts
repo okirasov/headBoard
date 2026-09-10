@@ -3,7 +3,7 @@ export type Status = 'inbox' | 'focus' | 'waiting' | 'done' | 'archived';
 export type ColumnKey = Exclude<Status, 'archived'>;
 export type Lang = 'en' | 'ru';
 export type Theme = 'light' | 'dark';
-export type View = 'board' | 'review' | 'digest' | 'calendar' | 'archive' | 'projects' | 'stats' | 'search' | 'due' | 'recurring' | 'tags';
+export type View = 'board' | 'review' | 'digest' | 'calendar' | 'archive' | 'projects' | 'stats' | 'search' | 'due' | 'recurring' | 'tags' | 'templates';
 export type Provider = 'Google' | 'Apple';
 export type Recur = 'daily' | 'weekly' | 'monthly' | null;
 
@@ -57,6 +57,21 @@ export interface User {
   email: string;
   provider: Provider;
   initials: string;
+}
+
+/** A saved task blueprint; `{placeholders}` in title/note are asked for on use. */
+export interface Template {
+  id: string;
+  name: string;
+  title: string;
+  proj: string | null;
+  pr: Priority;
+  tags: string[];
+  note: string;
+  /** Due date relative to the day of use, in days; null = no due date. */
+  dueInDays: number | null;
+  remindDays: 0 | 1 | null;
+  usedCount: number;
 }
 
 export interface CaptureItem {

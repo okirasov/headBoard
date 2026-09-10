@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Appearance } from 'react-native';
 import {
   type CaptureItem, type ColumnKey, type FileRef, type Lang, type Priority, type Project, type Provider, type Task, type Theme,
-  type User, type View, type Recur, newTask, newProject, dict, statusLabel, phrases, fmtDate, sizeHuman, rollRecurring, normalizeTags, renameTag, removeTag,
+  type User, type View, type Recur, type Template, newTask, newProject, dict, statusLabel, phrases, fmtDate, sizeHuman, rollRecurring, normalizeTags, renameTag, removeTag, applyTemplate, templateFromTask,
 } from '@headboard/core';
 
 export const STORAGE_KEY = 'headboard-v1';
@@ -13,7 +13,7 @@ export const TOAST_MS = 2400;
 export interface Preview { name: string; sizeL: string; src: string | null; extL: string }
 
 export interface PersistedSlice {
-  tasks: Task[]; projects: Project[]; projFiles: Record<string, FileRef[]>; digestText: string | null; digestAt: number | null; notifyStale: boolean; notifyDue: boolean;
+  tasks: Task[]; projects: Project[]; templates: Template[]; projFiles: Record<string, FileRef[]>; digestText: string | null; digestAt: number | null; notifyStale: boolean; notifyDue: boolean;
   user: User | null; lang: Lang; theme: Theme; showDone: boolean;
   /** API JWT when signed in through apps/api; null in local-only mode. */
   token: string | null;
@@ -42,6 +42,11 @@ export interface Actions {
   setRemind: (id: string, remindDays: 0 | 1 | null) => void;
   setRecur: (id: string, recur: Recur) => void;
   setTags: (id: string, tags: string[]) => void;
+  addTemplate: (t: Template) => void;
+  updateTemplate: (id: string, patch: Partial<Template>) => void;
+  deleteTemplate: (id: string) => void;
+  saveAsTemplate: (taskId: string) => void;
+  useTemplate: (id: string, values: Record<string, string>) => Task | null;
   renameTag: (from: string, to: string) => void;
   deleteTag: (tag: string) => void;
   complete: (id: string) => void;
@@ -65,7 +70,7 @@ export interface Actions {
 }
 export type Store = PersistedSlice & UiSlice & Actions;
 
-const initialPersisted: PersistedSlice = { tasks: [], projects: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, user: null, lang: 'en', theme: 'light', showDone: true, token: null };
+const initialPersisted: PersistedSlice = { tasks: [], projects: [], templates: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, user: null, lang: 'en', theme: 'light', showDone: true, token: null };
 const initialUi: UiSlice = {
   mView: 'board', mCol: 'focus', mSel: null, fTag: null, mCapOpen: false, mProfOpen: false, mPv: null,
   capText: '', capItems: null, capBusy: false, q: '', calSel: null, snack: null, zTask: null, zMonth: 0, cmText: '', dueTask: null, dueMonth: 0, digestBusy: false, digestSeed: 0,
@@ -122,6 +127,17 @@ export const useStore = create<Store>()(
         setPriority: (id, pr) => patchTask(id, { pr }),
         setDue: (id, due) => { patchTask(id, { due, touched: Date.now(), ...(due === null ? { remindDays: null } : {}) }); set({ dueTask: null }); },
         setRemind: (id, remindDays) => patchTask(id, { remindDays }),
+        addTemplate: t => { set(s => ({ templates: [...s.templates, t] })); toast(T().tTemplateSaved); },
+        updateTemplate: (id, patch) => set(s => ({ templates: s.templates.map(t => (t.id === id ? { ...t, ...patch } : t)) })),
+        deleteTemplate: id => { set(s => ({ templates: s.templates.filter(t => t.id !== id) })); toast(T().tTemplateDeleted); },
+        saveAsTemplate: taskId => { const task = get().tasks.find(t => t.id === taskId); if (task) get().addTemplate(templateFromTask(task)); },
+        useTemplate: (id, values) => {
+          const tpl = get().templates.find(t => t.id === id); if (!tpl) return null;
+          const task = applyTemplate(tpl, values, Date.now());
+          set(s => ({ tasks: [task, ...s.tasks], templates: s.templates.map(t => (t.id === id ? { ...t, usedCount: t.usedCount + 1 } : t)), mCapOpen: false, mView: 'board', mCol: task.status as 'inbox', mSel: task.id }));
+          toast(T().tTemplateApplied);
+          return task;
+        },
         setTags: (id, tags) => patchTask(id, { tags: normalizeTags(tags) }),
         renameTag: (from, to) => {
           const changed = renameTag(get().tasks, from, to); if (!changed.length) return;
@@ -171,7 +187,7 @@ export const useStore = create<Store>()(
           set({ user: { name, email: user?.email ?? (provider === 'Apple' ? 'sam.kern@icloud.com' : 'sam.kern@gmail.com'), provider, initials: user?.initials ?? initialsOf(name) }, mProfOpen: false });
         },
         setAuth: (token, user) => set({ token, user, mProfOpen: false }),
-        signOut: () => set(s => ({ user: null, mProfOpen: false, mSel: null, token: null, ...(s.token ? { tasks: [], projects: [], projFiles: {}, digestText: null, digestAt: null } : {}) })),
+        signOut: () => set(s => ({ user: null, mProfOpen: false, mSel: null, token: null, ...(s.token ? { tasks: [], projects: [], templates: [], projFiles: {}, digestText: null, digestAt: null } : {}) })),
         toast,
         openSnooze: id => set({ zTask: id, zMonth: 0 }),
         closeSnooze: () => set({ zTask: null }),
@@ -182,7 +198,7 @@ export const useStore = create<Store>()(
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: s => ({ tasks: s.tasks, projects: s.projects, projFiles: s.projFiles, digestText: s.digestText, digestAt: s.digestAt, notifyStale: s.notifyStale, notifyDue: s.notifyDue, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token }),
+      partialize: s => ({ tasks: s.tasks, projects: s.projects, templates: s.templates, projFiles: s.projFiles, digestText: s.digestText, digestAt: s.digestAt, notifyStale: s.notifyStale, notifyDue: s.notifyDue, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<PersistedSlice>;
         return { ...current, ...p, theme: p.theme ?? systemTheme() };

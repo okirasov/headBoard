@@ -1,11 +1,12 @@
 import type { Api, ApiError } from './api';
-import type { FileRef, Lang, Project, Task, Theme } from './model';
+import type { FileRef, Lang, Project, Task, Template, Theme } from './model';
 
 /** The slice of application state the sync engine reads and writes. */
 export interface SyncState {
   token: string | null;
   tasks: Task[];
   projects: Project[];
+  templates: Template[];
   projFiles: Record<string, FileRef[]>;
   lang: Lang;
   theme: Theme;
@@ -60,6 +61,7 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
   const { api } = a;
   let taskSnap = new Map<string, string>();
   let projSnap = new Map<string, string>();
+  let tplSnap = new Map<string, string>();
   let settingsKey = '';
   let queue: Promise<unknown> = Promise.resolve();
   let retryTimer: ReturnType<typeof setTimeout> | undefined;
@@ -109,6 +111,20 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
     }
     for (const id of Array.from(projSnap.keys())) if (!seenP.has(id)) { projSnap.delete(id); await enqueue(() => api.projects.remove(id).catch(() => undefined)); }
 
+    const seenT = new Set<string>();
+    for (const t of s.templates) {
+      seenT.add(t.id);
+      const json = JSON.stringify(t);
+      if (tplSnap.get(t.id) === json) continue;
+      const isNew = !tplSnap.has(t.id);
+      tplSnap.set(t.id, json);
+      await enqueue(() => (isNew ? api.templates.create(t) : api.templates.patch(t.id, t)).catch(e => {
+        if (code(e) === 'id_exists') return;
+        tplSnap.delete(t.id); scheduleRetry();
+      }));
+    }
+    for (const id of Array.from(tplSnap.keys())) if (!seenT.has(id)) { tplSnap.delete(id); await enqueue(() => api.templates.remove(id).catch(() => undefined)); }
+
     const seen = new Set<string>();
     for (const t of s.tasks) {
       seen.add(t.id);
@@ -151,15 +167,16 @@ export function createSyncEngine(a: SyncAdapter, retryMs = 3000): SyncEngine {
     const st = a.getState();
     if (!st.token) return;
     try {
-      const [tasks, projects, settings] = await Promise.all([api.tasks.list(true), api.projects.list(), api.settings.get()]);
+      const [tasks, projects, settings, templates] = await Promise.all([api.tasks.list(true), api.projects.list(), api.settings.get(), Promise.resolve().then(() => api.templates.list()).catch(() => [] as Template[])]);
       const plain = projects.map(({ files: _f, ...p }) => p);
       projSnap = new Map(plain.map(p => [p.id, JSON.stringify(p)]));
+      if (templates.length) tplSnap = new Map(templates.map(t => [t.id, JSON.stringify(t)]));
       if (tasks.length) {
         const fixed = tasks.map(t => ({ ...t, files: t.files.map(f => ({ ...f, src: f.src ? absolute(f.src) : undefined })) }));
         taskSnap = new Map(fixed.map(t => [t.id, JSON.stringify(t)]));
         const projFiles: Record<string, FileRef[]> = {};
         for (const p of projects) if (p.files?.length) projFiles[p.id] = p.files.map(f => ({ ...f, src: f.src ? absolute(f.src) : undefined }));
-        a.setState({ tasks: fixed, projects: plain, projFiles, lang: settings.lang, theme: settings.theme, showDone: settings.showDone, digestText: settings.digestText, digestAt: settings.digestAt ?? null, notifyStale: settings.notifyStale ?? true, notifyDue: settings.notifyDue ?? true });
+        a.setState({ tasks: fixed, projects: plain, projFiles, ...(templates.length ? { templates } : {}), lang: settings.lang, theme: settings.theme, showDone: settings.showDone, digestText: settings.digestText, digestAt: settings.digestAt ?? null, notifyStale: settings.notifyStale ?? true, notifyDue: settings.notifyDue ?? true });
         settingsKey = JSON.stringify(settingsOf(a.getState(), a.timeZone));
       } else {
         taskSnap = new Map();

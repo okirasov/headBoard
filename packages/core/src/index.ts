@@ -14,3 +14,4 @@ export * from './search';
 export * from './due';
 export * from './recurring';
 export * from './tags';
+export * from './templates';

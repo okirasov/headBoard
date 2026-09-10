@@ -31,6 +31,7 @@ function Body({ task }: { task: Task }) {
   const toggleDone = useStore(s => s.toggleDone);
   const bump = useStore(s => s.bump);
   const openSnooze = useStore(s => s.openSnooze);
+  const saveAsTemplate = useStore(s => s.saveAsTemplate);
   const restore = useStore(s => s.restore);
   const deleteTask = useStore(s => s.deleteTask);
   const [confirmDel, setConfirmDel] = useState(false);
@@ -109,6 +110,7 @@ function Body({ task }: { task: Task }) {
           <IcSend size={14} color={t.onAcc} />
         </Pressable>
       </View>
+      {!isArchived && <Btn variant="card" color={t.mut} label={T.saveAsTemplate} size={12} pad={9} onPress={() => saveAsTemplate(task.id)} />}
       {task.chat && (
         <Btn variant="card" label={T.openChat} icon={<IcLink size={11} color={t.ink} />} onPress={() => Linking.openURL(task.chat as string)} />
       )}

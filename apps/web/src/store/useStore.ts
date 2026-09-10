@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import {
   type CaptureItem, type FileRef, type Lang, type Priority, type Project, type Provider, type Status, type Task, type Theme,
-  type User, type View, type ColumnKey, type Recur, newTask, newProject, dict, statusLabel, phrases, fmtDate, rollRecurring, normalizeTags, renameTag, removeTag,
+  type User, type View, type ColumnKey, type Recur, type Template, newTask, newProject, dict, statusLabel, phrases, fmtDate, rollRecurring, normalizeTags, renameTag, removeTag, applyTemplate, templateFromTask,
 } from '@headboard/core';
 
 export const STORAGE_KEY = 'headboard-v1';
@@ -13,6 +13,7 @@ export interface Preview { name: string; sizeL: string; src: string | null; extL
 export interface PersistedSlice {
   tasks: Task[];
   projects: Project[];
+  templates: Template[];
   projFiles: Record<string, FileRef[]>;
   digestText: string | null;
   /** Server-owned time of the last digest change (08:00 scheduler or manual regenerate). */
@@ -70,6 +71,12 @@ export interface Actions {
   setRemind: (id: string, remindDays: 0 | 1 | null) => void;
   setRecur: (id: string, recur: Recur) => void;
   setTags: (id: string, tags: string[]) => void;
+  addTemplate: (t: Template) => void;
+  updateTemplate: (id: string, patch: Partial<Template>) => void;
+  deleteTemplate: (id: string) => void;
+  saveAsTemplate: (taskId: string) => void;
+  /** Create a task from a template (placeholders filled), bump its usage counter, open the task. */
+  useTemplate: (id: string, values: Record<string, string>) => Task | null;
   /** Rename everywhere; renaming into an existing tag merges. */
   renameTag: (from: string, to: string) => void;
   deleteTag: (tag: string) => void;
@@ -99,7 +106,7 @@ export interface Actions {
 export type Store = PersistedSlice & UiSlice & Actions;
 
 const initialPersisted: PersistedSlice = {
-  tasks: [], projects: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, user: null, lang: 'en', theme: 'light', showDone: true, token: null,
+  tasks: [], projects: [], templates: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, user: null, lang: 'en', theme: 'light', showDone: true, token: null,
 };
 
 const initialUi: UiSlice = {
@@ -206,6 +213,18 @@ export const useStore = create<Store>()(
         setPriority: (id, pr) => patchTask(id, { pr }),
         setDue: (id, due) => patchTask(id, { due, touched: Date.now(), ...(due === null ? { remindDays: null } : {}) }),
         setRemind: (id, remindDays) => patchTask(id, { remindDays }),
+        addTemplate: t => { set(s => ({ templates: [...s.templates, t] })); toast(T().tTemplateSaved); },
+        updateTemplate: (id, patch) => set(s => ({ templates: s.templates.map(t => (t.id === id ? { ...t, ...patch } : t)) })),
+        deleteTemplate: id => { set(s => ({ templates: s.templates.filter(t => t.id !== id) })); toast(T().tTemplateDeleted); },
+        saveAsTemplate: taskId => { const task = get().tasks.find(t => t.id === taskId); if (task) get().addTemplate(templateFromTask(task)); },
+        useTemplate: (id, values) => {
+          const tpl = get().templates.find(t => t.id === id);
+          if (!tpl) return null;
+          const task = applyTemplate(tpl, values, Date.now());
+          set(s => ({ tasks: [task, ...s.tasks], templates: s.templates.map(t => (t.id === id ? { ...t, usedCount: t.usedCount + 1 } : t)), capOpen: false, view: 'board', sel: task.id }));
+          toast(T().tTemplateApplied);
+          return task;
+        },
         setTags: (id, tags) => patchTask(id, { tags: normalizeTags(tags) }),
         renameTag: (from, to) => {
           const changed = renameTag(get().tasks, from, to);
@@ -285,7 +304,7 @@ export const useStore = create<Store>()(
           });
         },
         setAuth: (token, user) => set({ token, user, profOpen: false }),
-        signOut: () => set(s => ({ user: null, profOpen: false, sel: null, token: null, ...(s.token ? { tasks: [], projects: [], projFiles: {}, digestText: null, digestAt: null } : {}) })),
+        signOut: () => set(s => ({ user: null, profOpen: false, sel: null, token: null, ...(s.token ? { tasks: [], projects: [], templates: [], projFiles: {}, digestText: null, digestAt: null } : {}) })),
         toast,
         openSnooze: id => set({ zTask: id, zMonth: 0 }),
         closeSnooze: () => set({ zTask: null }),
@@ -297,7 +316,7 @@ export const useStore = create<Store>()(
       name: STORAGE_KEY,
       storage: createJSONStorage(() => safeStorage()),
       partialize: s => ({
-        tasks: s.tasks, projects: s.projects, projFiles: s.projFiles, digestText: s.digestText,
+        tasks: s.tasks, projects: s.projects, templates: s.templates, projFiles: s.projFiles, digestText: s.digestText,
         digestAt: s.digestAt, notifyStale: s.notifyStale, notifyDue: s.notifyDue, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token,
       }),
       merge: (persisted, current) => {

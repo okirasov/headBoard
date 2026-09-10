@@ -4,7 +4,7 @@ import { api } from '../../lib/api';
 import { type PushState, disablePush, enablePush, pushState } from '../../lib/push';
 import { useT } from '../../lib/useT';
 import { Kicker, Segmented } from '../ui/primitives';
-import { IcChevronUp } from '../ui/Icons';
+import { IcChevronUp, IcTemplate } from '../ui/Icons';
 import { cx } from '../../lib/cx';
 
 export function Avatar({ initials, size = 30, textSize = 'text-10.5' }: { initials: string; size?: number; textSize?: string }) {
@@ -60,6 +60,7 @@ export function ProfileBlock() {
             <Kicker size={9} className="mb-6">{T.theme}</Kicker>
             <Segmented value={theme} onChange={setTheme} options={[{ v: 'light', label: T.light }, { v: 'dark', label: T.dark }]} />
           </div>
+          <button type="button" onClick={() => set({ view: 'templates', profOpen: false })} className="flex cursor-pointer items-center gap-8 rounded-9 border border-line bg-card px-10 py-7 text-left text-12.5 font-semibold leading-normal hover:border-lineStrong"><IcTemplate size={13} className="text-mut2" /><span className="flex-1">{T.templatesTitle}</span><span className="font-mono text-10.5 font-normal text-mut2">{useStore.getState().templates.length}</span></button>
           {api && (
             <div>
               <div className="mb-6 flex items-center"><Kicker size={9}>{T.notifications}</Kicker><span className="flex-1" />{push === 'on' && <button type="button" onClick={() => void sendTest()} className="cursor-pointer font-mono text-9 uppercase tracking-kicker text-mut2 hover:text-acc">{T.notifyTest}</button>}</div>

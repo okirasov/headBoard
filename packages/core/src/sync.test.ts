@@ -4,7 +4,7 @@ import type { Api } from './api';
 
 const now = Date.now();
 function fakeStore(init: Partial<SyncState>) {
-  let state: SyncState = { token: 'tok', tasks: [], projects: [], projFiles: {}, lang: 'en', theme: 'light', showDone: true, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, ...init };
+  let state: SyncState = { token: 'tok', tasks: [], projects: [], templates: [], projFiles: {}, lang: 'en', theme: 'light', showDone: true, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, ...init };
   const subs = new Set<(s: SyncState) => void>();
   return {
     getState: () => state,
@@ -12,7 +12,7 @@ function fakeStore(init: Partial<SyncState>) {
     subscribe: (f: (s: SyncState) => void) => { subs.add(f); return () => subs.delete(f); },
   };
 }
-function fakeApi(server: { tasks: any[]; projects: any[]; settings?: any }) {
+function fakeApi(server: { tasks: any[]; projects: any[]; settings?: any; templates?: any[] }) {
   const calls: string[] = [];
   const api = {
     tasks: {
@@ -23,6 +23,7 @@ function fakeApi(server: { tasks: any[]; projects: any[]; settings?: any }) {
       list: async () => server.projects, create: async (p: any) => { calls.push('POST project ' + p.id); return p; },
       patch: async (id: string) => { calls.push('PATCH project ' + id); return {}; }, remove: async () => undefined,
     },
+    templates: { list: async () => server.templates ?? [], create: async (t: any) => { calls.push('POST template ' + t.id); return t; }, patch: async (id: string) => { calls.push('PATCH template ' + id); return {}; }, remove: async (id: string) => { calls.push('DELETE template ' + id); } },
     settings: { get: async () => server.settings ?? ({ lang: 'ru', theme: 'dark', showDone: false, digestText: 'd', digestAt: 100 }), put: async (s: any) => { calls.push('PUT settings ' + s.lang + (s.timeZone ? ' ' + s.timeZone : '')); return server.settings ? { ...server.settings, ...s, digestText: server.settings.digestText, digestAt: server.settings.digestAt } : s; } },
     files: { upload: async () => ({ id: 'srv1', name: 'a.png', kind: 'img', src: '/files/srv1/content' }) },
   } as unknown as Api;
@@ -83,6 +84,23 @@ describe('sync engine', () => {
     st.setState({ lang: 'ru' });
     await new Promise(r => setTimeout(r, 600));
     expect(calls).toContain('PUT settings ru');
+    eng.stop();
+  });
+
+  it('templates are pulled on start and diffed like projects', async () => {
+    const st = fakeStore({});
+    const server = { tasks: [newTask({ id: 's', title: 'S' }, now)], projects: [], templates: [{ id: 'tp1', name: 'Retro', title: 'Retro', proj: null, pr: 1 as const, tags: [] as string[], note: '', dueInDays: 3, remindDays: null, usedCount: 0 }] };
+    const { api, calls } = fakeApi(server);
+    const eng = createSyncEngine({ api, ...st, fileToPart: async () => null, onUnauthorized: () => undefined, onError: () => undefined, baseUrl: '' });
+    await eng.start();
+    expect(st.getState().templates.map(t => t.id)).toEqual(['tp1']);
+    st.setState({ templates: [{ ...server.templates[0], name: 'Retro v2' }, { id: 'tp2', name: 'New', title: 'New', proj: null, pr: 1 as const, tags: [], note: '', dueInDays: null, remindDays: null, usedCount: 0 }] });
+    await tick();
+    expect(calls).toContain('PATCH template tp1');
+    expect(calls).toContain('POST template tp2');
+    st.setState({ templates: [] });
+    await tick();
+    expect(calls).toContain('DELETE template tp1');
     eng.stop();
   });
 

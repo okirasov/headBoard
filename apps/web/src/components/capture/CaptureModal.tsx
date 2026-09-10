@@ -2,7 +2,8 @@ import { type CaptureItem, heuristicExtract, phrases, PRIORITY_BAR_TOKEN } from 
 import { useStore } from '../../store/useStore';
 import { useT } from '../../lib/useT';
 import { api } from '../../lib/api';
-import { Button, Dot, Scrim } from '../ui/primitives';
+import { Button, Dot, Kicker, Scrim } from '../ui/primitives';
+import { UseTemplateButton } from '../../views/templates/UseTemplate';
 import { IcSpark, IcX } from '../ui/Icons';
 import { cx } from '../../lib/cx';
 
@@ -15,6 +16,7 @@ export function CaptureModal() {
   const capItems = useStore(s => s.capItems);
   const capBusy = useStore(s => s.capBusy);
   const projects = useStore(s => s.projects);
+  const templates = useStore(s => s.templates);
   const set = useStore(s => s.set);
   const addTasks = useStore(s => s.addTasks);
   if (!capOpen) return null;
@@ -41,6 +43,12 @@ export function CaptureModal() {
           <div className="font-sans text-22 font-medium leading-normal tracking-tightSm">{T.capture}</div>
           <div className="mt-3 text-12.5 leading-normal text-mut2">{T.capSub}</div>
         </div>
+        {templates.length > 0 && (
+          <div className="flex flex-wrap items-center gap-6">
+            <Kicker size={9}>{T.fromTemplate}</Kicker>
+            {templates.slice(0, 6).map(t => <UseTemplateButton key={t.id} template={t} compact />)}
+          </div>
+        )}
         <textarea
           value={capText}
           onChange={e => set({ capText: e.target.value })}
