@@ -1,0 +1,51 @@
+README.md
+  s_2372cb08d633fa::t_01af6654c3237a 3
+apps/mobile/App.tsx
+  s_2372cb08d633fa::t_d1f447e982333f 28,55,82-83,100
+apps/mobile/src/components/Header.tsx
+  s_2372cb08d633fa::t_e9951dfabf4508 9,22-24
+apps/mobile/src/components/Icons.tsx
+  s_2372cb08d633fa::t_aedd7dac686f57 30-32
+apps/mobile/src/screens/SearchScreen.tsx
+  s_2372cb08d633fa::t_ba0c02c2e6e52e 1-84
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_f4061cb8f33937 23,62
+apps/web/src/App.tsx
+  s_2372cb08d633fa::t_4e8943b8602e43 23
+apps/web/src/components/layout/Shell.tsx
+  s_2372cb08d633fa::t_a3e6854aa3eb84 11,27
+apps/web/src/components/layout/Sidebar.tsx
+  s_2372cb08d633fa::t_4f51eb4be9d553 7,32
+apps/web/src/components/layout/TopBar.tsx
+  s_2372cb08d633fa::t_31d08102c8dcef 22
+apps/web/src/views/search/SearchView.tsx
+  s_2372cb08d633fa::t_913147a9be9b3a 1-105
+docs/architecture.html
+  s_2372cb08d633fa::t_8e9f29ecdc284b 177,425,429-430,443,448
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_18f7a40460bd99 27,71,118,160
+packages/core/src/index.ts
+  s_2372cb08d633fa::t_7dbf4e02cf846a 13
+packages/core/src/model.ts
+  s_2372cb08d633fa::t_a57d20e449c311 6
+packages/core/src/search.test.ts
+  s_2372cb08d633fa::t_d210ca4300556f 1-48
+packages/core/src/search.ts
+  s_2372cb08d633fa::t_7c9fad0439a201 1-91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "26f89684f51ea852a706f014fc6ed7fe62c0e8a4",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
