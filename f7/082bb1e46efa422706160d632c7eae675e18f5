@@ -1,0 +1,29 @@
+apps/mobile/src/components/Snack.tsx
+  s_2372cb08d633fa::t_f7e562f5cafd84 1,4,9,11-12,15-16,18-22
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_58d486f649c9d6 11,24,73-74,85,105,107-121,125,127,131,135,139,145,147,151-152,154
+apps/web/src/components/ui/Snackbar.tsx
+  s_2372cb08d633fa::t_b1a61356984573 2,5,7-8,11-16
+apps/web/src/store/useStore.test.ts
+  s_2372cb08d633fa::t_ae70ddcff9c8f7 171-196
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_25135cbac6a869 9-10,47-48,110-111,127,159,161-162,165-179,184,189,191,197,201,205,214,216,227,230,233,236,244,246
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_a6eca0d9e59dc7 38,88,141
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "f7082bb1e46efa422706160d632c7eae675e18f5",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
