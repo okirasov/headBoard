@@ -1,0 +1,35 @@
+apps/api/Headboard.Api.Tests/TasksTests.cs
+  s_2372cb08d633fa::t_0c791cc2c05f00 221-237,273,313-314,318-319
+apps/api/Headboard.Api/Tasks/TaskEndpoints.cs
+  s_2372cb08d633fa::t_03885be4aef195 77
+apps/api/Headboard.Api/Tasks/TaskMapper.cs
+  s_2372cb08d633fa::t_f5f737e9337cb1 221-224
+apps/api/README.md
+  s_2372cb08d633fa::t_9741691ce19749 144
+packages/core/src/index.ts
+  s_2372cb08d633fa::t_91a786e90c58e2 19
+packages/core/src/merge.test.ts
+  s_2372cb08d633fa::t_d9eb34429ddbc4 1-54
+packages/core/src/merge.ts
+  s_2372cb08d633fa::t_a196014babd448 1-92
+packages/core/src/sync.test.ts
+  s_2372cb08d633fa::t_3501358dfe89e1 20-33,93,151-181
+packages/core/src/sync.ts
+  s_2372cb08d633fa::t_6df8822d6c72e3 1,134-135,141-145,211-216,231-237
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "08064ac25c5877e7d0a00c2c8b42cb628e5e7233",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
