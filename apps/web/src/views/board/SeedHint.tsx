@@ -8,7 +8,7 @@ export function SeedHint() {
   const loadSeed = useStore(s => s.loadSeed);
   if (!import.meta.env.DEV) return null;
   return (
-    <div className="mb-12 flex items-center gap-10 rounded-12 border border-dashed border-lineStrong px-14 py-9 text-12.5 text-mut2">
+    <div className="mt-14 flex items-center gap-10 rounded-12 border border-dashed border-lineStrong px-14 py-9 text-12.5 text-mut2">
       <span className="flex-1">dev</span>
       <Button
         variant="outline"

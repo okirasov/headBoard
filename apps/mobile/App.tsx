@@ -57,7 +57,7 @@ function useDevAutologin() {
     }
     const st = useStore.getState();
     if (!user) { void devOrMockSignIn('Google'); return; }
-    if (tasks.length === 0 && !st.token) import('./src/store/devSeed').then(({ buildSeed }) => { const s = buildSeed(); st.loadSeed(s.tasks, s.projects, s.projFiles); });
+    if (tasks.length === 0 && !st.token && process.env.EXPO_PUBLIC_DEV_EMPTY !== '1') import('./src/store/devSeed').then(({ buildSeed }) => { const s = buildSeed(); st.loadSeed(s.tasks, s.projects, s.projFiles); });
     // Optional screen/theme/lang presets for screenshot verification.
     const v = process.env.EXPO_PUBLIC_DEV_VIEW; if (v === 'board' || v === 'review' || v === 'digest' || v === 'calendar' || v === 'archive' || v === 'projects' || v === 'stats' || v === 'search' || v === 'due' || v === 'recurring' || v === 'tags' || v === 'templates' || v === 'history') st.set({ mView: v, ...(v === 'search' ? { q: process.env.EXPO_PUBLIC_DEV_QUERY ?? '' } : {}) });
     if (v === 'history' && process.env.EXPO_PUBLIC_DEV_HIST === '1') st.set({ histId: [...st.tasks].sort((a, b) => (b.history?.length ?? 0) - (a.history?.length ?? 0))[0]?.id ?? null });

@@ -6,7 +6,7 @@ import { Chip } from '../../components/ui/primitives';
 import { IcHash, IcX } from '../../components/ui/Icons';
 import { Column } from './Column';
 import { ProjectFilesBar } from './ProjectFilesBar';
-import { SeedHint } from './SeedHint';
+import { Welcome } from './Welcome';
 import { BulkBar } from './BulkBar';
 
 export function BoardView() {
@@ -50,7 +50,7 @@ export function BoardView() {
         </div>
       </div>
       {fProj && <ProjectFilesBar />}
-      {tasks.length === 0 && <SeedHint />}
+      {tasks.length === 0 && <Welcome />}
       <div className="flex min-h-0 flex-1 gap-14">
         {cols.map(c => <Column key={c} col={c} label={statusLabel(c, lang, true)} cards={cardsFor(c)} now={now} />)}
       </div>
