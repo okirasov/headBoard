@@ -16,6 +16,7 @@ import { useNow } from './src/lib/useNow';
 import { Header } from './src/components/Header';
 import { TabBar } from './src/components/TabBar';
 import { Snack } from './src/components/Snack';
+import { BulkBarM } from './src/components/BulkBarM';
 import { FilePreviewM } from './src/components/FilePreviewM';
 import { SignInScreen } from './src/screens/SignInScreen';
 import { BoardScreen } from './src/screens/BoardScreen';
@@ -60,6 +61,7 @@ function useDevAutologin() {
     // Optional screen/theme/lang presets for screenshot verification.
     const v = process.env.EXPO_PUBLIC_DEV_VIEW; if (v === 'board' || v === 'review' || v === 'digest' || v === 'calendar' || v === 'archive' || v === 'projects' || v === 'stats' || v === 'search' || v === 'due' || v === 'recurring' || v === 'tags' || v === 'templates' || v === 'history') st.set({ mView: v, ...(v === 'search' ? { q: process.env.EXPO_PUBLIC_DEV_QUERY ?? '' } : {}) });
     if (v === 'history' && process.env.EXPO_PUBLIC_DEV_HIST === '1') st.set({ histId: [...st.tasks].sort((a, b) => (b.history?.length ?? 0) - (a.history?.length ?? 0))[0]?.id ?? null });
+    if (process.env.EXPO_PUBLIC_DEV_SELECT === '1') st.set({ selected: st.tasks.filter(t => t.status === 'focus').slice(0, 2).map(t => t.id) });
     const th = process.env.EXPO_PUBLIC_DEV_THEME; if (th === 'dark' || th === 'light') st.set({ theme: th });
     const lg = process.env.EXPO_PUBLIC_DEV_LANG; if (lg === 'ru' || lg === 'en') st.set({ lang: lg });
     const sheet = process.env.EXPO_PUBLIC_DEV_SHEET;
@@ -113,6 +115,7 @@ function Root() {
             {mView === 'history' && <HistoryScreen now={now} />}
           </ScrollView>
           <TabBar reviewBadge={stats.staleN} />
+          <BulkBarM />
           <TaskSheet />
           <CaptureSheet />
           <SnoozeSheet />

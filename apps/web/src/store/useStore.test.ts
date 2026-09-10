@@ -194,6 +194,29 @@ describe('store', () => {
     expect(useStore.getState().snackUndo).toBeNull();
   });
 
+  it('bulk actions apply to the selection with one undo', () => {
+    reset();
+    const a = newTask({ id: 'b1', title: 'A', pr: 1, status: 'inbox' }, Date.now());
+    const b = newTask({ id: 'b2', title: 'B', pr: 1, status: 'inbox' }, Date.now());
+    const c = newTask({ id: 'b3', title: 'C', pr: 1, status: 'inbox' }, Date.now());
+    useStore.setState({ tasks: [a, b, c] });
+    const st = useStore.getState();
+    st.toggleSelect('b1'); st.toggleSelect('b2'); st.toggleSelect('b2'); st.toggleSelect('b2');
+    expect(useStore.getState().selected).toEqual(['b1', 'b2']);
+    st.bulkPriority(0);
+    expect(useStore.getState().tasks.filter(t => t.pr === 0).map(t => t.id)).toEqual(['b1', 'b2']);
+    st.bulkMove('focus');
+    expect(useStore.getState().selected).toEqual([]);
+    expect(useStore.getState().tasks.map(t => t.status)).toEqual(['focus', 'focus', 'inbox']);
+    st.undo();
+    expect(useStore.getState().tasks.map(t => t.status)).toEqual(['inbox', 'inbox', 'inbox']);
+    st.toggleSelect('b3'); st.bulkArchive();
+    expect(useStore.getState().tasks.find(t => t.id === 'b3')!.status).toBe('archived');
+    st.toggleSelect('b1'); st.bulkDone();
+    expect(useStore.getState().tasks.find(t => t.id === 'b1')!.status).toBe('done');
+    expect(useStore.getState().tasks.find(t => t.id === 'b1')!.history.at(-1)!.kind).toBe('done');
+  });
+
   it('signIn/signOut', () => {
     useStore.getState().signIn('Apple');
     expect(useStore.getState().user).toMatchObject({ provider: 'Apple', initials: 'SK', email: 'sam.kern@icloud.com' });

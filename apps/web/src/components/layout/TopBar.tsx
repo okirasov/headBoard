@@ -18,6 +18,7 @@ export function TopBar() {
         <IcSearch size={14} className="absolute left-10 top-9 text-mut2" />
         <input
           value={q}
+          data-search
           onChange={e => set({ q: e.target.value })}
           onKeyDown={e => { if (e.key === 'Enter' && q.trim()) set({ view: 'search' }); }}
           placeholder={T.searchPh}

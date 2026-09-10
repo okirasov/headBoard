@@ -30,6 +30,9 @@ export function TaskCard({ task, now }: { task: Task; now: number }) {
   const set = useStore(s => s.set);
   const markDone = useStore(s => s.markDone);
   const bump = useStore(s => s.bump);
+  const selected = useStore(s => s.selected.includes(task.id));
+  const anySelected = useStore(s => s.selected.length > 0);
+  const toggleSelect = useStore(s => s.toggleSelect);
   const p = projects.find(x => x.id === task.proj) ?? null;
   const staleDays = useStore(s => s.staleDays);
   const stale = isStale(task, now, staleDays);
@@ -41,21 +44,35 @@ export function TaskCard({ task, now }: { task: Task; now: number }) {
     set({ dragId: task.id });
   };
 
+  const selectBox = (
+    <button
+      type="button"
+      aria-label={T.selectCard}
+      aria-pressed={selected}
+      onClick={e => { e.stopPropagation(); toggleSelect(task.id); }}
+      className={cx('flex h-16 w-16 shrink-0 cursor-pointer items-center justify-center rounded-6 border transition-opacity', !open && 'absolute right-8 top-8', selected ? 'border-acc bg-acc text-onAcc opacity-100' : 'border-lineStrong bg-card text-transparent opacity-0 group-hover:opacity-100', anySelected && 'opacity-100')}
+    >
+      <IcCheck size={9} />
+    </button>
+  );
   return (
     <div
-      onClick={() => set({ sel: task.id })}
+      onClick={e => { if (e.metaKey || e.ctrlKey || e.shiftKey || anySelected) toggleSelect(task.id); else set({ sel: task.id }); }}
       draggable
       onDragStart={onDragStart}
       onDragEnd={() => set({ dragId: null, dragCol: null })}
       className={cx(
-        'relative flex cursor-grab flex-col gap-8 overflow-hidden rounded-12 border bg-card py-12 pl-16 pr-12 transition-[box-shadow,border-color] duration-150 hover:border-lineStrong hover:shadow-card-hover',
+        'group relative flex cursor-grab flex-col gap-8 overflow-hidden rounded-12 border bg-card py-12 pl-16 pr-12 transition-[box-shadow,border-color] duration-150 hover:border-lineStrong hover:shadow-card-hover',
         stale ? 'border-goldBd' : 'border-line',
         dragId === task.id && 'opacity-35',
+        selected && '!border-acc bg-sel',
       )}
     >
       <span className={cx('absolute bottom-0 left-0 top-0 w-4', BAR[PRIORITY_BAR_TOKEN[task.pr]])} />
+      {!open && selectBox}
       {open && (
         <div className="flex items-center gap-6">
+          {selectBox}
           <IdleBadge task={task} now={now} />
           <span className="flex-1" />
           <button

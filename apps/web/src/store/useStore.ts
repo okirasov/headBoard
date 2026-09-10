@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import {
   type CaptureItem, type FileRef, type Lang, type Priority, type Project, type Provider, type Status, type Task, type Theme,
-  type User, type View, type ColumnKey, type Recur, type Template, newTask, newProject, dict, statusLabel, phrases, fmtDate, rollRecurring, normalizeTags, renameTag, removeTag, applyTemplate, templateFromTask, withHistory, createdEntry, type SyncStatus } from '@headboard/core';
+  type User, type View, type ColumnKey, type Recur, type Template, newTask, newProject, dict, statusLabel, priorityLabel, phrases, fmtDate, rollRecurring, normalizeTags, renameTag, removeTag, applyTemplate, templateFromTask, withHistory, createdEntry, type SyncStatus } from '@headboard/core';
 
 export const STORAGE_KEY = 'headboard-v1';
 export const TOAST_MS = 2400;
@@ -45,6 +45,9 @@ export interface UiSlice {
   capItems: CaptureItem[] | null;
   capBusy: boolean;
   calSel: number | null;
+  /** Multi-selected card ids (bulk bar). */
+  selected: string[];
+  helpOpen: boolean;
   /** Live sync state from the engine (see core/sync.ts). */
   sync: SyncStatus;
   snack: string | null;
@@ -113,6 +116,12 @@ export interface Actions {
   setAuth: (token: string, user: User) => void;
   signOut: () => void;
   toast: (msg: string, undo?: () => void) => void;
+  toggleSelect: (id: string) => void;
+  clearSelection: () => void;
+  bulkMove: (status: ColumnKey) => void;
+  bulkDone: () => void;
+  bulkArchive: () => void;
+  bulkPriority: (pr: Priority) => void;
   undo: () => void;
   openSnooze: (id: string) => void;
   closeSnooze: () => void;
@@ -129,7 +138,7 @@ const initialPersisted: PersistedSlice = {
 const initialUi: UiSlice = {
   view: 'board', q: '', fPr: null, fProj: null, fTag: null, sel: null,
   capOpen: false, capText: '', capItems: null, capBusy: false,
-  calSel: null, sync: { state: 'local', pending: 0, lastSyncAt: null }, snack: null, snackUndo: null, pv: null, zTask: null, zMonth: 0, profOpen: false, histId: null,
+  calSel: null, selected: [], helpOpen: false, sync: { state: 'local', pending: 0, lastSyncAt: null }, snack: null, snackUndo: null, pv: null, zTask: null, zMonth: 0, profOpen: false, histId: null,
   dragId: null, dragCol: null, cmText: '', digestBusy: false, digestSeed: 0,
 };
 
@@ -186,6 +195,43 @@ export const useStore = create<Store>()(
         ...initialPersisted,
         ...initialUi,
         set: patch => set(patch),
+        toggleSelect: id => set(s => ({ selected: s.selected.includes(id) ? s.selected.filter(x => x !== id) : [...s.selected, id] })),
+        clearSelection: () => set({ selected: [] }),
+        bulkMove: status => {
+          const ids = get().selected; if (!ids.length) return;
+          const snap = snapshot(ids); const now = Date.now();
+          patchTasks(t => (ids.includes(t.id) && t.status !== status ? { ...t, status, touched: now, doneAt: null } : t));
+          set({ selected: [] });
+          toast(T().tBulkMoved + statusLabel(status, get().lang) + ' · ' + ids.length, restoreFn(snap));
+        },
+        bulkDone: () => {
+          const ids = get().selected; if (!ids.length) return;
+          const snap = snapshot(ids); const now = Date.now();
+          const created: string[] = [];
+          set(s => {
+            let tasks = s.tasks;
+            for (const id of ids) {
+              const t = tasks.find(x => x.id === id); if (!t || t.status === 'done') continue;
+              if (t.recur) { const { done, next } = rollRecurring(t, now); created.push(next.id); tasks = [next, ...tasks.map(x => (x.id === id ? done : x))]; }
+              else tasks = tasks.map(x => (x.id === id ? withHistory(x, { ...x, status: 'done', doneAt: now, touched: now }, now) : x));
+            }
+            return { tasks, selected: [] };
+          });
+          toast(T().tBulkDone + ids.length, restoreFn(snap, created));
+        },
+        bulkArchive: () => {
+          const ids = get().selected; if (!ids.length) return;
+          const snap = snapshot(ids); const now = Date.now();
+          patchTasks(t => (ids.includes(t.id) ? { ...t, status: 'archived' as Status, archivedAt: now } : t));
+          set(s => ({ selected: [], sel: s.sel && ids.includes(s.sel) ? null : s.sel }));
+          toast(T().tBulkArchived + ids.length, restoreFn(snap));
+        },
+        bulkPriority: pr => {
+          const ids = get().selected; if (!ids.length) return;
+          const snap = snapshot(ids);
+          patchTasks(t => (ids.includes(t.id) && t.pr !== pr ? { ...t, pr } : t));
+          toast(T().tBulkPriority + priorityLabel(pr, get().lang), restoreFn(snap));
+        },
         undo: () => { const u = get().snackUndo; clearTimeout(toastTimer); set({ snack: null, snackUndo: null }); u?.(); },
         patchTask,
         moveTask: (id, status) => {

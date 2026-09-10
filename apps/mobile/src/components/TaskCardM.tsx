@@ -27,13 +27,16 @@ export function TaskCardM({ task, now }: { task: Task; now: number }) {
   const { T, lang } = useT();
   const projects = useStore(s => s.projects);
   const set = useStore(s => s.set);
+  const selected = useStore(s => s.selected.includes(task.id));
+  const anySelected = useStore(s => s.selected.length > 0);
+  const toggleSelect = useStore(s => s.toggleSelect);
   const p = projects.find(x => x.id === task.proj);
   const staleDays = useStore(s => s.staleDays);
   const stale = isStale(task, now, staleDays);
   const due = dueLabel(task, lang, now);
   const open = task.status !== 'done';
   return (
-    <Pressable onPress={() => set({ mSel: task.id })} style={{ position: 'relative', overflow: 'hidden', backgroundColor: t.card, borderWidth: 1, borderColor: stale ? t.goldBd : t.line, borderRadius: 14, paddingTop: 13, paddingBottom: 13, paddingLeft: 17, paddingRight: 13, gap: 7 }}>
+    <Pressable onPress={() => (anySelected ? toggleSelect(task.id) : set({ mSel: task.id }))} onLongPress={() => toggleSelect(task.id)} delayLongPress={350} style={{ position: 'relative', overflow: 'hidden', backgroundColor: selected ? t.sel : t.card, borderWidth: 1, borderColor: selected ? t.acc : stale ? t.goldBd : t.line, borderRadius: 14, paddingTop: 13, paddingBottom: 13, paddingLeft: 17, paddingRight: 13, gap: 7 }}>
       <View style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, backgroundColor: t[PRIORITY_BAR_TOKEN[task.pr]] }} />
       {open && (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 16 }}>

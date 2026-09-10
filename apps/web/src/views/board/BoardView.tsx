@@ -7,6 +7,7 @@ import { IcHash, IcX } from '../../components/ui/Icons';
 import { Column } from './Column';
 import { ProjectFilesBar } from './ProjectFilesBar';
 import { SeedHint } from './SeedHint';
+import { BulkBar } from './BulkBar';
 
 export function BoardView() {
   const { T, lang } = useT();
@@ -53,6 +54,7 @@ export function BoardView() {
       <div className="flex min-h-0 flex-1 gap-14">
         {cols.map(c => <Column key={c} col={c} label={statusLabel(c, lang, true)} cards={cardsFor(c)} now={now} />)}
       </div>
+      <BulkBar />
     </div>
   );
 }

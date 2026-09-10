@@ -36,6 +36,8 @@ export interface Dict {
   notifications: string; notifyOn: string; notifyOff: string; notifyDenied: string; notifyUnavailable: string; notifyTest: string; notifyTestSent: string; notifyHint: string;
   gcalConnect: string; gcalConnected: string; gcalSyncing: string; gcalSyncNow: string; gcalDisconnect: string; gcalError: string; gcalReauth: string; gcalUnavailable: string; gcalDenied: string; gcalHint: string; gcalSynced: string;
   syncLocal: string; syncSyncing: string; syncSynced: string; syncOffline: string; syncPending: string; syncHeadOk: string; syncHeadOff: string;
+  bulkMove: string; clearSelection: string; selectCard: string; tBulkDone: string; tBulkMoved: string; tBulkArchived: string; tBulkPriority: string;
+  shortcutsTitle: string; shortcutsSub: string; kCapture: string; kSearch: string; kViews: string; kDone: string; kArchive: string; kSnooze: string; kBump: string; kSelect: string; kEsc: string; kHelp: string;
   undo: string; tUndone: string; staleAfter: string; staleAfterHint: string; dShort: string;
   archiveTitle: string; restore: string; deleteForever: string; confirmDelete: string; archiveEmpty: string; archivedOn: string; archivedBadge: string; tRestored: string; tDeleted: string;
   seedDemo: string;
@@ -87,6 +89,8 @@ export const EN: Dict = {
   notifications: 'Reminders', notifyOn: 'On', notifyOff: 'Off', notifyDenied: 'Notifications are blocked in the browser settings', notifyUnavailable: 'Push is not available here', notifyTest: 'Send test', notifyTestSent: 'Test notification sent', notifyHint: 'Once a day at 9:00: forgotten tasks, if any.',
   gcalConnect: 'Connect Google Calendar', gcalConnected: 'Google Calendar · two-way sync', gcalSyncing: 'syncing…', gcalSyncNow: 'Sync now', gcalDisconnect: 'Disconnect', gcalError: 'Google Calendar · sync error', gcalReauth: 'Google Calendar · reconnect needed', gcalUnavailable: 'Google Calendar · not configured', gcalDenied: 'Calendar access was not granted', gcalHint: 'Tasks with a due date appear as all-day events in a “Headboard” calendar. Moves, renames and new events sync back.', gcalSynced: 'synced ',
   syncLocal: 'local only', syncSyncing: 'syncing…', syncSynced: 'synced ', syncOffline: 'offline', syncPending: ' · pending: ', syncHeadOk: 'Synced', syncHeadOff: 'Offline — changes kept here',
+  bulkMove: 'Move to', clearSelection: 'Clear selection', selectCard: 'Select', tBulkDone: 'Done: ', tBulkMoved: 'Moved: ', tBulkArchived: 'Archived: ', tBulkPriority: 'Priority set: ',
+  shortcutsTitle: 'Keyboard shortcuts', shortcutsSub: 'work when no field is focused', kCapture: 'Capture', kSearch: 'Search', kViews: 'Switch screen (sidebar order)', kDone: 'Complete the open task', kArchive: 'Archive the open task', kSnooze: 'Snooze the open task', kBump: 'Bump the open task', kSelect: 'Select several cards', kEsc: 'Close / clear selection', kHelp: 'This list',
   undo: 'Undo', tUndone: 'Undone', staleAfter: 'Forgotten after', staleAfterHint: 'Days without a touch before a task counts as forgotten: card badge, Review, digest and the daily push.', dShort: 'd',
   archiveTitle: 'Archive', restore: 'Restore to Inbox', deleteForever: 'Delete', confirmDelete: 'Delete for good?', archiveEmpty: 'Archive is empty — nothing dropped yet.', archivedOn: 'archived ', archivedBadge: 'archived', tRestored: 'Restored to Inbox', tDeleted: 'Deleted',
   seedDemo: 'Load sample data',
@@ -141,6 +145,8 @@ export const RU: Dict = {
   notifications: 'Напоминания', notifyOn: 'Вкл', notifyOff: 'Выкл', notifyDenied: 'Уведомления запрещены в настройках браузера', notifyUnavailable: 'Push здесь недоступен', notifyTest: 'Тест', notifyTestSent: 'Тестовое уведомление отправлено', notifyHint: 'Раз в день в 9:00: забытые задачи, если они есть.',
   gcalConnect: 'Подключить Google Calendar', gcalConnected: 'Google Calendar · двусторонняя синхронизация', gcalSyncing: 'синхронизация…', gcalSyncNow: 'Синхронизировать', gcalDisconnect: 'Отключить', gcalError: 'Google Calendar · ошибка синхронизации', gcalReauth: 'Google Calendar · нужно переподключить', gcalUnavailable: 'Google Calendar · не настроен', gcalDenied: 'Доступ к календарю не выдан', gcalHint: 'Задачи со сроком появляются событиями на весь день в календаре «Headboard». Переносы, переименования и новые события возвращаются на доску.', gcalSynced: 'синхронизировано ',
   syncLocal: 'только на этом устройстве', syncSyncing: 'синхронизация…', syncSynced: 'синхронизировано ', syncOffline: 'офлайн', syncPending: ' · в очереди: ', syncHeadOk: 'Синхронизировано', syncHeadOff: 'Офлайн — правки сохранены здесь',
+  bulkMove: 'Переместить', clearSelection: 'Снять выделение', selectCard: 'Выбрать', tBulkDone: 'Завершено: ', tBulkMoved: 'Перемещено: ', tBulkArchived: 'В архив: ', tBulkPriority: 'Приоритет задан: ',
+  shortcutsTitle: 'Горячие клавиши', shortcutsSub: 'работают, когда фокус не в поле ввода', kCapture: 'Захват', kSearch: 'Поиск', kViews: 'Переключить экран (порядок сайдбара)', kDone: 'Завершить открытую задачу', kArchive: 'Открытую задачу в архив', kSnooze: 'Отложить открытую задачу', kBump: 'Поднять открытую задачу', kSelect: 'Выбрать несколько карточек', kEsc: 'Закрыть / снять выделение', kHelp: 'Этот список',
   undo: 'Отменить', tUndone: 'Отменено', staleAfter: 'Забытая через', staleAfterHint: 'Сколько дней без активности задача считается забытой: бейдж на карточке, «Разбор», дайджест и ежедневный push.', dShort: 'д',
   archiveTitle: 'Архив', restore: 'Вернуть в Инбокс', deleteForever: 'Удалить', confirmDelete: 'Удалить навсегда?', archiveEmpty: 'Архив пуст — ничего не отпущено.', archivedOn: 'в архиве с ', archivedBadge: 'в архиве', tRestored: 'Возвращено в Инбокс', tDeleted: 'Удалено',
   seedDemo: 'Загрузить пример',
@@ -191,6 +197,7 @@ export const phrases = {
   tagsN(n: number, lang: Lang) { return lang === 'ru' ? 'тегов: ' + n : n + (n === 1 ? ' tag' : ' tags'); },
   resultsN(n: number, lang: Lang) { return lang === 'ru' ? 'найдено: ' + n : n + (n === 1 ? ' result' : ' results'); },
   projectsN(n: number, lang: Lang) { return lang === 'ru' ? 'проектов: ' + n : n + (n === 1 ? ' project' : ' projects'); },
+  selectedN(n: number, lang: Lang) { return lang === 'ru' ? 'выбрано: ' + n : n + ' selected'; },
   changesN(n: number, lang: Lang) { return lang === 'ru' ? 'изменений: ' + n : n + (n === 1 ? ' change' : ' changes'); },
   tasksN(n: number, lang: Lang) { return lang === 'ru' ? 'задач: ' + n : n + (n === 1 ? ' task' : ' tasks'); },
   archivedN(n: number, lang: Lang) { return lang === 'ru' ? 'в архиве: ' + n : n + ' archived'; },

@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { dict } from '@headboard/core';
 import { useStore, applyThemeClass } from './store/useStore';
 import { startSync, refreshSettings } from './store/sync';
+import { useShortcuts } from './lib/useShortcuts';
+import { ShortcutsHelp } from './components/ui/ShortcutsHelp';
 import { registerServiceWorker } from './lib/push';
 import { Shell } from './components/layout/Shell';
 import { SignIn } from './views/auth/SignIn';
@@ -16,6 +18,7 @@ export function App() {
   const theme = useStore(s => s.theme);
   useEffect(() => applyThemeClass(theme), [theme]);
   useEffect(() => { void startSync(); void registerServiceWorker(); }, []);
+  useShortcuts();
   // Deep link from a notification: ?view=review
   useEffect(() => {
     const u = new URL(location.href);
@@ -48,6 +51,7 @@ export function App() {
     <div className="relative h-full overflow-hidden font-sans text-13 text-ink">
       <Shell />
       <TaskDrawer />
+      <ShortcutsHelp />
       <CaptureModal />
       <SnoozePicker />
       <FilePreviewModal />

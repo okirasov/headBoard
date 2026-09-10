@@ -68,6 +68,7 @@ export function ProfileBlock() {
             <Segmented value={String(STALE_DAYS_OPTIONS.includes(staleDays as 3) ? staleDays : 7)} onChange={v => setStaleDays(Number(v))} options={STALE_DAYS_OPTIONS.map(d => ({ v: String(d), label: d + T.dShort }))} />
             <div className="mt-5 font-mono text-9 text-mut2">{T.staleAfterHint}</div>
           </div>
+          <button type="button" onClick={() => set({ helpOpen: true, profOpen: false })} className="flex cursor-pointer items-center gap-8 rounded-9 border border-line bg-card px-10 py-7 text-left text-12.5 font-semibold leading-normal hover:border-lineStrong"><span className="flex-1">{T.shortcutsTitle}</span><span className="font-mono text-10.5 font-normal text-mut2">?</span></button>
           <button type="button" onClick={() => set({ view: 'templates', profOpen: false })} className="flex cursor-pointer items-center gap-8 rounded-9 border border-line bg-card px-10 py-7 text-left text-12.5 font-semibold leading-normal hover:border-lineStrong"><IcTemplate size={13} className="text-mut2" /><span className="flex-1">{T.templatesTitle}</span><span className="font-mono text-10.5 font-normal text-mut2">{useStore.getState().templates.length}</span></button>
           {api && (
             <div>
