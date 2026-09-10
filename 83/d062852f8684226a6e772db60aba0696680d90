@@ -1,0 +1,81 @@
+README.md
+  s_2372cb08d633fa::t_ff6048083c8d01 3
+apps/api/Headboard.Api.Tests/RecurTests.cs
+  s_2372cb08d633fa::t_0c11219df5ae37 1-29
+apps/api/Headboard.Api.Tests/TasksTests.cs
+  s_2372cb08d633fa::t_9b83c8639bce12 127
+apps/api/Headboard.Api/Tasks/TaskDto.cs
+  s_2372cb08d633fa::t_dd28dff936a70c 33
+apps/api/Headboard.Api/Tasks/TaskMapper.cs
+  s_2372cb08d633fa::t_58ba8e70e1f73c 45,122
+apps/api/README.md
+  s_2372cb08d633fa::t_2705ae829b28d7 9
+apps/mobile/App.tsx
+  s_2372cb08d633fa::t_407e316a17d873 30,58,85-86,105
+apps/mobile/src/components/DueControls.tsx
+  s_2372cb08d633fa::t_8754f2692fd3a2 2,21-31
+apps/mobile/src/components/Icons.tsx
+  s_2372cb08d633fa::t_3cb248dbb3c632 30-32
+apps/mobile/src/components/TaskCardM.tsx
+  s_2372cb08d633fa::t_bcbf0ccb8851ef 2,50
+apps/mobile/src/screens/RecurringScreen.tsx
+  s_2372cb08d633fa::t_63d1b65036886a 1-62
+apps/mobile/src/sheets/ProfileSheet.tsx
+  s_2372cb08d633fa::t_aa0bd1c79e32a5 11,67-71
+apps/mobile/src/sheets/TaskSheet.tsx
+  s_2372cb08d633fa::t_fabb458247b326 15,77-82
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_c9597d1d6380ec 7,43-44,93-105,109-111,122
+apps/web/src/App.tsx
+  s_2372cb08d633fa::t_e2558527190a1e 23
+apps/web/src/components/layout/Shell.tsx
+  s_2372cb08d633fa::t_078d6e7cb1b1fc 13,31
+apps/web/src/components/layout/Sidebar.tsx
+  s_2372cb08d633fa::t_0e1e129fef90e9 4,7,33
+apps/web/src/components/task/DueControls.tsx
+  s_2372cb08d633fa::t_c9445318bd129c 1-2,38-52
+apps/web/src/components/task/TaskDrawer.tsx
+  s_2372cb08d633fa::t_79452559f46cb3 11,150
+apps/web/src/components/ui/Icons.tsx
+  s_2372cb08d633fa::t_2e3c38d0bf944c 73-75
+apps/web/src/store/useStore.test.ts
+  s_2372cb08d633fa::t_294a0e901b4db6 22,63-76
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_931635b6d6b5a1 5,70-72,146,148,151-153,155-160,164,170-172,204
+apps/web/src/views/board/TaskCard.tsx
+  s_2372cb08d633fa::t_66021d73ae1ce7 2,91
+apps/web/src/views/calendar/CalendarView.tsx
+  s_2372cb08d633fa::t_ed9090befb3984 1,67
+apps/web/src/views/digest/DigestView.tsx
+  s_2372cb08d633fa::t_e8a04cbe112ec7 1,32
+apps/web/src/views/recurring/RecurringView.tsx
+  s_2372cb08d633fa::t_a592cea11176fb 1-73
+docs/architecture.html
+  s_2372cb08d633fa::t_715dc1d5ef004a 93,177,188,193,221,418-420,438,442-443,458
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_57d77b5e7c1159 27,73,122,148-155
+packages/core/src/index.ts
+  s_2372cb08d633fa::t_39716d9bf321eb 15
+packages/core/src/model.ts
+  s_2372cb08d633fa::t_e4cd4b2919cad4 6,8,35
+packages/core/src/recurring.test.ts
+  s_2372cb08d633fa::t_6ee19f86ffdd14 1-32
+packages/core/src/recurring.ts
+  s_2372cb08d633fa::t_5d880ecb35ecdb 1-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "83d062852f8684226a6e772db60aba0696680d90",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
