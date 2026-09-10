@@ -1,0 +1,65 @@
+apps/api/Headboard.Api.Tests/TasksTests.cs
+  s_2372cb08d633fa::t_fa0e89f9d90a9b 1,222-251
+apps/api/Headboard.Api/Auth/AuthEndpoints.cs
+  s_2372cb08d633fa::t_5343c8fa521906 64-84
+apps/api/README.md
+  s_2372cb08d633fa::t_72786ba19bf593 142
+apps/mobile/src/components/Icons.tsx
+  s_2372cb08d633fa::t_728d31b90836f5 36-41
+apps/mobile/src/lib/backup.ts
+  s_19bb7e04471060::t_56600e381d60e3 1-25
+apps/mobile/src/sheets/ProfileSheet.tsx
+  s_2372cb08d633fa::t_83e61ed543170b 6-7,12-13,25-35,130-137,141-147
+apps/mobile/src/store/sync.ts
+  s_2372cb08d633fa::t_e87e7eeaee06a4 60-74
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_c375896e8c5994 7,75-76,171-179
+apps/web/src/components/layout/ProfileMenu.tsx
+  s_2372cb08d633fa::t_f66685374d7b2d 4-5,9-10,33-42,63,91-98,101-109
+apps/web/src/components/ui/Icons.tsx
+  s_2372cb08d633fa::t_547d9df1d2f224 79-84
+apps/web/src/lib/backup.ts
+  s_19bb7e04471060::t_ce7d501ca6aa7f 1-34
+apps/web/src/store/sync.ts
+  s_2372cb08d633fa::t_49c845182f4431 63-77
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_a59ee196e9aff0 5,119-120,237-245
+packages/core/src/api.ts
+  s_2372cb08d633fa::t_70c09dee864df2 57-58
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_abf4a21b59ba90 42,97,155
+packages/core/src/index.ts
+  s_2372cb08d633fa::t_c6b447846fcd65 20
+packages/core/src/sync.test.ts
+  s_2372cb08d633fa::t_50c7c315b9c824 48-52,55,57-62
+packages/core/src/sync.ts
+  s_2372cb08d633fa::t_0f3c73bab99c0c 208-216,218
+packages/core/src/backup.test.ts
+  s_2372cb08d633fa::t_e594454630059d 1-43
+packages/core/src/backup.ts
+  s_2372cb08d633fa::t_c40000697bb6b3 1-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "a804b10d38fbca0ffbfe1ec3cade285d9931ab97",
+  "prompts": {},
+  "sessions": {
+    "s_19bb7e04471060": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f1ad9e0-0e04-4d6f-9d32-06340c42ea59",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    },
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
