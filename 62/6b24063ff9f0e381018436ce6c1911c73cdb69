@@ -1,0 +1,25 @@
+apps/api/Headboard.Api/Headboard.Api.csproj
+  s_2372cb08d633fa::t_f9b1b9de8a5181 1,7
+apps/api/README.md
+  s_2372cb08d633fa::t_322e8c2435d751 26-35
+package.json
+  s_2372cb08d633fa::t_8e1d672a592ea8 15-16
+scripts/auth-setup.mjs
+  s_2372cb08d633fa::t_4f01aebd5a4a8b 1-94
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "626b24063ff9f0e381018436ce6c1911c73cdb69",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "unknown"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
