@@ -86,7 +86,7 @@
     <svg width="34" height="34" viewBox="0 0 48 48" aria-hidden="true"><circle cx="15" cy="38" r="7.5" fill="var(--ink)"/><circle cx="24" cy="29" r="2.6" fill="var(--ink)"/><rect x="25" y="3" width="19" height="19" rx="7" fill="none" stroke="var(--ink)" stroke-width="5"/><circle cx="40.5" cy="18.5" r="4.4" fill="var(--bg)"/><circle cx="40.5" cy="18.5" r="3.1" fill="var(--acc)"/></svg>
     <span class="word">b<b>o</b>ard</span>
   </div>
-  <div class="kicker" style="margin-top:8px">Техническая архитектура · версия от 2026-09-11 · main</div>
+  <div class="kicker" style="margin-top:8px">Техническая архитектура · версия от 2026-09-13 · main</div>
   <h1>Headboard: web, mobile, API и общее ядро</h1>
   <p class="lead">Персональная канбан-доска «разгрузки головы». Один монорепозиторий, четыре пакета, одна доменная логика. Документ описывает границы слоёв, модель данных, синхронизацию, контракт API, авторизацию, AI-контур, дизайн-систему, тесты и известные ограничения.</p>
   <nav class="toc">
@@ -339,6 +339,7 @@ interface Template { id; name; title; proj; pr; tags; note; dueInDays: number | 
   <li><b>Пользователь.</b> Upsert по (provider, subject); инициалы это первые буквы двух слов имени.</li>
   <li><b>Web.</b> <code>lib/providers.ts</code> подгружает скрипты GIS и Apple JS по клику. Google: <code>initCodeClient</code> с <code>ux_mode: popup</code> → code → <code>POST /auth/google</code>. Apple: <code>AppleID.auth.init</code> с <code>usePopup</code> → id_token и имя → <code>POST /auth/apple</code>. Кнопки остаются собственными, без логотипов провайдеров.</li>
   <li><b>Mobile.</b> Apple на iOS через <code>expo-apple-authentication</code> (нативный лист, identityToken с аудиторией bundle id). Google через <code>expo-auth-session</code> <code>useIdTokenAuthRequest</code> в системном браузере со схемой <code>headboard://</code>; требует development build, не Expo Go. Apple на Android недоступен, кнопка ведёт на dev-логин.</li>
+  <li><b>Настройка.</b> Идентификаторы клиентов создаются вручную в Google Cloud (OAuth-клиенты Web с origin <code>http://localhost:5173</code> и redirect <code>/calendar/oauth/callback</code>, iOS и Android с <code>com.headboard.app</code>, тестовый пользователь на экране согласия) и в Apple Developer (App ID с Sign in with Apple, Services ID с https return URL). Дальше одна команда <code>npm run auth:setup -- --google-web … --google-secret … --google-ios … --google-android … --apple-services … --apple-redirect …</code> (<code>scripts/auth-setup.mjs</code>) раскладывает значения: client id в gitignored <code>apps/web/.env</code> и <code>apps/mobile/.env</code>, аудитории, web-клиент, секрет и <code>Calendar:RedirectUri</code> в .NET user-secrets проекта API (<code>UserSecretsId</code> в csproj, читаются автоматически в Development). Секрет не попадает ни в репозиторий, ни в вывод скрипта; <code>--dry-run</code> показывает план, <code>--show</code> текущие значения с маской. SHA-1 отладочного ключа Android берётся из <code>apps/mobile/android/app/debug.keystore</code>, который создаёт <code>expo run:android</code>.</li>
   <li><b>Фолбэк.</b> При отсутствии client id провайдера клиент вызывает <code>POST /auth/dev</code> (только Development); без API используется мок-пользователь прототипа. Отмена popup и сбой показываются тостом.</li>
 </ul>
 
@@ -527,7 +528,7 @@ interface Template { id; name; title; proj; pr; tags; note; dueInDays: number | 
 <tr><td>Сборка</td><td>Vite production build, <code>dotnet build</code> без предупреждений</td><td><code>npm run build</code></td></tr>
 <tr><td>Визуальная сверка</td><td>Web в браузере на 1440×900, обе темы и языка; mobile скриншотами симулятора <code>xcrun simctl io booted screenshot</code> через dev-флаги</td><td>вручную / по скриптам</td></tr>
 </table></div>
-<p>Инструменты: Node 26, npm 11 workspaces, .NET SDK 10.0.103, Xcode 26 с iOS 26.5 симулятором, Expo Go. Запуск: <code>npm run dev</code> (web, 5173), <code>npm run api</code> (5080), <code>npm run mobile</code> (Metro 8081). Конфиг предпросмотра для Claude Code лежит в <code>.claude/launch.json</code>.</p>
+<p>Инструменты: Node 26, npm 11 workspaces, .NET SDK 10.0.103, Xcode 26 с iOS 26.5 симулятором, Expo Go. Запуск: <code>npm run dev</code> (web, 5173), <code>npm run api</code> (5080), <code>npm run mobile</code> (Metro 8081), <code>npm run auth:setup</code> (раскладка OAuth-идентификаторов и секрета). Конфиг предпросмотра для Claude Code лежит в <code>.claude/launch.json</code>.</p>
 
 <h2 id="config">14. Конфигурация</h2>
 <div class="tbl"><table>
@@ -536,7 +537,7 @@ interface Template { id; name; title; proj; pr; tags; note; dueInDays: number | 
 <tr><td>mobile env</td><td><code>EXPO_PUBLIC_API_URL</code></td><td>Адрес API; на устройстве нужен LAN-адрес машины</td></tr>
 <tr><td rowspan="12">api <code>appsettings*.json</code>, env <code>Section__Key</code>, user secrets</td><td><code>Jwt:Secret</code></td><td>Обязателен, ≥ 32 байта; без него старт падает</td></tr>
 <tr><td><code>Jwt:Issuer</code></td><td>Issuer и audience токена, по умолчанию <code>headboard</code></td></tr>
-<tr><td><code>Auth:GoogleClientId</code>, <code>Auth:AppleClientId</code></td><td>Аудитории id-token; до настройки эндпоинты отвечают 503</td></tr>
+<tr><td><code>Auth:GoogleClientIds[]</code>, <code>Auth:GoogleWebClientId</code>, <code>Auth:GoogleClientSecret</code>, <code>Auth:AppleClientIds[]</code></td><td>Аудитории id-token и web-клиент для code-flow и календаря; до настройки эндпоинты отвечают 503. Локально заполняются через <code>npm run auth:setup</code> в user-secrets, в проде переменными окружения или секретами платформы</td></tr>
 <tr><td><code>Auth:AllowDevLogin</code></td><td><code>true</code> в Development, <code>false</code> в остальных окружениях</td></tr>
 <tr><td><code>Anthropic:ApiKey</code>, <code>Anthropic:Model</code></td><td>Ключ и модель; без ключа <code>/ai/*</code> → 503</td></tr>
 <tr><td><code>ConnectionStrings:Sqlite</code></td><td><code>Data Source=headboard.db</code></td></tr>
@@ -575,9 +576,9 @@ interface Template { id; name; title; proj; pr; tags; note; dueInDays: number | 
 </ul>
 
 <h2 id="limits">16. Ограничения и следующие шаги</h2>
-<div class="note">Это состояние main на 2026-09-11. Пункты ниже требуют решений или внешних учётных данных.</div>
+<div class="note">Это состояние main на 2026-09-13. Пункты ниже требуют решений или внешних учётных данных.</div>
 <ul>
-  <li><span class="pill gold">auth</span> Реальные потоки Google/Apple реализованы, но включаются только при наличии client id: Google Cloud (web, iOS, Android клиенты), Apple Developer (App ID с Sign in with Apple, Services ID с https return URL; <code>localhost</code> Apple не принимает). Apple на Android не поддержан.</li>
+  <li><span class="pill gold">auth</span> Реальные потоки Google/Apple реализованы и включаются после создания OAuth-клиентов в Google Cloud и Apple Developer и запуска <code>npm run auth:setup</code>; создать клиенты может только владелец аккаунтов. Apple для web требует https return URL (<code>localhost</code> Apple не принимает), Apple на Android не поддержан, Sign in with Apple и Google на mobile требуют development build.</li>
   <li><span class="pill gold">db</span> Миграции EF сгенерированы для SQLite; PostgreSQL создаёт схему через <code>EnsureCreated()</code>. Перед эволюцией схемы в проде нужны отдельные Postgres-миграции.</li>
   <li><span class="pill gold">push</span> Напоминания включаются VAPID-ключами на сервере (web) и EAS <code>projectId</code> плюс development build (mobile); в Expo Go удалённые push не работают. Проверено тестами с фейковым отправителем.</li>
   <li><span class="pill">history</span> При лимите 200 записей на задачу старые теряются; для очень долгих задач понадобится выгрузка или отдельная таблица.</li>
