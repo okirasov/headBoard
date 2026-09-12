@@ -23,6 +23,16 @@ Development uses SQLite (`apps/api/Headboard.Api/headboard.db`, created and migr
 startup). OpenAPI document: `GET http://localhost:5080/openapi/v1.json` (Development only).
 CORS allows `http://localhost:5173` (web) and `http://localhost:8081` (Expo) in Development.
 
+## Configuring real sign-in (local)
+
+Create the OAuth clients (see the end of *Sign-in flows*), then run one command from the repo root; it writes the client ids to `apps/web/.env` and `apps/mobile/.env` and everything the API needs, including the secret, to .NET user-secrets (outside the repo):
+
+```bash
+npm run auth:setup -- --google-web <web client id> --google-secret <web client secret> --google-ios <ios client id> --google-android <android client id> --apple-services <services id> --apple-redirect https://<your host>
+```
+
+`--dry-run` prints what would be written, `--show` lists the current values (secret masked). Restart the API and the dev servers afterwards.
+
 ## Sign-in flows
 
 - `POST /auth/google {idToken}` — native apps (expo-auth-session id-token response). The token audience must be one of `Auth:GoogleClientIds`.

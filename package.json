@@ -12,6 +12,7 @@
     "build": "npm run build --workspaces --if-present",
     "dev": "npm run dev -w @headboard/web",
     "mobile": "npm run start -w @headboard/mobile",
-    "api": "dotnet run --project apps/api/Headboard.Api"
+    "api": "dotnet run --project apps/api/Headboard.Api",
+    "auth:setup": "node scripts/auth-setup.mjs"
   }
 }
