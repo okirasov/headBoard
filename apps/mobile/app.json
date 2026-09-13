@@ -8,7 +8,7 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.headboard.app",
+      "bundleIdentifier": "com.okirasov.headboard",
       "usesAppleSignIn": true
     },
     "android": {
@@ -19,7 +19,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.headboard.app"
+      "package": "com.okirasov.headboard"
     },
     "web": {
       "favicon": "./assets/favicon.png"

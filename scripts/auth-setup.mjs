@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const API_DIR = resolve(root, 'apps/api/Headboard.Api');
-const BUNDLE_ID = 'com.headboard.app';
+const BUNDLE_ID = 'com.okirasov.headboard';
 
 const args = process.argv.slice(2);
 const flag = name => { const i = args.indexOf(name); return i >= 0 ? (args[i + 1] ?? '') : undefined; };
