@@ -1,0 +1,25 @@
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_d182cc465609b9 86-87,89
+apps/api/Headboard.Api/appsettings.json
+  s_2372cb08d633fa::t_70b336409b7d9e 47
+apps/api/README.md
+  s_2372cb08d633fa::t_1cdfbf7dce55c0 98
+vercel.json
+  s_2372cb08d633fa::t_55179c249e99c4 1-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "2a2157ced28d785ba475d0313f6a7c5e0f563d57",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
