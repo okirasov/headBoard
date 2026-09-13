@@ -83,8 +83,10 @@ builder.Services.AddHostedService(sp => sp.GetRequiredService<Headboard.Api.Dige
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddOpenApi();
+    // Dev servers plus any deployed web origins from Cors:Origins (e.g. the Vercel URL of apps/web).
+    var extraOrigins = builder.Configuration.GetSection("Cors:Origins").Get<string[]>() ?? [];
     builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
-        .WithOrigins("http://localhost:5173", "http://localhost:8081")
+        .WithOrigins(["http://localhost:5173", "http://localhost:8081", .. extraOrigins])
         .AllowAnyHeader()
         .AllowAnyMethod()));
 }

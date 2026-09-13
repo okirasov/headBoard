@@ -95,6 +95,7 @@ Keys can be set in `appsettings*.json`, environment variables (`Jwt__Secret`, ..
 | `Auth:GoogleWebClientId` | — | The "Web application" client id; also accepted as an audience. |
 | `Auth:GoogleClientSecret` | — | Secret of the web client. Needed only for the browser code-flow (`POST /auth/google {code}`); without it that path returns 503 `code_exchange_unavailable`. |
 | `Auth:AppleClientIds` | `[]` | Accepted audiences for Apple id-tokens: the Services ID (web) and the iOS bundle id (`com.headboard.app`). Legacy `Auth:AppleClientId` is still honoured. |
+| `Cors:Origins` | `[]` | Extra allowed browser origins besides the local dev servers, e.g. `["https://headboard.vercel.app"]` (as env: `Cors__Origins__0`). |
 | `Auth:AllowDevLogin` | `true` in Development, else `false` | Enables `POST /auth/dev`. |
 | `Anthropic:ApiKey` | — | Without it `/ai/*` return `503 {"error":"ai_unavailable"}` and clients fall back locally. |
 | `Anthropic:Model` | `claude-sonnet-5` | Model id sent to `POST https://api.anthropic.com/v1/messages`. |
