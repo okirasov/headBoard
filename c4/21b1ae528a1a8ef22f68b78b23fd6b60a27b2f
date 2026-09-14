@@ -1,0 +1,19 @@
+apps/mobile/eas.json
+  s_2372cb08d633fa::t_1a697d6a132876 40-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "c421b1ae528a1a8ef22f68b78b23fd6b60a27b2f",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
