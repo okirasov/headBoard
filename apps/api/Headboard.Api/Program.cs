@@ -99,6 +99,21 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseCors();
+// Production image ships the web app in wwwroot: static assets plus an index.html fallback for SPA routes (?view=…).
+var spa = Directory.Exists(Path.Combine(app.Environment.ContentRootPath, "wwwroot"));
+if (spa)
+{
+    app.UseDefaultFiles();
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        OnPrepareResponse = ctx =>
+        {
+            // Hashed assets may be cached forever; the entry point and the service worker must always be fresh.
+            var cache = ctx.File.Name == "index.html" || ctx.File.Name == "sw.js" ? "no-cache" : "public, max-age=31536000, immutable";
+            ctx.Context.Response.Headers.CacheControl = cache;
+        },
+    });
+}
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi(); // GET /openapi/v1.json
@@ -118,6 +133,8 @@ app.MapCalendar();
 app.MapPush();
 app.MapTemplates();
 app.MapTags();
+
+if (spa) app.MapFallbackToFile("index.html");
 
 app.Run();
 

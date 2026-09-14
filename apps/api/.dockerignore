@@ -1,9 +1,0 @@
-**/bin/
-**/obj/
-**/storage/
-**/*.db
-**/*.db-shm
-**/*.db-wal
-Headboard.Api.Tests/
-appsettings.Development.json
-fly.toml

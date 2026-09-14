@@ -35,7 +35,7 @@ npm run auth:setup -- --google-web <web client id> --google-secret <web client s
 
 ## Deployment (Fly.io)
 
-The API runs on Fly.io as `deboard-api` (https://deboard-api.fly.dev): one shared-cpu machine in `ams`, SQLite and uploaded files on the `data` volume mounted at `/data`. `apps/api/Dockerfile` publishes the project with the .NET 10 SDK image and runs it on the ASP.NET runtime image; `apps/api/fly.toml` holds the non-secret configuration as environment variables (`Urls`, connection string, storage root, CORS and calendar return URLs). Secrets (`Jwt__Secret`, `Auth__*`) are set with `fly secrets set` and never live in the repo. Deploy from `apps/api`:
+The API runs on Fly.io as `deboard-api` (https://deboard-api.fly.dev): one shared-cpu machine in `ams`, SQLite and uploaded files on the `data` volume mounted at `/data`. The root `Dockerfile` builds the web app (Vite, `VITE_API_URL=/` so it calls the same origin) and publishes the API, which serves the bundle from `wwwroot` with an `index.html` fallback; the root `fly.toml` holds the non-secret configuration as environment variables (`Urls`, connection string, storage root, CORS and calendar return URLs). Secrets (`Jwt__Secret`, `Auth__*`) are set with `fly secrets set` and never live in the repo. Deploy from the repository root:
 
 ```bash
 fly deploy --remote-only
