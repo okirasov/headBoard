@@ -25,7 +25,7 @@ export function backupFilename(now: number): string {
 const isObj = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null && !Array.isArray(x);
 const str = (x: unknown): x is string => typeof x === 'string';
 
-/** Parse and normalise a backup file; null when it is not a Headboard export. Missing fields get defaults via newTask/newTemplate. */
+/** Parse and normalise a backup file; null when it is not a Deboard export. Missing fields get defaults via newTask/newTemplate. */
 export function parseBackup(json: string, now: number): Backup | null {
   let raw: unknown;
   try { raw = JSON.parse(json); } catch { return null; }

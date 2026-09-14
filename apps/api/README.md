@@ -1,6 +1,6 @@
-# Headboard API (.NET 10)
+# Deboard API (.NET 10)
 
-Minimal-API backend for Headboard: per-user persistence of the core model
+Minimal-API backend for Deboard: per-user persistence of the core model
 (`packages/core/src/model.ts`), Google/Apple sign-in exchanged for a JWT, and AI
 task extraction / digest generation through the Anthropic Messages API.
 
@@ -51,8 +51,8 @@ Google Cloud console: create one OAuth client per platform (Web application with
 Uses the same Google web client as sign-in (`Auth:GoogleWebClientId` + `Auth:GoogleClientSecret`) with the `https://www.googleapis.com/auth/calendar` scope and offline access; enable the Google Calendar API in the Cloud project and register `Calendar:RedirectUri`.
 
 - `POST /calendar/connect {returnUrl}` → `{url}` consent screen; `GET /calendar/oauth/callback` stores the refresh token in `CalendarLinks` and redirects to `returnUrl?calendar=connected|denied|error`. `GET /calendar` status, `POST /calendar/sync` reconcile now, `DELETE /calendar` disconnect (revokes the token, events stay).
-- A dedicated calendar named **Headboard** is created on first sync. Every task with a due date that is not done/archived is an all-day event tagged with `extendedProperties.private.headboardTaskId`; the pushed fingerprint is stored in `Tasks.CalendarHash` so unchanged tasks cost no calls.
-- Inbound uses incremental listing (`syncToken`, 410 → full resync): date moves and renames update the task when the event changed after the task was last touched, cancelled events clear the task's date, events created directly in the Headboard calendar become Inbox tasks (and are tagged back). Our own pushes are recognised by fingerprint and ignored.
+- A dedicated calendar named **Deboard** is created on first sync. Every task with a due date that is not done/archived is an all-day event tagged with `extendedProperties.private.headboardTaskId`; the pushed fingerprint is stored in `Tasks.CalendarHash` so unchanged tasks cost no calls.
+- Inbound uses incremental listing (`syncToken`, 410 → full resync): date moves and renames update the task when the event changed after the task was last touched, cancelled events clear the task's date, events created directly in the Deboard calendar become Inbox tasks (and are tagged back). Our own pushes are recognised by fingerprint and ignored.
 - Deleted tasks leave their event id in `CalendarLinks.PendingDeletesJson`; the next pass removes the event.
 
 ## Push reminders about deadlines

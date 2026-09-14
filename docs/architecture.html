@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Headboard · Техническая архитектура</title>
+<title>Deboard · Техническая архитектура</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -87,7 +87,7 @@
     <span class="word">b<b>o</b>ard</span>
   </div>
   <div class="kicker" style="margin-top:8px">Техническая архитектура · версия от 2026-09-14 · main</div>
-  <h1>Headboard: web, mobile, API и общее ядро</h1>
+  <h1>Deboard: web, mobile, API и общее ядро</h1>
   <p class="lead">Персональная канбан-доска «разгрузки головы». Один монорепозиторий, четыре пакета, одна доменная логика. Документ описывает границы слоёв, модель данных, синхронизацию, контракт API, авторизацию, AI-контур, дизайн-систему, тесты и известные ограничения.</p>
   <nav class="toc">
     <a href="#overview">Обзор</a><a href="#layers">Слои</a><a href="#core">Ядро</a><a href="#model">Модель данных</a><a href="#state">Состояние</a><a href="#sync">Синхронизация</a><a href="#api">API</a><a href="#auth">Авторизация</a><a href="#ai">AI</a><a href="#stats">Статистика</a><a href="#search">Поиск</a><a href="#due">Сроки</a><a href="#recurring">Повторы</a><a href="#tags">Теги</a><a href="#templates">Шаблоны</a><a href="#history">История</a><a href="#editing">Редактирование и удобство</a><a href="#data">Данные и аккаунт</a><a href="#design">Дизайн-система</a><a href="#web">Web</a><a href="#mobile">Mobile</a><a href="#testing">Тесты и инструменты</a><a href="#config">Конфигурация</a><a href="#deploy">Деплой</a><a href="#decisions">Решения</a><a href="#limits">Ограничения</a>
@@ -108,7 +108,7 @@
 
 <h2 id="layers">2. Слои и потоки данных</h2>
 <figure>
-<svg viewBox="0 0 1000 560" role="img" aria-label="Диаграмма слоёв Headboard">
+<svg viewBox="0 0 1000 560" role="img" aria-label="Диаграмма слоёв Deboard">
   <!-- clients -->
   <rect x="30" y="30" width="430" height="200" rx="14" class="box"/>
   <text x="50" y="56" class="k">apps/web · React 19 + Tailwind</text>
@@ -357,7 +357,7 @@ interface Template { id; name; title; proj; pr; tags; note; dueInDays: number | 
 <h3 id="gcal">Двусторонняя синхронизация с Google Calendar</h3>
 <figure>
 <svg viewBox="0 0 1000 300" role="img" aria-label="Схема синхронизации с Google Calendar">
-  <rect x="20" y="30" width="230" height="240" rx="14" class="box"/><text x="36" y="56" class="k">Headboard · Tasks</text>
+  <rect x="20" y="30" width="230" height="240" rx="14" class="box"/><text x="36" y="56" class="k">Deboard · Tasks</text>
   <rect x="36" y="72" width="198" height="46" rx="10" class="box2"/><text x="48" y="92" class="t" font-size="12">due ≠ null, не done/archived</text><text x="48" y="108" class="s">→ зеркалится</text>
   <rect x="36" y="128" width="198" height="46" rx="10" class="box2"/><text x="48" y="148" class="t" font-size="12">EventId · Hash на задаче</text><text x="48" y="164" class="s">отпечаток: title · дата · note</text>
   <rect x="36" y="184" width="198" height="46" rx="10" class="box2"/><text x="48" y="204" class="t" font-size="12">CalendarLinks</text><text x="48" y="220" class="s">refresh token · syncToken · pending</text>
@@ -368,7 +368,7 @@ interface Template { id; name; title; proj; pr; tags; note; dueInDays: number | 
   <rect x="401" y="168" width="198" height="40" rx="10" class="box2"/><text x="413" y="193" class="t" font-size="12">3 · outbound (hash ≠)</text>
   <text x="401" y="240" class="m">каждые 300 с · nudge после правок · «Sync now»</text>
 
-  <rect x="750" y="30" width="230" height="240" rx="14" class="box"/><text x="766" y="56" class="k">Google Calendar · «Headboard»</text>
+  <rect x="750" y="30" width="230" height="240" rx="14" class="box"/><text x="766" y="56" class="k">Google Calendar · «Deboard»</text>
   <rect x="766" y="72" width="198" height="46" rx="10" class="box2"/><text x="778" y="92" class="t" font-size="12">all-day event</text><text x="778" y="108" class="s">extendedProperties.headboardTaskId</text>
   <rect x="766" y="128" width="198" height="46" rx="10" class="box2"/><text x="778" y="148" class="t" font-size="12">перенос · переименование</text><text x="778" y="164" class="s">→ задача, если updated ≥ touched</text>
   <rect x="766" y="184" width="198" height="46" rx="10" class="box2"/><text x="778" y="204" class="t" font-size="12">отмена · новое событие</text><text x="778" y="220" class="s">→ due = null · задача в Inbox</text>
@@ -382,10 +382,10 @@ interface Template { id; name; title; proj; pr; tags; note; dueInDays: number | 
     <marker id="h" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--ok)"/></marker>
   </defs>
 </svg>
-<figcaption>Рис. 4. Сверка задач с календарём «Headboard»: три шага одного прохода и правила в обе стороны.</figcaption>
+<figcaption>Рис. 4. Сверка задач с календарём «Deboard»: три шага одного прохода и правила в обе стороны.</figcaption>
 </figure>
 <p>Подключение отдельное от входа: <code>POST /calendar/connect</code> отдаёт consent-URL с scope <code>calendar</code> и <code>access_type=offline</code>, <code>state</code> подписан HMAC на <code>Jwt:Secret</code> (uid, returnUrl, срок). Callback <code>GET /calendar/oauth/callback</code> меняет code на refresh-token (тот же web-клиент Google) и сохраняет его в <code>CalendarLinks</code>, затем редиректит на <code>returnUrl?calendar=connected|denied|error</code> (web: адрес приложения, mobile: <code>headboard://calendar</code> через <code>openAuthSessionAsync</code>). Refresh-token живёт только на сервере.</p>
-<p><code>CalendarSyncScheduler</code> (hosted service) делает полный проход по подключённым пользователям раз в <code>Calendar:PollIntervalSeconds</code> (300 с) и немедленные проходы по «толчкам» от мутаций задач и кнопки «Синхронизировать». Ожидание «толчков» и таймер полного прохода это один и тот же токен отмены: если время уже вышло (первая итерация после старта), отмена ставится сразу, иначе цикл ждал бы первого «толчка» и входящие события подхватывались бы только после правки задачи на клиенте, что и происходило до исправления. Полный проход выполняет только держатель аренды <code>jobs</code>; без неё (сразу после перезапуска её ещё держит убитый процесс) повтор через 30 с, оба исхода пишутся в лог. <code>CalendarSyncService.ReconcileUserAsync</code>: при первом проходе создаёт календарь «Headboard»; удаляет события задач, стёртых с прошлого прохода (<code>PendingDeletesJson</code>); читает входящие изменения инкрементально по <code>syncToken</code> (410 → полная перечитка); выталкивает исходящие. Правила: задача зеркалится, пока у неё есть срок и она не done/archived, как событие на весь день с <code>extendedProperties.private.headboardTaskId</code>; отпечаток <code>CalendarHash</code> (title, дата, note) избавляет от лишних запросов и позволяет отличить эхо собственного push от правки пользователя; входящее применяется по правилу «последний пишущий» (<code>event.updated</code> против <code>task.touched</code>); отменённое событие снимает срок с задачи; событие, созданное в календаре «Headboard» руками, становится задачей в Inbox и помечается обратно. Клиенты подтягивают серверные изменения задач через <code>refreshTasks()</code> движка синхронизации (слияние по <code>touched</code>) при возврате в фокус и после «Синхронизировать».</p>
+<p><code>CalendarSyncScheduler</code> (hosted service) делает полный проход по подключённым пользователям раз в <code>Calendar:PollIntervalSeconds</code> (300 с) и немедленные проходы по «толчкам» от мутаций задач и кнопки «Синхронизировать». Ожидание «толчков» и таймер полного прохода это один и тот же токен отмены: если время уже вышло (первая итерация после старта), отмена ставится сразу, иначе цикл ждал бы первого «толчка» и входящие события подхватывались бы только после правки задачи на клиенте, что и происходило до исправления. Полный проход выполняет только держатель аренды <code>jobs</code>; без неё (сразу после перезапуска её ещё держит убитый процесс) повтор через 30 с, оба исхода пишутся в лог. <code>CalendarSyncService.ReconcileUserAsync</code>: при первом проходе создаёт календарь «Deboard»; удаляет события задач, стёртых с прошлого прохода (<code>PendingDeletesJson</code>); читает входящие изменения инкрементально по <code>syncToken</code> (410 → полная перечитка); выталкивает исходящие. Правила: задача зеркалится, пока у неё есть срок и она не done/archived, как событие на весь день с <code>extendedProperties.private.headboardTaskId</code>; отпечаток <code>CalendarHash</code> (title, дата, note) избавляет от лишних запросов и позволяет отличить эхо собственного push от правки пользователя; входящее применяется по правилу «последний пишущий» (<code>event.updated</code> против <code>task.touched</code>); отменённое событие снимает срок с задачи; событие, созданное в календаре «Deboard» руками, становится задачей в Inbox и помечается обратно. Клиенты подтягивают серверные изменения задач через <code>refreshTasks()</code> движка синхронизации (слияние по <code>touched</code>) при возврате в фокус и после «Синхронизировать».</p>
 
 <h3>Push-напоминания о забытых задачах</h3>
 <p><code>StaleNotifier</code> (hosted service) раз в день после <code>Notify:Hour</code> (9) по зоне пользователя проверяет тех, у кого включён <code>Settings.NotifyStale</code>, по тому же правилу <code>DigestSchedule.IsDue</code> с маркером <code>LastStaleNotifyAt</code>. Если <code>digestStats</code> находит забытые задачи, <code>StaleMessage</code> собирает текст («Забытых задач: N», «“…” ждёт уже X дн.») с deep link <code>/?view=review</code>, а <code>PushDispatcher</code> рассылает его на все устройства из <code>PushSubscriptions</code>: браузеры через Web Push (библиотека WebPush, VAPID-ключи <code>Push:*</code>), мобильные через Expo Push API по токену <code>expo-notifications</code>. Ответы «устройство исчезло» (404/410, <code>DeviceNotRegistered</code>) и пять подряд ошибок удаляют подписку. Web: <code>public/sw.js</code> показывает уведомление и по тапу фокусирует вкладку с <code>?view=review</code>; подписка создаётся из тумблера «Напоминания» в меню профиля (<code>lib/push.ts</code>: разрешение → <code>pushManager.subscribe</code> с VAPID-ключом из <code>GET /push/config</code> → <code>POST /push/subscribe</code>). Mobile: тот же тумблер в профиль-шторке, токен через <code>getExpoPushTokenAsync</code> (нужен EAS <code>projectId</code> и development build), тап обрабатывает <code>addNotificationResponseReceivedListener</code> и переключает <code>mView</code>.</p>
@@ -564,7 +564,7 @@ interface Template { id; name; title; proj; pr; tags; note; dueInDays: number | 
   <li><b>AI только через сервер</b>, ключ не попадает в клиентские бандлы; локальные эвристики остаются как фолбэк.</li>
   <li><b>Демо-данные не в продукте</b>: сид загружается динамическим импортом только в dev-сборках.</li>
   <li><b>Push только по делу.</b> Одно уведомление в день и только при наличии забытых задач; текст считается на сервере из тех же правил, что и дайджест. Каналы спрятаны за <code>IPushSender</code>, поэтому web и mobile добавляются и тестируются одинаково, а «мёртвые» подписки удаляются сами.</li>
-  <li><b>Календарь: отдельный календарь «Headboard» и поллинг.</b> Не трогаем основной календарь пользователя, зеркалим только задачи со сроком; входящие изменения читаем инкрементально каждые 5 минут и сразу после правок вместо push-каналов, которым нужен публичный https.</li>
+  <li><b>Календарь: отдельный календарь «Deboard» и поллинг.</b> Не трогаем основной календарь пользователя, зеркалим только задачи со сроком; входящие изменения читаем инкрементально каждые 5 минут и сразу после правок вместо push-каналов, которым нужен публичный https.</li>
   <li><b>Дайджест генерирует сервер, а не клиент по таймеру.</b> Только API работает постоянно и знает все данные; клиенты лишь присылают зону и подхватывают результат. Статистика посчитана заново на сервере по правилам ядра, промпт общий.</li>
   <li><b>Синхронизация дельтами и трёхстороннее слияние.</b> Клиент отправляет только то, что изменил относительно своего снимка, а при загрузке сливает серверную копию с локальной по полям. Сервер со своей стороны никогда не удаляет по «отсутствию»: комментарии upsert, журнал union, удаления только явными запросами. Так два устройства с офлайн-правками не затирают друг друга без op-log и векторных часов; цена: при правке одного и того же поля на обоих побеждает более поздний <code>touched</code>, а не пользователь.</li>
   <li><b>Один лидер через аренду в БД, а не внешний cron.</b> Аренда в таблице с concurrency token работает на SQLite и PostgreSQL без дополнительной инфраструктуры и переживает смерть лидера за TTL. Цена: до 180 с без фоновых заданий после падения лидера и один лишний запрос к БД на тик.</li>
@@ -587,7 +587,7 @@ interface Template { id; name; title; proj; pr; tags; note; dueInDays: number | 
   <li><span class="pill gold">db</span> Миграции EF сгенерированы для SQLite; PostgreSQL создаёт схему через <code>EnsureCreated()</code>. Перед эволюцией схемы в проде нужны отдельные Postgres-миграции.</li>
   <li><span class="pill gold">push</span> Напоминания включаются VAPID-ключами на сервере (web) и EAS <code>projectId</code> плюс development build (mobile); в Expo Go удалённые push не работают. Проверено тестами с фейковым отправителем.</li>
   <li><span class="pill">history</span> При лимите 200 записей на задачу старые теряются; для очень долгих задач понадобится выгрузка или отдельная таблица.</li>
-  <li><span class="pill gold">calendar</span> Синхронизация с Google Calendar настроена и проверена с реальным аккаунтом в обе стороны: задача со сроком стала событием в календаре «Headboard», событие, созданное в Google, стало задачей в Инбоксе с записью в истории. Экран согласия Google в режиме Testing, поэтому доступ к календарю получают только test users. Поллинг раз в 5 минут вместо push-уведомлений (watch channels требуют публичный https-эндпоинт API).</li>
+  <li><span class="pill gold">calendar</span> Синхронизация с Google Calendar настроена и проверена с реальным аккаунтом в обе стороны: задача со сроком стала событием в календаре «Deboard», событие, созданное в Google, стало задачей в Инбоксе с записью в истории. Экран согласия Google в режиме Testing, поэтому доступ к календарю получают только test users. Поллинг раз в 5 минут вместо push-уведомлений (watch channels требуют публичный https-эндпоинт API).</li>
   <li><span class="pill">digest</span> Зона пользователя известна серверу только после первого <code>PUT /settings</code>, до этого используется UTC. После падения лидера фоновые задания молчат до истечения аренды (<code>Leases:TtlSeconds</code>).</li>
   <li><span class="pill">sync</span> Правка одного и того же поля на двух устройствах решается по <code>touched</code>, без показа конфликта пользователю. Список файлов при двойной правке берётся целиком с одной стороны. Резервная копия не содержит байтов вложений.</li>
   <li><span class="pill">files</span> Вложения из сида без содержимого сервер не сохраняет (нет байтов для загрузки). Реальные файлы загружаются и хранятся.</li>
@@ -596,7 +596,7 @@ interface Template { id; name; title; proj; pr; tags; note; dueInDays: number | 
   <li><span class="pill">env</span> На машине разработки порт 5080 занят сторонним процессом, API запускается с <code>--urls http://localhost:5081</code>.</li>
 </ul>
 
-<footer>Headboard · docs/architecture.html · источники: <code>README.md</code>, <code>apps/api/README.md</code>, <code>docs/superpowers/specs</code>, <code>docs/superpowers/plans</code>.</footer>
+<footer>Deboard · docs/architecture.html · источники: <code>README.md</code>, <code>apps/api/README.md</code>, <code>docs/superpowers/specs</code>, <code>docs/superpowers/plans</code>.</footer>
 </div>
 </body>
 </html>
