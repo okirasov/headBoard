@@ -1,0 +1,31 @@
+apps/api/fly.toml
+  s_2372cb08d633fa::t_7e97b378c46569 1-40
+apps/api/.dockerignore
+  s_2372cb08d633fa::t_1c584a068c84be 1-9
+apps/api/Dockerfile
+  s_2372cb08d633fa::t_3e05c21537361f 1-16
+apps/api/README.md
+  s_2372cb08d633fa::t_49f5096bf63d75 36-45
+apps/mobile/app.json
+  s_2372cb08d633fa::t_5134f96b7b3d67 12
+apps/mobile/eas.json
+  s_2372cb08d633fa::t_9dcc79366c17ca 27,33
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_34ca8f992f33f2 99,158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "64af33b73c40df145d717be59f33a757c8908475",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
