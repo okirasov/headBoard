@@ -1,0 +1,27 @@
+apps/api/Headboard.Api/Program.cs
+  s_2372cb08d633fa::t_ca5982923eb58d 102-116,137-138
+apps/api/README.md
+  s_2372cb08d633fa::t_5ba0cf7f1c7d69 38
+.dockerignore
+  s_2372cb08d633fa::t_122ab8f08a1c25 1-6,10-20
+Dockerfile
+  s_2372cb08d633fa::t_ffdac087c773e1 1-23,25,27,30,33-34
+fly.toml
+  s_2372cb08d633fa::t_c2a424b5b98073 1-2,9-15,22,24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "175dde03fccb2b19359ff27f2793740238eff455",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
