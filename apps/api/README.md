@@ -33,6 +33,16 @@ npm run auth:setup -- --google-web <web client id> --google-secret <web client s
 
 `--dry-run` prints what would be written, `--show` lists the current values (secret masked). Restart the API and the dev servers afterwards.
 
+## Deployment (Fly.io)
+
+The API runs on Fly.io as `deboard-api` (https://deboard-api.fly.dev): one shared-cpu machine in `ams`, SQLite and uploaded files on the `data` volume mounted at `/data`. `apps/api/Dockerfile` publishes the project with the .NET 10 SDK image and runs it on the ASP.NET runtime image; `apps/api/fly.toml` holds the non-secret configuration as environment variables (`Urls`, connection string, storage root, CORS and calendar return URLs). Secrets (`Jwt__Secret`, `Auth__*`) are set with `fly secrets set` and never live in the repo. Deploy from `apps/api`:
+
+```bash
+fly deploy --remote-only
+```
+
+`Auth:AllowDevLogin` is off in Production, so only Google and Apple sign-in work there. Leases are on by default; add machines only after moving to PostgreSQL.
+
 ## Testing from a phone
 
 `dotnet run` binds to `localhost` only; a device on the same Wi-Fi cannot reach that. Start the API on all interfaces and point the app at the Mac's LAN address (`ipconfig getifaddr en0`):

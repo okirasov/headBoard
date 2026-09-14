@@ -9,12 +9,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.head.board",
-      "usesAppleSignIn": true,
-      "infoPlist": {
-        "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": true
-        }
-      }
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
