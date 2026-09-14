@@ -33,6 +33,16 @@ npm run auth:setup -- --google-web <web client id> --google-secret <web client s
 
 `--dry-run` prints what would be written, `--show` lists the current values (secret masked). Restart the API and the dev servers afterwards.
 
+## Testing from a phone
+
+`dotnet run` binds to `localhost` only; a device on the same Wi-Fi cannot reach that. Start the API on all interfaces and point the app at the Mac's LAN address (`ipconfig getifaddr en0`):
+
+```bash
+dotnet run --project apps/api/Headboard.Api --urls http://0.0.0.0:5081
+```
+
+The mobile production profile in `apps/mobile/eas.json` bakes that address into `EXPO_PUBLIC_API_URL`; if the Mac's address changes, update it and rebuild. macOS may ask to allow incoming connections for `dotnet` the first time.
+
 ## Sign-in flows
 
 - `POST /auth/google {idToken}` — native apps (expo-auth-session id-token response). The token audience must be one of `Auth:GoogleClientIds`.

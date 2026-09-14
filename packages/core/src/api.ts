@@ -28,6 +28,9 @@ export class ApiError extends Error {
 }
 
 /** Typed client for the Headboard API (apps/api). `getToken` supplies the JWT once signed in. */
+/** Requests give up after this long; file uploads are the slowest normal case. */
+export const REQUEST_TIMEOUT_MS = 20_000;
+
 export function createApi(baseUrl: string, getToken: () => string | null) {
   const base = baseUrl.replace(/\/$/, '');
 
@@ -36,7 +39,16 @@ export function createApi(baseUrl: string, getToken: () => string | null) {
     const token = getToken();
     if (token) headers.Authorization = 'Bearer ' + token;
     if (body !== undefined) headers['Content-Type'] = 'application/json';
-    const res = await fetch(base + path, { method, headers, body: raw ?? (body !== undefined ? JSON.stringify(body) : undefined) });
+    // A server that is unreachable (wrong LAN address, firewall) must fail fast instead of leaving the UI waiting forever.
+    const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = ctl ? setTimeout(() => ctl.abort(), REQUEST_TIMEOUT_MS) : undefined;
+    let res: Response;
+    try {
+      res = await fetch(base + path, { method, headers, body: raw ?? (body !== undefined ? JSON.stringify(body) : undefined), signal: ctl?.signal });
+    } catch (e) {
+      if (ctl?.signal.aborted) throw new ApiError(0, 'timeout');
+      throw e;
+    } finally { clearTimeout(timer); }
     if (!res.ok) {
       let code = 'http_' + res.status;
       try { const j = await res.json(); if (j && typeof j.error === 'string') code = j.error; } catch { /* no body */ }
