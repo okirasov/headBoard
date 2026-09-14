@@ -35,6 +35,8 @@ public class ApiFactory : WebApplicationFactory<Program>
     {
         Directory.CreateDirectory(Root);
         builder.UseEnvironment("Development");
+        // Tests must not see the developer's real OAuth settings from .NET user-secrets (the API project has a UserSecretsId).
+        builder.ConfigureAppConfiguration(cfg => { foreach (var src in cfg.Sources.Where(x => x is Microsoft.Extensions.Configuration.Json.JsonConfigurationSource j && (j.Path?.EndsWith("secrets.json") ?? false)).ToList()) cfg.Sources.Remove(src); });
         builder.ConfigureAppConfiguration(cfg => cfg.AddInMemoryCollection(new Dictionary<string, string?>
         {
             ["ConnectionStrings:Sqlite"] = $"Data Source={Path.Combine(Root, "test.db")}",
