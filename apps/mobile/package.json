@@ -39,7 +39,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
-    "build:ios": "EXPO_ASC_API_KEY_PATH=$HOME/Downloads/AuthKey_4G4D8JLC78.p8 EXPO_ASC_KEY_ID=4G4D8JLC78 EXPO_ASC_ISSUER_ID=2bb8395d-cc59-4cb9-9f3c-944153a93b3d EXPO_APPLE_TEAM_ID=PW7867VU3L EXPO_APPLE_TEAM_TYPE=INDIVIDUAL npx eas-cli build --profile production --platform ios",
+    "build:ios": "EXPO_NO_CAPABILITY_SYNC=1 EXPO_ASC_API_KEY_PATH=$HOME/Downloads/AuthKey_4G4D8JLC78.p8 EXPO_ASC_KEY_ID=4G4D8JLC78 EXPO_ASC_ISSUER_ID=2bb8395d-cc59-4cb9-9f3c-944153a93b3d EXPO_APPLE_TEAM_ID=PW7867VU3L EXPO_APPLE_TEAM_TYPE=INDIVIDUAL npx eas-cli build --profile production --platform ios",
     "submit:ios": "EXPO_ASC_API_KEY_PATH=$HOME/Downloads/AuthKey_4G4D8JLC78.p8 EXPO_ASC_KEY_ID=4G4D8JLC78 EXPO_ASC_ISSUER_ID=2bb8395d-cc59-4cb9-9f3c-944153a93b3d EXPO_APPLE_TEAM_ID=PW7867VU3L EXPO_APPLE_TEAM_TYPE=INDIVIDUAL npx eas-cli submit --platform ios --latest"
   },
   "private": true
