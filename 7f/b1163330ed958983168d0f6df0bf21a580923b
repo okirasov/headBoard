@@ -1,0 +1,21 @@
+apps/api/README.md
+  s_2372cb08d633fa::t_1899a6bb4ac6c4 36-45
+packages/core/src/api.ts
+  s_2372cb08d633fa::t_2ca1fce4eac48c 31-33,42-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "7fb1163330ed958983168d0f6df0bf21a580923b",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
