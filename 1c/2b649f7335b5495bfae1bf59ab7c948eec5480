@@ -1,0 +1,33 @@
+apps/mobile/eas.json
+  s_2372cb08d633fa::t_d4f5b50a092f9a 15,27,33
+apps/mobile/src/lib/api.ts
+  s_2372cb08d633fa::t_2b142cbc349586 4,6-13
+apps/mobile/src/screens/SignInScreen.tsx
+  s_2372cb08d633fa::t_133225a888e722 1-5,28-61,78
+apps/mobile/src/store/sync.ts
+  s_2372cb08d633fa::t_3ddf093cf6b8fc 2,18,75-80
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_8ab5e975a98312 20-21,73,94,277,295
+packages/core/src/api.test.ts
+  s_2372cb08d633fa::t_27a8cf34fd4b8a 3-19
+packages/core/src/api.ts
+  s_2372cb08d633fa::t_bfa2018591258a 34-36,48,106
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_d63a9c286b4457 43,99,158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "1c2b649f7335b5495bfae1bf59ab7c948eec5480",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
