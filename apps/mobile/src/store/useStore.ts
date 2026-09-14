@@ -17,6 +17,8 @@ export interface PersistedSlice {
   user: User | null; lang: Lang; theme: Theme; showDone: boolean;
   /** API JWT when signed in through apps/api; null in local-only mode. */
   token: string | null;
+  /** Runtime override of EXPO_PUBLIC_API_URL (the Mac's LAN address changes; the build does not). */
+  apiUrl: string | null;
 }
 export interface UiSlice {
   mView: View; mCol: ColumnKey; mSel: string | null; fTag: string | null; mCapOpen: boolean; mProfOpen: boolean; mPv: Preview | null;
@@ -68,6 +70,7 @@ export interface Actions {
   setLang: (lang: Lang) => void;
   setTheme: (theme: Theme) => void;
   setStaleDays: (days: number) => void;
+  setApiUrl: (url: string | null) => void;
   signIn: (provider: Provider, user?: Partial<User>) => void;
   setAuth: (token: string, user: User) => void;
   signOut: () => void;
@@ -88,7 +91,7 @@ export interface Actions {
 }
 export type Store = PersistedSlice & UiSlice & Actions;
 
-const initialPersisted: PersistedSlice = { tasks: [], projects: [], templates: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, staleDays: 7, user: null, lang: 'en', theme: 'light', showDone: true, token: null };
+const initialPersisted: PersistedSlice = { tasks: [], projects: [], templates: [], projFiles: {}, digestText: null, digestAt: null, notifyStale: true, notifyDue: true, staleDays: 7, user: null, lang: 'en', theme: 'light', showDone: true, token: null, apiUrl: null };
 const initialUi: UiSlice = {
   mView: 'board', mCol: 'focus', mSel: null, fTag: null, mCapOpen: false, mProfOpen: false, mPv: null,
   capText: '', capItems: null, capBusy: false, q: '', calSel: null, selected: [], sync: { state: 'local', pending: 0, lastSyncAt: null }, snack: null, snackUndo: null, zTask: null, zMonth: 0, cmText: '', dueTask: null, dueMonth: 0, histId: null, digestBusy: false, digestSeed: 0,
@@ -271,6 +274,7 @@ export const useStore = create<Store>()(
         },
         setLang: lang => set({ lang }),
         setTheme: theme => set({ theme }),
+        setApiUrl: url => set({ apiUrl: url && /^https?:\/\/\S+$/i.test(url.trim()) ? url.trim().replace(/\/$/, '') : null }),
         setStaleDays: days => set({ staleDays: Math.min(60, Math.max(1, Math.round(days))) }),
         signIn: (provider, user) => {
           const name = user?.name ?? 'Sam Kern';
@@ -288,7 +292,7 @@ export const useStore = create<Store>()(
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: s => ({ tasks: s.tasks, projects: s.projects, templates: s.templates, projFiles: s.projFiles, digestText: s.digestText, digestAt: s.digestAt, notifyStale: s.notifyStale, notifyDue: s.notifyDue, staleDays: s.staleDays, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token }),
+      partialize: s => ({ tasks: s.tasks, projects: s.projects, templates: s.templates, projFiles: s.projFiles, digestText: s.digestText, digestAt: s.digestAt, notifyStale: s.notifyStale, notifyDue: s.notifyDue, staleDays: s.staleDays, user: s.user, lang: s.lang, theme: s.theme, showDone: s.showDone, token: s.token, apiUrl: s.apiUrl }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<PersistedSlice>;
         const tasks = (p.tasks ?? current.tasks).map(t => (t.history && t.seriesId !== undefined ? t : { ...t, history: t.history ?? [], seriesId: t.seriesId ?? null }));

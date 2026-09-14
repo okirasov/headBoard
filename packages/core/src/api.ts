@@ -31,8 +31,9 @@ export class ApiError extends Error {
 /** Requests give up after this long; file uploads are the slowest normal case. */
 export const REQUEST_TIMEOUT_MS = 20_000;
 
-export function createApi(baseUrl: string, getToken: () => string | null) {
-  const base = baseUrl.replace(/\/$/, '');
+export function createApi(baseUrl: string | (() => string), getToken: () => string | null) {
+  // A getter lets the mobile app switch servers (the Mac's LAN address) without rebuilding.
+  const base = () => (typeof baseUrl === 'function' ? baseUrl() : baseUrl).replace(/\/$/, '');
 
   async function req<T>(method: string, path: string, body?: unknown, raw?: BodyInit): Promise<T> {
     const headers: Record<string, string> = {};
@@ -44,7 +45,7 @@ export function createApi(baseUrl: string, getToken: () => string | null) {
     const timer = ctl ? setTimeout(() => ctl.abort(), REQUEST_TIMEOUT_MS) : undefined;
     let res: Response;
     try {
-      res = await fetch(base + path, { method, headers, body: raw ?? (body !== undefined ? JSON.stringify(body) : undefined), signal: ctl?.signal });
+      res = await fetch(base() + path, { method, headers, body: raw ?? (body !== undefined ? JSON.stringify(body) : undefined), signal: ctl?.signal });
     } catch (e) {
       if (ctl?.signal.aborted) throw new ApiError(0, 'timeout');
       throw e;
@@ -102,7 +103,7 @@ export function createApi(baseUrl: string, getToken: () => string | null) {
         const q = target.taskId ? '?taskId=' + encodeURIComponent(target.taskId) : target.projectId ? '?projectId=' + encodeURIComponent(target.projectId) : '';
         return req<FileRef>('POST', '/files' + q, undefined, fd);
       },
-      contentUrl: (id: string) => base + '/files/' + encodeURIComponent(id) + '/content',
+      contentUrl: (id: string) => base() + '/files/' + encodeURIComponent(id) + '/content',
       remove: (id: string) => req<void>('DELETE', '/files/' + encodeURIComponent(id)),
     },
     push: {

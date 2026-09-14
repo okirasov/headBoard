@@ -1,5 +1,5 @@
 import { createSyncEngine, type SyncEngine } from '@headboard/core';
-import { api, API_URL } from '../lib/api';
+import { api, API_URL, effectiveApiUrl } from '../lib/api';
 import { useStore } from './useStore';
 
 /** React Native adapter for the shared sync engine (see packages/core/src/sync.ts). */
@@ -15,7 +15,7 @@ function getEngine(): SyncEngine | null {
   if (!engine) {
     engine = createSyncEngine({
       api,
-      baseUrl: API_URL,
+      baseUrl: effectiveApiUrl() ?? API_URL,
       timeZone: (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch { return undefined; } })(),
       getState: () => useStore.getState(),
       setState: patch => useStore.setState(patch),
@@ -70,6 +70,12 @@ export async function deleteAccount(): Promise<boolean> {
   engine = null;
   st.signOut();
   return true;
+}
+
+/** Forget the engine so the next start uses the current server address. */
+export function resetSync(): void {
+  engine?.stop();
+  engine = null;
 }
 
 export async function refreshTasks(): Promise<void> {

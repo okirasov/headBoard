@@ -1,4 +1,8 @@
-import { Pressable, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, Text, TextInput, View } from 'react-native';
+import { API_URL, effectiveApiUrl } from '../lib/api';
+import { resetSync } from '../store/sync';
+import { useStore } from '../store/useStore';
 import { GOOGLE_CONFIGURED, appleOrDevSignIn, devOrMockSignIn, useGoogleSignIn } from '../lib/auth';
 import { useTheme } from '../theme/ThemeContext';
 import { useT } from '../lib/useT';
@@ -21,6 +25,40 @@ function GoogleButton() {
   return <ProviderButton label={T.google} onPress={() => void google.signIn()} />;
 }
 
+/** Where the app talks to: shown only when a server is configured at all; saving swaps the address without a rebuild. */
+function ServerRow() {
+  const { t } = useTheme();
+  const { T } = useT();
+  const setApiUrl = useStore(s => s.setApiUrl);
+  const toast = useStore(s => s.toast);
+  const [v, setV] = useState(effectiveApiUrl() ?? '');
+  if (!API_URL) return null;
+  const commit = () => {
+    const u = v.trim();
+    if (u === (effectiveApiUrl() ?? '')) return;
+    setApiUrl(u === API_URL ? null : u);
+    resetSync();
+    setV(effectiveApiUrl() ?? '');
+    toast(T.apiUrlSaved);
+  };
+  return (
+    <View style={{ marginTop: 18, gap: 5 }}>
+      <Text style={kicker(9.5, t.mut2)}>{T.apiUrlLbl}</Text>
+      <TextInput
+        value={v}
+        onChangeText={setV}
+        onBlur={commit}
+        onSubmitEditing={commit}
+        autoCapitalize="none"
+        autoCorrect={false}
+        keyboardType="url"
+        style={[txt(12, { mono: true, color: t.ink }), { backgroundColor: t.card, borderWidth: 1, borderColor: t.line, borderRadius: 10, paddingVertical: 9, paddingHorizontal: 12 }]}
+      />
+      <Text style={txt(9.5, { mono: true, color: t.mut2, lh: 1.5 })}>{T.apiUrlHint}</Text>
+    </View>
+  );
+}
+
 export function SignInScreen() {
   const { t } = useTheme();
   const { T } = useT();
@@ -37,6 +75,7 @@ export function SignInScreen() {
         </Pressable>
       </View>
       <Text style={[txt(10.5, { mono: true, color: t.mut2, lh: 1.7, ls: 0.4 }), { marginTop: 16 }]}>{T.authNote}</Text>
+      <ServerRow />
     </View>
   );
 }

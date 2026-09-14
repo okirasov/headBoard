@@ -1,5 +1,22 @@
 import { createApi, ApiError } from './api';
 
+describe('createApi base getter', () => {
+  it('re-reads the base URL on every request', async () => {
+    const seen: string[] = [];
+    const orig = globalThis.fetch;
+    globalThis.fetch = (async (url: string) => { seen.push(String(url)); return new Response('{}', { status: 200, headers: { 'Content-Type': 'application/json' } }); }) as typeof fetch;
+    try {
+      let base = 'http://a:1/';
+      const api = createApi(() => base, () => null);
+      await api.settings.get();
+      base = 'http://b:2';
+      await api.settings.get();
+      expect(seen).toEqual(['http://a:1/settings', 'http://b:2/settings']);
+      expect(api.files.contentUrl('x')).toBe('http://b:2/files/x/content');
+    } finally { globalThis.fetch = orig; }
+  });
+});
+
 describe('createApi', () => {
   const calls: Array<{ url: string; init: RequestInit }> = [];
   beforeEach(() => {
