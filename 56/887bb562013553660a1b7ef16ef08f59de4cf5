@@ -1,0 +1,19 @@
+apps/api/Headboard.Api/Calendar/CalendarSyncScheduler.cs
+  s_2372cb08d633fa::t_508c5650447860 33-35,50-54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "56887bb562013553660a1b7ef16ef08f59de4cf5",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
