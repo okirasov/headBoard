@@ -41,8 +41,9 @@
     "scheme": "headboard",
     "extra": {
       "eas": {
-        "projectId": ""
+        "projectId": "27083c34-9afe-43c4-908f-cf5469f415ea"
       }
-    }
+    },
+    "owner": "okirasov"
   }
 }
