@@ -30,7 +30,9 @@ public class CalendarSyncScheduler(IServiceScopeFactory scopes, IConfiguration c
             {
                 var wait = next - DateTimeOffset.UtcNow;
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-                if (wait > TimeSpan.Zero) cts.CancelAfter(wait);
+                // The wait doubles as the poll timer: when it has already elapsed (first iteration, or a long nudge burst)
+                // cancel right away so the full pass runs instead of blocking on the next nudge forever.
+                cts.CancelAfter(wait > TimeSpan.Zero ? wait : TimeSpan.Zero);
                 var pending = new HashSet<Guid>();
                 try
                 {
@@ -45,8 +47,11 @@ public class CalendarSyncScheduler(IServiceScopeFactory scopes, IConfiguration c
                 }
                 catch (OperationCanceledException) when (!ct.IsCancellationRequested) { /* time for the full pass */ }
                 foreach (var uid in pending) await ReconcileAsync(uid, ct);
-                if (await lease.TryAcquireAsync(Headboard.Api.Jobs.LeaderLease.Jobs, lease.Ttl, ct)) await RunAllAsync(ct);
-                next = DateTimeOffset.UtcNow + interval;
+                // Without the jobs lease (another instance leads, or a dead one still holds it) try again soon instead of waiting a full interval.
+                var ran = await lease.TryAcquireAsync(Headboard.Api.Jobs.LeaderLease.Jobs, lease.Ttl, ct);
+                if (ran) { var n = await RunAllAsync(ct); log.LogInformation("Calendar sync: full pass over {Count} user(s)", n); }
+                else log.LogInformation("Calendar sync: full pass skipped, jobs lease held elsewhere");
+                next = DateTimeOffset.UtcNow + (ran ? interval : TimeSpan.FromSeconds(30));
             }
             catch (Exception e) when (!ct.IsCancellationRequested) { log.LogError(e, "Calendar sync loop failed"); next = DateTimeOffset.UtcNow + interval; }
         }
