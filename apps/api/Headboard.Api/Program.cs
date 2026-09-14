@@ -80,16 +80,14 @@ builder.Services.AddHostedService(sp => sp.GetRequiredService<Headboard.Api.Push
 builder.Services.AddSingleton<Headboard.Api.Digest.DigestScheduler>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<Headboard.Api.Digest.DigestScheduler>());
 
-if (builder.Environment.IsDevelopment())
-{
-    builder.Services.AddOpenApi();
-    // Dev servers plus any deployed web origins from Cors:Origins (e.g. the Vercel URL of apps/web).
-    var extraOrigins = builder.Configuration.GetSection("Cors:Origins").Get<string[]>() ?? [];
-    builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
-        .WithOrigins(["http://localhost:5173", "http://localhost:8081", .. extraOrigins])
-        .AllowAnyHeader()
-        .AllowAnyMethod()));
-}
+if (builder.Environment.IsDevelopment()) builder.Services.AddOpenApi();
+// Browser origins: the dev servers in Development, plus whatever Cors:Origins lists (the deployed web app) everywhere.
+var corsOrigins = (builder.Configuration.GetSection("Cors:Origins").Get<string[]>() ?? []).Where(o => !string.IsNullOrWhiteSpace(o)).ToList();
+if (builder.Environment.IsDevelopment()) corsOrigins.AddRange(["http://localhost:5173", "http://localhost:8081"]);
+builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
+    .WithOrigins([.. corsOrigins.Distinct()])
+    .AllowAnyHeader()
+    .AllowAnyMethod()));
 
 var app = builder.Build();
 
@@ -100,9 +98,9 @@ using (var scope = app.Services.CreateScope())
     else db.Database.EnsureCreated(); // Postgres: migrations are SQLite-generated; see README.
 }
 
+app.UseCors();
 if (app.Environment.IsDevelopment())
 {
-    app.UseCors();
     app.MapOpenApi(); // GET /openapi/v1.json
 }
 app.UseAuthentication();
