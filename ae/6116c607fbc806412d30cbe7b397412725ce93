@@ -1,0 +1,45 @@
+README.md
+  s_2372cb08d633fa::t_5be4898026665a 1,25
+apps/api/Headboard.Api/Calendar/CalendarSyncService.cs
+  s_2372cb08d633fa::t_3a3cc84d43e18e 10,16,112
+apps/api/README.md
+  s_2372cb08d633fa::t_8e87ac2376e2ec 1,3,74-75
+apps/mobile/app.json
+  s_2372cb08d633fa::t_e495e96c60757c 3
+apps/mobile/src/lib/push.ts
+  s_2372cb08d633fa::t_7583aa1d19c0c2 25
+apps/mobile/src/store/devSeed.ts
+  s_2372cb08d633fa::t_636aaf1294cd4d 8,36
+apps/mobile/src/store/useStore.ts
+  s_2372cb08d633fa::t_21b093efa59009 78
+apps/web/index.html
+  s_2372cb08d633fa::t_3b4f71035b7268 6
+apps/web/public/sw.js
+  s_2372cb08d633fa::t_c95825c9b525d9 1,3
+apps/web/src/store/devSeed.ts
+  s_2372cb08d633fa::t_f08e6414885c44 8,36
+apps/web/src/store/useStore.ts
+  s_2372cb08d633fa::t_87cfebb635ca63 119
+docs/architecture.html
+  s_2372cb08d633fa::t_638c2435814a97 6,90,111,360,371,385,388,567,590,599
+packages/core/src/backup.ts
+  s_2372cb08d633fa::t_5b310e155ee5bf 28
+packages/core/src/i18n.ts
+  s_2372cb08d633fa::t_6ce0aa54496a40 93,97-98,152,156-157
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "ae6116c607fbc806412d30cbe7b397412725ce93",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
