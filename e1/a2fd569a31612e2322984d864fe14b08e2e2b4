@@ -1,0 +1,21 @@
+apps/mobile/app.json
+  s_2372cb08d633fa::t_28fe5c9ef2fbc4 29-40
+apps/mobile/assets/icon.svg
+  s_2372cb08d633fa::t_895524214138fe 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "e1a2fd569a31612e2322984d864fe14b08e2e2b4",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "unknown"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
