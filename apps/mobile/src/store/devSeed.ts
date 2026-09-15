@@ -5,7 +5,7 @@ export function buildSeed(now = Date.now()): { tasks: Task[]; projects: Project[
   const d = DAY_MS;
   const projects: Project[] = [
     { id: 'p1', name: 'AI Research', color: 'var(--acc)' },
-    { id: 'p2', name: 'Deboard Build', color: 'var(--ok)' },
+    { id: 'p2', name: 'HeadBoard Build', color: 'var(--ok)' },
     { id: 'p3', name: 'Writing', color: '#6B7FA3' },
     { id: 'p4', name: 'Home Ops', color: '#9A7B2D' },
     { id: 'p5', name: 'Health', color: '#97658C' },
@@ -33,7 +33,7 @@ export function buildSeed(now = Date.now()): { tasks: Task[]; projects: Project[
     T('t3', 'Book dentist appointment', 'p5', 1, 'inbox', 1, { due: now + 3 * d }),
     T('t4', 'Outline essay: why personal boards fail', 'p3', 2, 'inbox', 4, { tags: ['essay'] }),
     T('t16', 'Water the plants', 'p4', 2, 'inbox', 1, { recur: 'weekly', due: now + 1 * d }),
-    T('t5', 'Draft Deboard data model with Claude', 'p2', 0, 'focus', 0, { tags: ['claude'], due: now, chat: 'https://claude.ai/', note: 'Tasks, projects, activity log. Decide: single table + views, or separate entities.', comments: [{ id: 'sc1', text: 'Claude suggested a single-table design with views — reviewing tonight.', at: now - 0.1 * d }, { id: 'sc2', text: 'Compare with how Linear models issues before deciding.', at: now - 0.04 * d }], files: [{ id: 'sf2', name: 'data-model-v2.png', kind: 'img' }, { id: 'sf3', name: 'schema-notes.md', kind: 'file', size: 4200 }] }),
+    T('t5', 'Draft HeadBoard data model with Claude', 'p2', 0, 'focus', 0, { tags: ['claude'], due: now, chat: 'https://claude.ai/', note: 'Tasks, projects, activity log. Decide: single table + views, or separate entities.', comments: [{ id: 'sc1', text: 'Claude suggested a single-table design with views — reviewing tonight.', at: now - 0.1 * d }, { id: 'sc2', text: 'Compare with how Linear models issues before deciding.', at: now - 0.04 * d }], files: [{ id: 'sf2', name: 'data-model-v2.png', kind: 'img' }, { id: 'sf3', name: 'schema-notes.md', kind: 'file', size: 4200 }] }),
     T('t6', 'Prompt library for task extraction', 'p1', 0, 'focus', 1, { tags: ['prompts'], chat: 'https://claude.ai/' }),
     T('t7', 'Design the weekly review ritual', 'p2', 1, 'focus', 12, { tags: ['ux'], note: 'Sunday evening, 20 min. What does the board show first?', comments: [{ id: 'sc3', text: 'Maybe the digest IS the review — merge them?', at: now - 5 * d }] }),
     T('t8', 'Rebuild morning routine', 'p5', 2, 'focus', 9),

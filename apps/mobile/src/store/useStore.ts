@@ -75,7 +75,7 @@ export interface Actions {
   setAuth: (token: string, user: User) => void;
   signOut: () => void;
   toast: (msg: string, undo?: () => void) => void;
-  /** Merge a backup file (see core/backup.ts); null when the file is not a Deboard export. */
+  /** Merge a backup file (see core/backup.ts); null when the file is not a HeadBoard export. */
   importBackup: (json: string) => { added: number; updated: number } | null;
   toggleSelect: (id: string) => void;
   clearSelection: () => void;

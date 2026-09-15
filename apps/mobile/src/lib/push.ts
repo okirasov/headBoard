@@ -22,7 +22,7 @@ export async function enablePush(): Promise<PushState> {
   const perm = await Notifications.getPermissionsAsync();
   const status = perm.granted ? 'granted' : (await Notifications.requestPermissionsAsync()).status;
   if (status !== 'granted') return 'denied';
-  if (Platform.OS === 'android') await Notifications.setNotificationChannelAsync('default', { name: 'Deboard', importance: Notifications.AndroidImportance.DEFAULT });
+  if (Platform.OS === 'android') await Notifications.setNotificationChannelAsync('default', { name: 'HeadBoard', importance: Notifications.AndroidImportance.DEFAULT });
   const pid = projectId();
   if (!pid) return 'unsupported';
   const token = (await Notifications.getExpoPushTokenAsync({ projectId: pid })).data;

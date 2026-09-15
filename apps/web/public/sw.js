@@ -1,6 +1,6 @@
-/* Deboard service worker: shows pushes about forgotten tasks and opens Review on tap. */
+/* HeadBoard service worker: shows pushes about forgotten tasks and opens Review on tap. */
 self.addEventListener('push', event => {
-  let data = { title: 'Deboard', body: '', url: '/?view=review', tag: 'stale' };
+  let data = { title: 'HeadBoard', body: '', url: '/?view=review', tag: 'stale' };
   try { data = { ...data, ...event.data.json() }; } catch (e) { if (event.data) data.body = event.data.text(); }
   event.waitUntil(self.registration.showNotification(data.title, {
     body: data.body,

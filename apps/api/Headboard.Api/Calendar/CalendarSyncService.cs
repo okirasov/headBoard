@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Headboard.Api.Calendar;
 
 /// <summary>
-/// Two-way reconciliation between a user's tasks and their dedicated "Deboard" Google calendar.
+/// Two-way reconciliation between a user's tasks and their dedicated "HeadBoard" Google calendar.
 /// Inbound: incremental event listing (syncToken) → due-date moves, title edits, deletions, and foreign events becoming Inbox tasks.
 /// Outbound: every mirrored task (due date, not done/archived) has an all-day event; hash mismatch → patch; unmirrored → delete.
 /// </summary>
 public class CalendarSyncService(AppDb db, GoogleCalendarClient google, ILogger<CalendarSyncService> log)
 {
-    public const string CalendarSummary = "Deboard";
+    public const string CalendarSummary = "HeadBoard";
 
     public async Task<CalendarLinkRow?> ReconcileUserAsync(Guid uid, long now, CancellationToken ct)
     {
@@ -109,7 +109,7 @@ public class CalendarSyncService(AppDb db, GoogleCalendarClient google, ILogger<
             }
             if (task is null)
             {
-                // Created directly in the Deboard calendar → new Inbox task carrying the date.
+                // Created directly in the HeadBoard calendar → new Inbox task carrying the date.
                 var due = EventMapper.ParseLocalDate(EventMapper.StartDate(ev), tz);
                 var title = ev["summary"]?.GetValue<string>()?.Trim();
                 if (due is null || string.IsNullOrEmpty(title)) continue;
