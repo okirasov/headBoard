@@ -1,6 +1,6 @@
 # Deboard on Fly.io — one machine serves the API and the web app (wwwroot); SQLite + files on the "data" volume.
 # Deploy from the repository root: fly deploy --remote-only
-app = "deboard-api"
+app = "headboard-api"
 primary_region = "ams"
 
 [build]
@@ -11,7 +11,7 @@ primary_region = "ams"
     VITE_API_URL = "/"
     VITE_GOOGLE_CLIENT_ID = "990213590248-ajsetps7tbapqqgb6u8h5bud07fjlblo.apps.googleusercontent.com"
     VITE_APPLE_SERVICES_ID = "com.headboard.web"
-    VITE_APPLE_REDIRECT_URI = "https://deboard-api.fly.dev/"
+    VITE_APPLE_REDIRECT_URI = "https://headboard-api.fly.dev/"
 
 [env]
   ASPNETCORE_ENVIRONMENT = "Production"
@@ -19,9 +19,9 @@ primary_region = "ams"
   Urls = "http://0.0.0.0:8080"
   ConnectionStrings__Sqlite = "Data Source=/data/headboard.db"
   Storage__Root = "/data/storage"
-  Cors__Origins__0 = "https://deboard-api.fly.dev"
-  Calendar__RedirectUri = "https://deboard-api.fly.dev/calendar/oauth/callback"
-  Calendar__AllowedReturnUrls__0 = "https://deboard-api.fly.dev"
+  Cors__Origins__0 = "https://headboard-api.fly.dev"
+  Calendar__RedirectUri = "https://headboard-api.fly.dev/calendar/oauth/callback"
+  Calendar__AllowedReturnUrls__0 = "https://headboard-api.fly.dev"
   Calendar__AllowedReturnUrls__1 = "http://localhost:5173"
   Calendar__AllowedReturnUrls__2 = "headboard://"
 

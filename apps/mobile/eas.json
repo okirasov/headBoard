@@ -24,13 +24,13 @@
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://deboard-api.fly.dev"
+        "EXPO_PUBLIC_API_URL": "https://headboard-api.fly.dev"
       }
     },
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://deboard-api.fly.dev"
+        "EXPO_PUBLIC_API_URL": "https://headboard-api.fly.dev"
       }
     }
   },
