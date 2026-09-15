@@ -1,0 +1,25 @@
+fly.toml
+  s_2372cb08d633fa::t_7982ed3c942747 3,14,22-24
+apps/api/README.md
+  s_2372cb08d633fa::t_98b917a61772d6 38
+apps/mobile/eas.json
+  s_2372cb08d633fa::t_995025e41c04c9 27,33
+docs/architecture.html
+  s_2372cb08d633fa::t_2ac04f3fefd1f1 338,535,586
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "8928598eecddaf5789a13c8fbd54ee0e451bbe34",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
