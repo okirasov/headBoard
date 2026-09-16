@@ -7,11 +7,17 @@ namespace Headboard.Api.Auth;
 /// <summary>Identity asserted by an external id-token.</summary>
 public record ExternalIdentity(string Subject, string Email, string Name);
 
+/// <summary>The identity provider's key material could not be fetched, so the token can be neither accepted nor rejected.</summary>
+public class ExternalAuthUnavailableException(string provider, Exception inner) : Exception($"{provider} verification unavailable", inner)
+{
+    public string Provider { get; } = provider;
+}
+
 /// <summary>
 /// Verifies Google id-tokens against every configured client id (web, iOS and Android apps each have their own),
 /// and exchanges web authorization codes for id-tokens with the web client secret.
 /// </summary>
-public class GoogleVerifier(IConfiguration cfg, IHttpClientFactory http)
+public class GoogleVerifier(IConfiguration cfg, IHttpClientFactory http, ILogger<GoogleVerifier> log)
 {
     public const string HttpClientName = "google-oauth";
     private const string TokenEndpoint = "https://oauth2.googleapis.com/token";
@@ -47,6 +53,12 @@ public class GoogleVerifier(IConfiguration cfg, IHttpClientFactory http)
         catch (InvalidJwtException)
         {
             return null;
+        }
+        catch (HttpRequestException e)
+        {
+            // Google's certificate endpoint could not be reached (network, or the egress address is blocked by Google).
+            log.LogError(e, "Google id-token verification failed: certificate fetch error {Status}", e.StatusCode);
+            throw new ExternalAuthUnavailableException("google", e);
         }
     }
 

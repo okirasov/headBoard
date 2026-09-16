@@ -29,7 +29,9 @@ public static class AuthEndpoints
                 if (idToken is null) return Results.Unauthorized();
             }
             if (string.IsNullOrWhiteSpace(idToken)) return Results.BadRequest(new { error = "id_token_or_code_required" });
-            var id = await verifier.VerifyAsync(idToken);
+            ExternalIdentity? id;
+            try { id = await verifier.VerifyAsync(idToken); }
+            catch (ExternalAuthUnavailableException) { return Results.Json(new { error = "google_unavailable" }, statusCode: 503); }
             if (id is null) return Results.Unauthorized();
             return Results.Ok(await Login(db, tokens, "Google", id));
         });
