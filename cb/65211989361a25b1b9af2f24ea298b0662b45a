@@ -1,0 +1,21 @@
+apps/api/Headboard.Api/appsettings.json
+  s_2372cb08d633fa::t_3158b86269fb59 40,47
+fly.toml
+  s_2372cb08d633fa::t_f1aaaabc0b66d4 1,23,26-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "cb65211989361a25b1b9af2f24ea298b0662b45a",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
