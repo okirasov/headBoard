@@ -1,0 +1,21 @@
+apps/web/index.html
+  s_2372cb08d633fa::t_e78de8b1d304fc 7-9
+apps/web/public/icon.svg
+  s_2372cb08d633fa::t_1243f5982f55a9 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "ef05dd8c6234b401155f4de60399f27627df57cd",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
