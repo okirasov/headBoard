@@ -1,0 +1,23 @@
+Dockerfile
+  s_2372cb08d633fa::t_56b320614569cc 36-39
+apps/api/Headboard.Api/Auth/AuthEndpoints.cs
+  s_2372cb08d633fa::t_62c9fc20574dd2 32-34
+apps/api/Headboard.Api/Auth/GoogleVerifier.cs
+  s_2372cb08d633fa::t_6c0df13ebe2d06 10-15,20,57-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "38b499de70c1b19ae802f352bbecd5b10362ad98",
+  "prompts": {},
+  "sessions": {
+    "s_2372cb08d633fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38e65fd6-4f1c-4802-a3c8-a683dc499ab7",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Oleg Kirasov <okirasov@gmail.com>"
+    }
+  }
+}
