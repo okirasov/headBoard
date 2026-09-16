@@ -12,7 +12,9 @@
         "resourceClass": "m-medium"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://192.168.1.38:5081"
+        "EXPO_PUBLIC_API_URL": "http://192.168.1.38:5081",
+        "EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID": "990213590248-b64dnaednfcukgp527v2gda0dob78ncb.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "990213590248-ajsetps7tbapqqgb6u8h5bud07fjlblo.apps.googleusercontent.com"
       }
     },
     "development-simulator": {
@@ -24,13 +26,17 @@
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://headboard-api.fly.dev"
+        "EXPO_PUBLIC_API_URL": "https://headboard-api.fly.dev",
+        "EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID": "990213590248-b64dnaednfcukgp527v2gda0dob78ncb.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "990213590248-ajsetps7tbapqqgb6u8h5bud07fjlblo.apps.googleusercontent.com"
       }
     },
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://headboard-api.fly.dev"
+        "EXPO_PUBLIC_API_URL": "https://headboard-api.fly.dev",
+        "EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID": "990213590248-b64dnaednfcukgp527v2gda0dob78ncb.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "990213590248-ajsetps7tbapqqgb6u8h5bud07fjlblo.apps.googleusercontent.com"
       }
     }
   },
