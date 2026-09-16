@@ -11,3 +11,5 @@ apps/api/**/*.db
 apps/api/**/storage/
 apps/mobile/.expo/
 .env
+.vercel
+.env*
